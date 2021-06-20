@@ -7,16 +7,13 @@
  */
 
 import React from 'react';
-import {
-  StyleSheet, View, Text
-} from 'react-native';
-import { widthToDp, heightToDp } from './src/utilities/responsiveUtils';
-import Splash from './src/screens/splashScreen';
+import RootStack from './src/routes/rootStack'
+
 
 function App() {
 
   return (
-    <Splash />
+    <RootStack />
   );
 };
 
