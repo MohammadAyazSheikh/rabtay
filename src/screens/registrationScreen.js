@@ -21,17 +21,16 @@ export default class Registration extends Component {
                     <Image source={require('../../assets/logot.png')} style={styles.logoImg} />
                 </View>
                 <View style={styles.logInView}>
-                    <TouchableOpacity style={styles.btnLogIn}>
+                    <TouchableOpacity style={styles.btnLogIn}
+                        onPress={() => {
+                            this.props.navigation.navigate('LogIn');
+                        }}
+                    >
                         <Text style={styles.btnTxt}>
                             LogIn
                         </Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.btnForget}>
-                        <Text style={styles.btnForgetTxt}>
-                            forgot password?
-                        </Text>
-                    </TouchableOpacity>
-                    <Text style={{color:'white', margin:10, fontWeight:'bold'}}>
+                    <Text style={{ color: 'white', margin: 10, fontWeight: 'bold' }}>
                         OR
                     </Text>
                     <TouchableOpacity style={styles.btnLogIn}>
@@ -49,7 +48,7 @@ export const styles = StyleSheet.create({
 
     container: {
         flex: 1,
-        backgroundColor: '#2fbbf0'
+        backgroundColor: BackGroundColor
     },
     logoImg: {
         width: widthToDp(70),
@@ -86,14 +85,6 @@ export const styles = StyleSheet.create({
     },
     bottomView: {
         flexDirection: 'row'
-    },
-    btnForget: {
-        padding: 5,
-        elevation: 1
-    },
-    btnForgetTxt: {
-        color: 'white'
     }
-
 });
 

@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Splash from '../screens/splashScreen';
-import Registration from '../screens/registrationScreen'
+import Registration from '../screens/registrationScreen';
+import LogIn  from '../screens/loginScreen';
 const rootStack = createStackNavigator();
 
 
@@ -32,6 +33,11 @@ export default function RootStack() {
                     }}
                 />
                 <rootStack.Screen name="Registration" component={Registration}
+                    options={{
+                        headerShown: false
+                    }}
+                />
+                 <rootStack.Screen name="LogIn" component={LogIn}
                     options={{
                         headerShown: false
                     }}
