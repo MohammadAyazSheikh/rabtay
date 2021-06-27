@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import {
-    Text, View, Image, TouchableOpacity, FlatList,
+    Text, View, Image, TouchableOpacity, Animated,
     StyleSheet, Dimensions, TextInput
 } from 'react-native';
 import { widthToDp, heightToDp } from '../utilities/responsiveUtils';
 import { BackGroundColor } from '../utilities/colors';
 import LoginIcon from 'react-native-vector-icons/AntDesign';
 import Icon from 'react-native-vector-icons/Feather';
-import { min } from 'react-native-reanimated';
+
 
 const required = (val) => val ? true : false;
 const maxLength = (len) => (val) => !(val) || (val.length <= len);
@@ -19,6 +19,16 @@ export default class LogIn extends Component {
     constructor(props) {
         super(props);
 
+        this.inputAnim = new Animated.Value(1);
+        this.inputColor = this.inputAnim.interpolate({
+            inputRange: [1, 1.15],
+            outputRange: ['white', 'red'],
+        });
+        this.inputAnim2 = new Animated.Value(1);
+        this.inputColor2 = this.inputAnim2.interpolate({
+            inputRange: [1, 1.15],
+            outputRange: ['white', 'red'],
+        });
         this.state = {
             showPass: true,
             req: false,
@@ -30,22 +40,73 @@ export default class LogIn extends Component {
             email: '',
             pass: '',
         }
-        this.setError = this.setError.bind(this);
+        this.animateTextField = this.animateTextField.bind(this);
+        this.animateEmptyField = this.animateEmptyField.bind(this);
     }
 
-    setError(err_) {
-        this.setState({ err: err_ })
+    animateTextField(textFieldErr, animatedVal) {
+        if (textFieldErr) {
+            Animated.sequence([
+                Animated.timing(
+                    animatedVal,
+                    {
+                        toValue: 1.04,
+                        useNativeDriver: false,
+                        duration: 400
+                    }
+                ),
+                Animated.timing(
+                    animatedVal,
+                    {
+                        toValue: 1,
+                        useNativeDriver: false,
+                        duration: 400
+                    }
+                ),
+            ]).start();
+        }
     }
+
+    animateEmptyField(animatedVal) {
+        Animated.sequence([
+            Animated.spring(
+                animatedVal,
+                {
+                    toValue: 1.03,
+                    useNativeDriver: false,
+                    stiffness:100
+                }
+            ),
+            Animated.spring(
+                animatedVal,
+                {
+                    toValue: 1,
+                    useNativeDriver: false,
+                    stiffness:100
+                }
+            ),
+        ]).start();
+    }
+
     render() {
-
-
         return (
             <View style={styles.container}>
                 <View style={styles.logoView}>
                     <Image source={require('../../assets/logot.png')} style={styles.logoImg} />
                 </View>
                 <View style={styles.bottomView}>
-                    <View style={{ ...styles.inputView, marginBottom: 20 }}>
+                    < Animated.View
+                        style={
+                            [
+                                { ...styles.inputView, marginBottom: 20 },
+                                {
+                                    transform: [{ scale: this.inputAnim }],
+                                    backgroundColor: this.inputColor,
+                                }
+                            ]
+                        }
+
+                    >
                         <LoginIcon name="mail" style={styles.iconStyle} />
                         <TextInput placeholder='Email' style={styles.txtInput}
                             onChangeText={(val) => {
@@ -54,30 +115,40 @@ export default class LogIn extends Component {
                             }}
 
                             onBlur={() => {
-                                this.state.email ? false : this.setState({ errEmail: 'required' })
+                                this.state.email ? false : this.setState({ errEmail: 'required' });
+                                this.animateTextField(this.state.errEmail, this.inputAnim);
                             }}
                         />
 
-                    </View>
+                    </Animated.View>
                     <Text style={styles.errStyle}>{this.state.errEmail}</Text>
-                    <View style={styles.inputView}>
+                    <Animated.View
+                        style={[
+                            styles.inputView,
+                            {
+                                transform: [{ scale: this.inputAnim2 }],
+                                backgroundColor: this.inputColor2
+                            }
+                        ]
+                        } >
                         <LoginIcon name="lock" style={styles.iconStyle} />
                         <TextInput placeholder='Password' style={styles.txtInput} secureTextEntry={this.state.showPass}
                             onChangeText={(val) => {
-                                if (val.length >12) {
-                                    this.setState({errPass:'must be less than 12 characters'})
+                                if (val.length > 12) {
+                                    this.setState({ errPass: 'must be less than 12 characters' })
                                 }
-                                else if (val.length <4) {
-                                    this.setState({errPass:'must be greater than 4 characters'})
+                                else if (val.length < 4) {
+                                    this.setState({ errPass: 'must be greater than 4 characters' })
                                 }
-                                else{
-                                    this.setState({errPass:''}) 
+                                else {
+                                    this.setState({ errPass: '' })
                                 }
                                 this.setState({ pass: val })
                             }}
 
                             onBlur={() => {
-                                this.state.pass ? false : this.setState({ errPass: 'required' })
+                                this.state.pass ? false : this.setState({ errPass: 'required' });
+                                this.animateTextField(this.state.errPass, this.inputAnim2);
                             }}
                         />
                         <TouchableOpacity style={styles.LockIconViewStyle}
@@ -96,7 +167,7 @@ export default class LogIn extends Component {
 
                         </TouchableOpacity>
 
-                    </View>
+                    </Animated.View>
                     <Text style={{ ...styles.errStyle, marginTop: 0, marginBottom: 0 }}>{this.state.errPass}</Text>
                     <TouchableOpacity style={styles.btnForget}>
                         <Text style={styles.btnForgetTxt}>
@@ -104,7 +175,18 @@ export default class LogIn extends Component {
                         </Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={styles.btnLogIn}>
+                    <TouchableOpacity
+                        style={styles.btnLogIn}
+                        onPress={() => {
+
+                            if (!this.state.email)
+                                this.animateEmptyField(this.inputAnim);
+
+                            if (!this.state.pass)
+                                this.animateEmptyField(this.inputAnim2);
+
+                        }}
+                    >
                         <Text style={styles.btnTxt}>Login</Text>
                     </TouchableOpacity>
                 </View>
