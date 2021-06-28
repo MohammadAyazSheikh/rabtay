@@ -33,7 +33,11 @@ export default class Registration extends Component {
                     <Text style={{ color: 'white', margin: 10, fontWeight: 'bold' }}>
                         OR
                     </Text>
-                    <TouchableOpacity style={styles.btnLogIn}>
+                    <TouchableOpacity style={styles.btnLogIn}
+                        onPress={() => {
+                            this.props.navigation.navigate('SignUp');
+                        }}
+                    >
                         <Text style={styles.btnTxt}>
                             SignUp
                         </Text>

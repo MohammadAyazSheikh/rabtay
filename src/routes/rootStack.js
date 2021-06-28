@@ -4,6 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Splash from '../screens/splashScreen';
 import Registration from '../screens/registrationScreen';
 import LogIn  from '../screens/loginScreen';
+import Signup from '../screens/signupScreen';
 const rootStack = createStackNavigator();
 
 
@@ -42,7 +43,11 @@ export default function RootStack() {
                         headerShown: false
                     }}
                 />
-               
+                 <rootStack.Screen name="SignUp" component={Signup}
+                    options={{
+                        headerShown: false
+                    }}
+                />
                
                 {/* <rootStack.Screen name="Home" component={Home}
                     options={{

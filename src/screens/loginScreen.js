@@ -19,6 +19,8 @@ export default class LogIn extends Component {
     constructor(props) {
         super(props);
 
+        this.logoAnim = new Animated.Value(heightToDp(43));
+
         this.inputAnim = new Animated.Value(1);
         this.inputColor = this.inputAnim.interpolate({
             inputRange: [1, 1.15],
@@ -74,7 +76,7 @@ export default class LogIn extends Component {
                 {
                     toValue: 1.03,
                     useNativeDriver: false,
-                    stiffness:100
+                    stiffness: 100
                 }
             ),
             Animated.spring(
@@ -82,18 +84,36 @@ export default class LogIn extends Component {
                 {
                     toValue: 1,
                     useNativeDriver: false,
-                    stiffness:100
+                    stiffness: 100
                 }
             ),
         ]).start();
     }
 
+    componentDidMount() {
+
+        setTimeout(() => {
+            Animated.timing(
+                this.logoAnim,
+                {
+                    toValue: heightToDp(25),
+                    useNativeDriver: false,
+                    duration: 400
+                }
+            ).start();
+        }, 300)
+
+    }
+
     render() {
         return (
             <View style={styles.container}>
-                <View style={styles.logoView}>
+                <Animated.View style={[
+                    styles.logoView,
+                    { height: this.logoAnim }
+                ]}>
                     <Image source={require('../../assets/logot.png')} style={styles.logoImg} />
-                </View>
+                </Animated.View>
                 <View style={styles.bottomView}>
                     < Animated.View
                         style={
