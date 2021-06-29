@@ -248,7 +248,8 @@ export const styles = StyleSheet.create({
         borderRadius: heightToDp(10),
         flexDirection: 'row',
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        elevation:5
     },
     txtInput: {
         width: '75%',
