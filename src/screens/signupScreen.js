@@ -290,14 +290,20 @@ export default class Signup extends Component {
                             onPress={() => {
 
                                 if (!this.state.email)
-                                    this.animateEmptyField(this.inputAnim);
+                                    this.animateEmptyField(this.emailAnim);
 
                                 if (!this.state.pass)
-                                    this.animateEmptyField(this.inputAnim2);
+                                    this.animateEmptyField(this.passAnim);
+
+                                if (!this.state.Fname)
+                                    this.animateEmptyField(this.fnameAnim);
+
+                                if (!this.state.Lname)
+                                    this.animateEmptyField(this.lnameAnim);
 
                             }}
                         >
-                            <Text style={styles.btnTxt}>Login</Text>
+                            <Text style={styles.btnTxt}>Signup</Text>
                         </TouchableOpacity>
                     </ScrollView>
                 </View>
@@ -334,6 +340,7 @@ export const styles = StyleSheet.create({
     },
     scrollViewStyle: {
         paddingTop: 10,
+        paddingBottom: 10,
         justifyContent: 'center',
         alignItems: 'center',
         width: widthToDp(100),
@@ -382,7 +389,7 @@ export const styles = StyleSheet.create({
         height: widthToDp(25),
 
     },
-    
+
     btnLogIn: {
         backgroundColor: '#053881',
         width: widthToDp(80),
