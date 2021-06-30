@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {
     Text, View, Image, Animated, TouchableOpacity,
-    StyleSheet, ScrollView, TextInput
+    StyleSheet, ScrollView, TextInput, Switch
 } from 'react-native';
 import { widthToDp, heightToDp } from '../utilities/responsiveUtils';
 import { BackGroundColor } from '../utilities/colors';
@@ -50,6 +50,7 @@ export default class Signup extends Component {
             emailErr: '',
             pass: '',
             passErr: '',
+            gender: true,
         }
     }
 
@@ -195,9 +196,10 @@ export default class Signup extends Component {
                         </Animated.View>
                         <Text style={styles.errStyle}>{this.state.LnameErr}</Text>
 
-                        {/* Date of Birth */}
+                        {/*----- Date of Birth---- */}
 
                         < View style={styles.dateView}  >
+                            <Text style={styles.txtDOB}>Date of birth</Text>
                             <DatePicker
                                 date={this.state.Dob}
                                 onDateChange={(val) => { this.setState({ Dob: val }); console.log(val) }}
@@ -207,6 +209,16 @@ export default class Signup extends Component {
                             />
                         </View>
 
+                        < View style={styles.genderView}  >
+                            <Text style={{ color: 'grey', marginRight: 10 }}>{this.state.gender ? 'Male' : 'Female'}</Text>
+                            <Switch
+                                trackColor={{ false: "#767577", true: "#81b0ff" }}
+                                thumbColor={this.state.gender ? BackGroundColor : "pink"}
+                                ios_backgroundColor="#3e3e3e"
+                                onValueChange={() => { this.setState({ gender: !this.state.gender }) }}
+                                value={this.state.gender}
+                            />
+                        </View>
                         {/* ----Email------- */}
                         < Animated.View
                             style={
@@ -289,10 +301,10 @@ export default class Signup extends Component {
                             style={styles.btnLogIn}
                             onPress={() => {
 
-                                if (!this.state.email)
+                                if (!this.state.email || this.state.emailErr)
                                     this.animateEmptyField(this.emailAnim);
 
-                                if (!this.state.pass)
+                                if (!this.state.pass || this.state.passErr)
                                     this.animateEmptyField(this.passAnim);
 
                                 if (!this.state.Fname)
@@ -378,10 +390,13 @@ export const styles = StyleSheet.create({
         marginBottom: 30,
         borderRadius: widthToDp(5),
         backgroundColor: '#FFF',
-        height: widthToDp(30),
+        height: widthToDp(35),
         justifyContent: 'center',
         alignItems: 'center',
         elevation: 5
+    },
+    txtDOB: {
+        color: 'grey'
     },
     dateStyle: {
         backgroundColor: '#FFF',
@@ -389,7 +404,17 @@ export const styles = StyleSheet.create({
         height: widthToDp(25),
 
     },
-
+    genderView: {
+        backgroundColor: '#FFF',
+        marginBottom: 30,
+        height: heightToDp(6),
+        width: '80%',
+        borderRadius: heightToDp(10),
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        elevation: 5
+    },
     btnLogIn: {
         backgroundColor: '#053881',
         width: widthToDp(80),
