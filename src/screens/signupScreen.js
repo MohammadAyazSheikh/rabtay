@@ -1,16 +1,33 @@
 import React, { Component } from 'react';
 import {
     Text, View, Image, Animated, TouchableOpacity,
-    StyleSheet, ScrollView, TextInput, Switch
+    StyleSheet, ScrollView, TextInput, Switch, ActivityIndicator
 } from 'react-native';
 import { widthToDp, heightToDp } from '../utilities/responsiveUtils';
 import { BackGroundColor } from '../utilities/colors';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import DatePicker from 'react-native-date-picker'
+import DatePicker from 'react-native-date-picker';
+import { connect } from 'react-redux';
+import { Register } from '../redux/actions/signupActions';
+import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 
 const validEmail = (val) => /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(val);
 
-export default class Signup extends Component {
+const mapStateToProps = state => {
+    return {
+        user: state.user
+    }
+}
+
+const mapDispatchToProps = dispatch => (
+    {
+        Register: (fname, lname, email, pass, dob, gender,) =>
+            dispatch(Register(fname, lname, email, pass, dob, gender))
+
+    }
+)
+class Signup extends Component {
     constructor(props) {
         super(props);
 
@@ -42,15 +59,16 @@ export default class Signup extends Component {
 
         this.state = {
             Fname: '',
-            FnameErr: '',
+            FnameErr: null,
             Lname: '',
-            LnameErr: "",
+            LnameErr: null,
             Dob: new Date(),
             email: '',
-            emailErr: '',
+            emailErr: null,
             pass: '',
-            passErr: '',
+            passErr: null,
             gender: true,
+            isLoading: false
         }
     }
 
@@ -145,7 +163,7 @@ export default class Signup extends Component {
                                 onChangeText={(val) => {
                                     this.setState({ Fname: val });
                                     if (this.state.Fname)
-                                        this.setState({ FnameErr: '' });
+                                        this.setState({ FnameErr: null });
                                 }}
                                 onBlur={() => {
 
@@ -154,7 +172,7 @@ export default class Signup extends Component {
                                         this.setState({ FnameErr: 'required' })
                                     }
                                     else {
-                                        this.setState({ FnameErr: '' });
+                                        this.setState({ FnameErr: null });
                                     }
                                 }}
                             />
@@ -180,7 +198,7 @@ export default class Signup extends Component {
                                 onChangeText={(val) => {
                                     this.setState({ Lname: val })
                                     if (this.state.Lname)
-                                        this.setState({ LnameErr: '' });
+                                        this.setState({ LnameErr: null });
                                 }}
                                 onBlur={() => {
 
@@ -189,7 +207,7 @@ export default class Signup extends Component {
                                         this.setState({ LnameErr: 'required' })
                                     }
                                     else {
-                                        this.setState({ LnameErr: '' });
+                                        this.setState({ LnameErr: null });
                                     }
                                 }}
                             />
@@ -235,7 +253,7 @@ export default class Signup extends Component {
                             <AntDesign name="mail" style={styles.iconStyle} />
                             <TextInput placeholder='Email' style={styles.txtInput}
                                 onChangeText={(val) => {
-                                    validEmail(val) ? this.setState({ emailErr: '' }) : this.setState({ emailErr: 'invalid email' })
+                                    validEmail(val) ? this.setState({ emailErr: null }) : this.setState({ emailErr: 'invalid email' })
                                     this.setState({ email: val })
                                 }}
 
@@ -246,6 +264,7 @@ export default class Signup extends Component {
                                         this.setState({ emailErr: 'required' })
                                         this.animateEmptyField(this.emailAnim);
                                     }
+
 
                                 }}
                             />
@@ -275,11 +294,11 @@ export default class Signup extends Component {
                                     if (val.length > 12) {
                                         this.setState({ passErr: 'must be less than 12 characters' })
                                     }
-                                    else if (val.length < 4) {
+                                    else if (val.length < 6) {
                                         this.setState({ passErr: 'must be greater than 4 characters' })
                                     }
                                     else {
-                                        this.setState({ passErr: '' })
+                                        this.setState({ passErr: null })
                                     }
                                     this.setState({ pass: val })
                                 }}
@@ -313,9 +332,57 @@ export default class Signup extends Component {
                                 if (!this.state.Lname)
                                     this.animateEmptyField(this.lnameAnim);
 
+                                if (this.state.emailErr == null && this.state.passErr == null &&
+                                    this.state.FnameErr == null && this.state.LnameErr == null
+                                    && this.state.Fname !== '' && this.state.Lname !== ''
+                                    && this.state.email !== '' && this.state.pass !== '') {
+
+                                        this.props.Register(this.state.Fname,this.state.Lname, this.state.email,this.state.pass,this.state.Dob,this.state.gender)
+                                    // this.setState({ isLoading: true });
+                                    // auth()
+                                    //     .createUserWithEmailAndPassword(this.state.email, this.state.pass)
+                                    //     .then((response) => {
+
+                                    //         this.setState({ isLoading: false });
+                                    //         console.log(response);
+
+                                    //         const uid = response.user.uid;
+
+                                    //         const data = {
+                                    //             id: uid,
+                                    //             email: this.state.email,
+                                    //             fname: this.state.Fname,
+                                    //             lname: this.state.Lname,
+                                    //             dob: new Date(this.state.Dob),
+                                    //             gender: this.state.gender,
+                                    //         };
+
+                                    //         const usersRef = firestore().collection('users')
+
+                                    //         usersRef
+                                    //             .doc(uid)
+                                    //             .set(data)
+                                    //             .then(() => {
+                                    //                 // navigation.navigate('Home', { user: data })
+                                    //                 alert('signedin');
+                                    //             })
+                                    //             .catch((error) => {
+                                    //                 alert(error)
+                                    //             });
+                                    //     })
+                                    //     .catch((error) => {
+                                    //         this.setState({ isLoading: false });
+                                    //         alert(error)
+                                    //     });
+                                }
+
                             }}
                         >
-                            <Text style={styles.btnTxt}>Signup</Text>
+                            {
+                                this.props.user.isLoading ? <ActivityIndicator size='large' color='white' /> :
+                                    <Text style={styles.btnTxt}>Signup</Text>
+                            }
+
                         </TouchableOpacity>
                     </ScrollView>
                 </View>
@@ -324,6 +391,8 @@ export default class Signup extends Component {
         );
     }
 }
+
+export default connect(mapStateToProps, mapDispatchToProps)(Signup);
 
 export const styles = StyleSheet.create({
 

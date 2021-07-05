@@ -15,7 +15,7 @@ const widthToDp = (number) => {
     }
 
     let givenWidth = typeof number === 'number' ? number : parseFloat(number);
-    console.log('WidToDp ' + w + ' ' + h);
+    // console.log('WidToDp ' + w + ' ' + h);
     return PixelRatio.roundToNearestPixel((w * givenWidth) / 100);
 }
 
@@ -34,7 +34,7 @@ const heightToDp = (number) => {
     }
 
     let givenHeight = typeof number === 'number' ? number : parseFloat(number);
-    console.log('HitToDp ' + w + ' ' + h);
+    // console.log('HitToDp ' + w + ' ' + h);
     return PixelRatio.roundToNearestPixel((h * givenHeight) / 100);
 
 

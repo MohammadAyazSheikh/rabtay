@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "804272161242",
+    "project_id": "rabtay-b4853",
+    "storage_bucket": "rabtay-b4853.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:804272161242:android:8268b6588cc38b909080e3",
+        "android_client_info": {
+          "package_name": "com.rabtay"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "804272161242-uvh9f6quh5mn4o32b5mq0f755d0lmg5l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDSRhLXIIRmLuwPrFnc6X1-eyTEW3-m13M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "804272161242-uvh9f6quh5mn4o32b5mq0f755d0lmg5l.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:804272161242:android:464bcc67851481e89080e3",
+        "android_client_info": {
+          "package_name": "pk.com.rabtay"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "804272161242-uvh9f6quh5mn4o32b5mq0f755d0lmg5l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDSRhLXIIRmLuwPrFnc6X1-eyTEW3-m13M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "804272161242-uvh9f6quh5mn4o32b5mq0f755d0lmg5l.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -205,6 +205,8 @@ export default class LogIn extends Component {
                             if (!this.state.pass)
                                 this.animateEmptyField(this.inputAnim2);
 
+                            
+
                         }}
                     >
                         <Text style={styles.btnTxt}>Login</Text>
