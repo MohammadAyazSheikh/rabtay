@@ -1,4 +1,4 @@
 //signup actions
-export const SIGNUP_SUCCES = 'SIGNUP_SUCCES';
-export const SIGNUP_FAILED = 'SIGNUP_FAILED';
-export const SIGNUP_LOADING = 'SIGNUP_LOADING';
+export const AUTH_SUCCES = 'AUTH_SUCCES';
+export const AUTH_FAILED = 'AUTH_FAILED';
+export const AUTH_LOADING = 'AUTH_LOADING';

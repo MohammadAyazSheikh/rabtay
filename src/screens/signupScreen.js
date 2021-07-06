@@ -9,8 +9,6 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import DatePicker from 'react-native-date-picker';
 import { connect } from 'react-redux';
 import { Register } from '../redux/actions/signupActions';
-import auth from '@react-native-firebase/auth';
-import firestore from '@react-native-firebase/firestore';
 
 const validEmail = (val) => /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(val);
 
@@ -133,7 +131,7 @@ class Signup extends Component {
 
     render() {
 
-
+        console.log(this.props.user)
         return (
             <View style={styles.container}>
                 <Animated.View style={[
@@ -337,43 +335,8 @@ class Signup extends Component {
                                     && this.state.Fname !== '' && this.state.Lname !== ''
                                     && this.state.email !== '' && this.state.pass !== '') {
 
-                                        this.props.Register(this.state.Fname,this.state.Lname, this.state.email,this.state.pass,this.state.Dob,this.state.gender)
-                                    // this.setState({ isLoading: true });
-                                    // auth()
-                                    //     .createUserWithEmailAndPassword(this.state.email, this.state.pass)
-                                    //     .then((response) => {
-
-                                    //         this.setState({ isLoading: false });
-                                    //         console.log(response);
-
-                                    //         const uid = response.user.uid;
-
-                                    //         const data = {
-                                    //             id: uid,
-                                    //             email: this.state.email,
-                                    //             fname: this.state.Fname,
-                                    //             lname: this.state.Lname,
-                                    //             dob: new Date(this.state.Dob),
-                                    //             gender: this.state.gender,
-                                    //         };
-
-                                    //         const usersRef = firestore().collection('users')
-
-                                    //         usersRef
-                                    //             .doc(uid)
-                                    //             .set(data)
-                                    //             .then(() => {
-                                    //                 // navigation.navigate('Home', { user: data })
-                                    //                 alert('signedin');
-                                    //             })
-                                    //             .catch((error) => {
-                                    //                 alert(error)
-                                    //             });
-                                    //     })
-                                    //     .catch((error) => {
-                                    //         this.setState({ isLoading: false });
-                                    //         alert(error)
-                                    //     });
+                                    this.props.Register(this.state.Fname, this.state.Lname, this.state.email, this.state.pass, this.state.Dob, this.state.gender)
+                                    console.log(this.props.user)
                                 }
 
                             }}

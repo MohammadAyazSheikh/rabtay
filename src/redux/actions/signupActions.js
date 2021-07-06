@@ -4,20 +4,20 @@ import * as ActionTypes from '../actionTypes';
 
 export const signupSuccess = (user) => (
     {
-        type: ActionTypes.SIGNUP_SUCCES,
+        type: ActionTypes.AUTH_SUCCES,
         payload: user
     }
 )
 
 export const signupFailed = (errMess) => (
     {
-        type: ActionTypes.SIGNUP_FAILED,
+        type: ActionTypes.AUTH_FAILED,
         payload: errMess
     }
 )
 
 export const signupLoading = () => ({
-    type: ActionTypes.SIGNUP_LOADING,
+    type: ActionTypes.AUTH_LOADING,
 });
 
 
@@ -30,7 +30,7 @@ export const Register = (fname, lname, email, pass, dob, gender) => (dispatch) =
         .then((response) => {
 
 
-            console.log(response);
+            // console.log(response);
 
             const uid = response.user.uid;
 
@@ -49,17 +49,16 @@ export const Register = (fname, lname, email, pass, dob, gender) => (dispatch) =
                 .doc(uid)
                 .set(data)
                 .then((response) => {
-                    // navigation.navigate('Home', { user: data })
-                    signupSuccess(data)
+                    dispatch(signupSuccess(data));
                     alert('signedin');
                 })
                 .catch((error) => {
                     alert(error);
-                    signupFailed(error);
+                    dispatch(signupFailed(error));
                 });
         })
         .catch((error) => {
-            signupFailed(error);
+            dispatch(signupFailed(error));
             alert(error)
         });
 }

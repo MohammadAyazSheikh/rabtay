@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import {
     Text, View, Image, TouchableOpacity, Animated,
-    StyleSheet, Dimensions, TextInput
+    StyleSheet, ActivityIndicator, TextInput
 } from 'react-native';
 import { widthToDp, heightToDp } from '../utilities/responsiveUtils';
 import { BackGroundColor } from '../utilities/colors';
 import LoginIcon from 'react-native-vector-icons/AntDesign';
 import Icon from 'react-native-vector-icons/Feather';
-
+import { connect } from 'react-redux';
+import { Login } from '../redux/actions/loginActions';
 
 const required = (val) => val ? true : false;
 const maxLength = (len) => (val) => !(val) || (val.length <= len);
@@ -15,7 +16,21 @@ const minLength = (len) => (val) => val && (val.length >= len);
 const isNumber = (val) => !isNaN(Number(val));
 const validEmail = (val) => /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(val);
 
-export default class LogIn extends Component {
+const mapStateToProps = state => {
+    return {
+        user: state.user
+    }
+}
+
+const mapDispatchToProps = dispatch => (
+    {
+        Login: (email, pass) =>
+            dispatch(Login(email, pass))
+
+    }
+)
+
+class LogIn extends Component {
     constructor(props) {
         super(props);
 
@@ -33,12 +48,8 @@ export default class LogIn extends Component {
         });
         this.state = {
             showPass: true,
-            req: false,
-            max: null,
-            min: null,
-            validEmail: false,
-            errEmail: '',
-            errPass: '',
+            errEmail: null,
+            errPass: null,
             email: '',
             pass: '',
         }
@@ -115,6 +126,8 @@ export default class LogIn extends Component {
                     <Image source={require('../../assets/logot.png')} style={styles.logoImg} />
                 </Animated.View>
                 <View style={styles.bottomView}>
+
+                    {/* =====Email==== */}
                     < Animated.View
                         style={
                             [
@@ -130,7 +143,7 @@ export default class LogIn extends Component {
                         <LoginIcon name="mail" style={styles.iconStyle} />
                         <TextInput placeholder='Email' style={styles.txtInput}
                             onChangeText={(val) => {
-                                validEmail(val) ? this.setState({ errEmail: '' }) : this.setState({ errEmail: 'invalid email' })
+                                validEmail(val) ? this.setState({ errEmail: null }) : this.setState({ errEmail: 'invalid email' })
                                 this.setState({ email: val })
                             }}
 
@@ -142,6 +155,8 @@ export default class LogIn extends Component {
 
                     </Animated.View>
                     <Text style={styles.errStyle}>{this.state.errEmail}</Text>
+
+                    {/* ====Password==== */}
                     <Animated.View
                         style={[
                             styles.inputView,
@@ -157,11 +172,11 @@ export default class LogIn extends Component {
                                 if (val.length > 12) {
                                     this.setState({ errPass: 'must be less than 12 characters' })
                                 }
-                                else if (val.length < 4) {
-                                    this.setState({ errPass: 'must be greater than 4 characters' })
+                                else if (val.length < 6) {
+                                    this.setState({ errPass: 'must be greater than 6 characters' })
                                 }
                                 else {
-                                    this.setState({ errPass: '' })
+                                    this.setState({ errPass: null })
                                 }
                                 this.setState({ pass: val })
                             }}
@@ -205,17 +220,25 @@ export default class LogIn extends Component {
                             if (!this.state.pass)
                                 this.animateEmptyField(this.inputAnim2);
 
-                            
 
+                            if (this.state.email !== '' && !this.state.pass !== ''
+                                && this.state.errPass == null && this.state.errEmail == null) {
+                                this.props.Login(this.state.email, this.state.pass)
+                            }
                         }}
                     >
-                        <Text style={styles.btnTxt}>Login</Text>
+                        {/* <Text style={styles.btnTxt}>Login</Text> */}
+                        {
+                            this.props.user.isLoading ? <ActivityIndicator size='large' color='white' /> :
+                                <Text style={styles.btnTxt}>Login</Text>
+                        }
                     </TouchableOpacity>
                 </View>
             </View>
         );
     }
 }
+export default connect(mapStateToProps, mapDispatchToProps)(LogIn);
 
 export const styles = StyleSheet.create({
 
@@ -251,7 +274,7 @@ export const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
-        elevation:5
+        elevation: 5
     },
     txtInput: {
         width: '75%',

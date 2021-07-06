@@ -1,30 +1,27 @@
 import * as ActionTypes from '../actionTypes';
 
-export const Auth_Reducer = (state = { isLoading: false, user: null, errMess: null, succes: false }, action) => {
+export const Auth_Reducer = (state = { isLoading: false, user: null, errMess: null }, action) => {
 
     switch (action.type) {
-        case ActionTypes.SIGNUP_SUCCES:
+        case ActionTypes.AUTH_SUCCES:
             return {
                 ...state,
                 isLoading: false,
-                user: action.payload.user,
-                succes: true,
+                user: action.payload,
                 errMess: null,
             };
-        case ActionTypes.SIGNUP_FAILED:
+        case ActionTypes.AUTH_FAILED:
             return {
                 ...state,
                 isLoading: false,
                 user: null,
-                succes: false,
-                errMess: action.payload.errMess,
+                errMess: action.payload,
             };
-        case ActionTypes.SIGNUP_LOADING:
+        case ActionTypes.AUTH_LOADING:
             return {
                 ...state,
                 isLoading: true,
                 user: null,
-                succes: false,
                 errMess: null,
             };
         default:
