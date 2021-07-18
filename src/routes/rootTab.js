@@ -1,6 +1,10 @@
 import React, { useState, Component } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import Material from 'react-native-vector-icons/MaterialCommunityIcons';
+import Material2 from 'react-native-vector-icons/MaterialIcons';
+import Ant from 'react-native-vector-icons/AntDesign';
+import Ionic from 'react-native-vector-icons/Ionicons';
 import {
     Text, View, StyleSheet, TouchableOpacity, Image, Animated
 } from 'react-native';
@@ -23,12 +27,12 @@ class CenterButton extends Component {
         this.btn1Val = new Animated.ValueXY({ x: 5, y: 10 });
         this.btn2Val = new Animated.ValueXY({ x: 5, y: 10 });
         this.scaleBtn = new Animated.Value(1);
-            this.state = {
-                showBtn: true,
-            }
+        this.state = {
+            showBtn: true,
+        }
     }
 
-    animateBtn = (x_, y_, stiff,scale_) => {
+    animateBtn = (x_, y_, stiff, scale_) => {
         Animated.parallel([
             Animated.spring(
                 this.btn1Val,
@@ -51,7 +55,7 @@ class CenterButton extends Component {
                 {
                     toValue: scale_,
                     useNativeDriver: false,
-                
+
                 }
             ),
         ]).start();
@@ -72,38 +76,68 @@ class CenterButton extends Component {
                 }} >
                 <Animated.View style={
                     {
-                        width: 50,
-                        height: 50,
+                        width: 55,
+                        height: 55,
+                        justifyContent: 'center',
+                        alignItems: 'center',
                         borderRadius: 35,
-                        backgroundColor: '#2fbbf0',
+                        backgroundColor: '#FFF',
                         position: 'absolute',
                         bottom: this.btn1Val.x,
                         right: this.btn1Val.y,
                         transform: [{ scale: this.scaleBtn }],
                     }
                 }>
+                    <TouchableOpacity
+                        style={{
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            width: 50,
+                            height: 50,
+                            borderRadius: 30,
+                            backgroundColor: '#2fbbf0'
+                            
+                        }}>
+                        <Material name='camera-iris' size={30} color='#FFF' />
+                    </TouchableOpacity>
                 </Animated.View>
                 <Animated.View style={
                     {
-                        width: 50,
-                        height: 50,
+                        width: 55,
+                        height: 55,
                         borderRadius: 35,
-                        backgroundColor: '#2fbbf0',
+                        backgroundColor: '#FFF',
+                        justifyContent: 'center',
+                        alignItems: 'center',
                         position: 'absolute',
                         bottom: this.btn2Val.x,
                         left: this.btn2Val.y,
                         transform: [{ scale: this.scaleBtn }],
                     }
                 }>
+                    <TouchableOpacity
+                        style={{
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            width: 50,
+                            height: 50,
+                            borderRadius: 30,
+                            backgroundColor: '#2fbbf0'
+                        }}>
+                        <Ant name='picture' size={30} color='#FFF' />
+                    </TouchableOpacity>
                 </Animated.View>
                 <TouchableOpacity
-                    onPress={() => {
-                        this.setState({ showBtn: !this.state.showBtn });
-                        if (this.state.showBtn)
-                            this.animateBtn(80, 80, 95,1);
-                        else
-                            this.animateBtn(5, 10, 95,0);
-                    }}
+                    onPress={
+
+                        () => {
+                            this.setState({ showBtn: !this.state.showBtn });
+                            if (this.state.showBtn)
+                                this.animateBtn(75, 75, 95, 1);
+                            else
+                                this.animateBtn(5, 10, 95, 0);
+                        }
+                    }
                     style={{
                         width: 60,
                         height: 60,
@@ -142,21 +176,28 @@ export function root_Tab() {
             screenOptions={
                 ({ route }) => ({
                     tabBarIcon: ({ focused, color, size }) => {
-                        let iconName;
+
 
                         if (route.name === 'Message') {
-                            iconName = 'align-center'
+                            let size_ = 30;
+                            focused ? size_ = 35 : size_ = 30;
+                            return <Ionic name='chatbubble-ellipses' size={size_} color={color} />;
                         } else if (route.name === 'Profile') {
-                            iconName = 'user-circle'
-                            //iconName = focused ? 'at' : 'facebook';
+                            let size_ = 30;
+                            focused ? size_ = 35 : size_ = 30;
+                            return <Icon name='user' size={size_} color={color} />;
                         }
                         else if (route.name === 'Notification') {
-                            iconName = 'bell'
+                            let size_ = 30;
+                            focused ? size_ = 35 : size_ = 30;
+                            return <Material2 name='notifications-on' size={size_} color={color} />;
                         }
                         else if (route.name === 'Home') {
-                            iconName = 'bell'
+                            let size_ = 30;
+                            focused ? size_ = 35 : size_ = 30;
+                            return <Ionic name='home' size={size_} color={color} />;
                         }
-                        return <Icon name={iconName} size={size} color={color} />;
+
                     },
                 })
             }
@@ -174,18 +215,18 @@ export function root_Tab() {
                 }
             }}
         >
-            <rootTab.Screen name="Home" component={Screen} options={{ tabBarBadge: 3 }} />
+            <rootTab.Screen name="Home" component={Screen} />
             <rootTab.Screen name="Message" component={Screen} options={{ tabBarBadge: 3 }} />
             <rootTab.Screen name="Add" component={Screen}
                 options={{
-                   
+
                     tabBarButton: (props) => (
                         <CenterButton {...props} />
                     ),
                 }}
             />
             <rootTab.Screen name="Profile" component={Screen} />
-            <rootTab.Screen name="Notification" component={Screen} options={{ tabBarBadge: 6 }} />
+            <rootTab.Screen name="Notification" component={Screen} />
         </rootTab.Navigator>
     );
 }
