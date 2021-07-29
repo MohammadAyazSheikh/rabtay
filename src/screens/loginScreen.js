@@ -279,6 +279,7 @@ export const styles = StyleSheet.create({
     txtInput: {
         width: '75%',
         height: '100%',
+        color:BackGroundColor
 
     },
     iconStyle: {

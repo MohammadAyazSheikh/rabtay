@@ -1,15 +1,15 @@
 import React, { useState, Component } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import Material2 from 'react-native-vector-icons/MaterialIcons';
-import Ant from 'react-native-vector-icons/AntDesign';
 import Ionic from 'react-native-vector-icons/Ionicons';
 import {
     Text, View, StyleSheet, Image, Animated
 } from 'react-native';
 
 import CenterButton from '../components/tabCenterButton';
+import Profile from '../screens/profileScreen'
+
 
 const Screen = () => {
 
@@ -31,6 +31,7 @@ const rootTab = createBottomTabNavigator();
 
 export function root_Tab() {
     return (
+
         <rootTab.Navigator
             screenOptions={
                 ({ route }) => ({
@@ -38,9 +39,10 @@ export function root_Tab() {
 
 
                         if (route.name === 'Message') {
-                            let size_ = 30;
+                            let size_ = 40;
                             focused ? size_ = 35 : size_ = 30;
                             return <Ionic name='chatbubble-ellipses' size={size_} color={color} />;
+                          
                         } else if (route.name === 'Profile') {
                             let size_ = 30;
                             focused ? size_ = 35 : size_ = 30;
@@ -84,9 +86,11 @@ export function root_Tab() {
                     ),
                 }}
             />
-            <rootTab.Screen name="Profile" component={Screen} />
+            <rootTab.Screen name="Profile" component={Profile} />
             <rootTab.Screen name="Notification" component={Screen} />
         </rootTab.Navigator>
+
+
     );
 }
 
