@@ -1,8 +1,8 @@
-import { symlink } from 'fs';
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, ScrollView, Image } from 'react-native';
 import { BackGroundColor } from '../utilities/colors';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { widthToDp, heightToDp } from '../utilities/responsiveUtils';
 export default class Profile extends Component {
     constructor(props) {
         super(props);
@@ -28,24 +28,69 @@ export default class Profile extends Component {
                                     </Text>
                                 </TouchableOpacity>
                             </View>
-
                         </View>
                         <View style={styles.aboutView}>
                             <Text style={styles.txtName}  > Ayaz Sheikh</Text>
                             <Text style={styles.txtUserName}>@AyazSheikh101</Text>
-                            {/* <View style = {styles.decView}> */}
-                            <Text style = {styles.txtDesc}>
+                            <Text style={styles.txtDesc}>
                                 falana dhimkana aur kuch nahi baus aise hi farigh admi
                                 falana dhimkana aur kuch nhi
                             </Text>
-                            {/* </View> */}
                         </View>
                     </View>
                     <View style={styles.statsView}>
-
+                        <TouchableOpacity style={styles.statNumView}>
+                            <Text style={styles.txtStatsVal}>
+                                123
+                            </Text>
+                            <Text style={styles.txtStatsName}>
+                                Posts
+                            </Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.statNumView}>
+                            <Text style={styles.txtStatsVal}>
+                                160
+                            </Text>
+                            <Text style={styles.txtStatsName}>
+                                Following
+                            </Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.statNumView}>
+                            <Text style={styles.txtStatsVal}>
+                                2.1M
+                            </Text>
+                            <Text style={styles.txtStatsName}>
+                                Followers
+                            </Text>
+                        </TouchableOpacity>
                     </View>
-
                 </View>
+
+
+
+                <View style={styles.postContainer}>
+                    <View style={styles.imgPostView}>
+                        <Image style={styles.imgPostStyle}
+                            source={require('../../assets/p6.jpg')} />
+                    </View>
+                    <View style={styles.imgPostView}>
+                        <Image style={styles.imgPostStyle}
+                            source={require('../../assets/p2.jpeg')} />
+                    </View>
+                    <View style={styles.imgPostView}>
+                        <Image style={styles.imgPostStyle}
+                            source={require('../../assets/p5.jpg')} />
+                    </View>
+                    <View style={styles.imgPostView}>
+                        <Image style={styles.imgPostStyle}
+                            source={require('../../assets/p4.jpg')} />
+                    </View>
+                    <View style={styles.imgPostView}>
+                        <Image style={styles.imgPostStyle}
+                            source={require('../../assets/p3.jpg')} />
+                    </View>
+                </View>
+
 
             </ScrollView>
         )
@@ -55,15 +100,14 @@ export default class Profile extends Component {
 
 const styles = StyleSheet.create({
     container: {
-        justifyContent: 'flex-start',
-        alignItems: 'center',
-        flex: 1,
-        backgroundColor: '#F0F1F5'
+        alignItems: 'flex-start',
+        backgroundColor: '#F0F1F5',
+        paddingBottom:130
     },
     Header: {
-        height: '40%',
-        width: '100%',
-        // backgroundColor: 'grey',
+        height: heightToDp(40),
+        width: widthToDp(100),
+        flex: 2,
         justifyContent: 'center',
         alignItems: 'center'
     },
@@ -109,7 +153,7 @@ const styles = StyleSheet.create({
         height: '100%',
         justifyContent: 'center',
         alignItems: 'flex-start',
-        paddingLeft:10
+        paddingLeft: 10
     },
 
     txtName: {
@@ -118,16 +162,57 @@ const styles = StyleSheet.create({
     },
     txtUserName: {
         fontSize: 16,
-        color:'#4E4E4E',
+        color: '#4E4E4E',
     },
-    txtDesc:{
+    txtDesc: {
         fontSize: 14,
-        color:'#4E4E4E',
-        marginTop:5
+        color: '#4E4E4E',
+        marginTop: 5
     },
     statsView: {
-        backgroundColor: 'red',
-        height: '35%',
-        width: '100%',
+        backgroundColor: '#FFF',
+        height: '30%',
+        width: '85%',
+        elevation: 5,
+        borderRadius: 20,
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        alignItems: 'center'
+    },
+    statNumView: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 5
+    },
+    txtStatsVal: {
+        fontSize: 20,
+        fontWeight: 'bold'
+    },
+    txtStatsName: {
+        color: '#7A8FA6'
+    },
+    postContainer: {
+        marginTop: 20,
+        width: widthToDp(100),
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+        flexWrap: 'wrap',
+        padding:5
+    },
+    imgPostView: {
+        width: widthToDp(45),
+        height: widthToDp(45),
+        backgroundColor: '#FFF',
+        justifyContent: 'center',
+        alignItems: 'center',
+        margin: 5,
+        elevation:2
+    },
+    imgPostStyle: {
+        width: widthToDp(45),
+        height: widthToDp(45),
+        resizeMode: 'contain'
     }
 })
+
