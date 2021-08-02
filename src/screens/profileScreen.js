@@ -1,12 +1,82 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, ScrollView, Image } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Image, imagep } from 'react-native';
 import { BackGroundColor } from '../utilities/colors';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { widthToDp, heightToDp } from '../utilities/responsiveUtils';
+import * as ImagePicker from 'react-native-image-picker';
+import storage from '@react-native-firebase/storage';
+import { utils } from '@react-native-firebase/app';
+
 export default class Profile extends Component {
     constructor(props) {
         super(props);
+
+        this.state = {
+            imageUri: null,
+            cloudUrl: null
+        }
     }
+
+
+    selectPicture = () => {
+        let options = {
+            // title: 'Select Image',
+            // customButtons: [
+            //     {
+            //         name: 'customOptionKey',
+            //         title: 'Choose file from Custom Option'
+            //     },
+            // ],
+            storageOptions: {
+                skipBackup: true,
+                path: 'images',
+
+            },
+        };
+
+        ImagePicker.launchImageLibrary(options, async res => {
+            console.log('Response = ', res);
+
+            if (res.didCancel) {
+                console.log('User cancelled image picker');
+            } else if (res.error) {
+                console.log('ImagePicker Error: ', res.error);
+            } else if (res.customButton) {
+                console.log('User tapped custom button: ', res.customButton);
+                alert(res.customButton);
+            } else {
+                let source = res;
+                this.setState({ imageUri: source.assets[0].uri })
+                // alert(this.state.uri)
+
+                const reference = storage().ref('/images/profile/test.jpg');
+
+                console.log('Uploading...!');
+
+                let task = reference.putFile(this.state.imageUri);
+
+                task.then(async () => {
+                    console.log('Image uploaded to the bucket!');
+                    
+                    const urlCloud = await storage().ref('/images/profile/test.jpg').getDownloadURL();
+                    this.setState({cloudUrl:urlCloud})
+                    
+                    // this.setState({ isLoading: false, status: 'Image uploaded successfully' });
+                }).catch((e) => {
+                    status = 'Something went wrong';
+                    console.log('uploading image error => ', e);
+                    this.setState({ isLoading: false, status: 'Something went wrong' });
+                });
+
+                task.on('state_changed', taskSnapshot => {
+                    console.log(`${taskSnapshot.bytesTransferred} transferred out of ${taskSnapshot.totalBytes}`);
+                });
+
+
+               
+            }
+        });
+    };
 
     render() {
         return (
@@ -14,15 +84,29 @@ export default class Profile extends Component {
                 <View style={styles.Header}>
                     <View style={styles.infoView}>
                         <View style={styles.imageView}>
-                            <Image
-                                source={require('../../assets/profile.jpg')}
-                                style={styles.imgStyle}
-                            />
+                            {
+                                this.state.imageUri ?
+                                    <Image
+                                        source={{ uri: this.state.imageUri }}
+                                        style={styles.imgStyle}
+                                    />
+
+                                    :
+                                    <Image
+                                        source={require('../../assets/profile.jpg')}
+                                        style={styles.imgStyle}
+                                    />
+                            }
+
                             <View style={styles.btnImgView}>
                                 <TouchableOpacity style={{
                                     width: '100%', height: '100%', paddingLeft: 5, paddingRight: 5,
                                     justifyContent: "center", alignItems: 'center',
-                                }}>
+                                }}
+                                    onPress={
+                                        this.selectPicture
+                                    }
+                                >
                                     <Text style={styles.btnTxtImg}>
                                         Change Picture
                                     </Text>
@@ -102,7 +186,7 @@ const styles = StyleSheet.create({
     container: {
         alignItems: 'flex-start',
         backgroundColor: '#F0F1F5',
-        paddingBottom:130
+        paddingBottom: 130
     },
     Header: {
         height: heightToDp(40),
@@ -198,7 +282,7 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
         alignItems: 'center',
         flexWrap: 'wrap',
-        padding:5
+        padding: 5
     },
     imgPostView: {
         width: widthToDp(45),
@@ -207,7 +291,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         margin: 5,
-        elevation:2
+        elevation: 2
     },
     imgPostStyle: {
         width: widthToDp(45),
