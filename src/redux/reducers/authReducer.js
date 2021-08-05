@@ -24,6 +24,13 @@ export const Auth_Reducer = (state = { isLoading: false, user: null, errMess: nu
                 user: null,
                 errMess: null,
             };
+        case ActionTypes.DP_UPDATE:
+            return {
+                ...state,
+                isLoading: false,
+                user: action.payload,
+                errMess: null,
+            };
         default:
             return state;
     }
