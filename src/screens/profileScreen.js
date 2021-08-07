@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, ScrollView, Image, imagep } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Image, FlatList, Animated } from 'react-native';
 import { BackGroundColor } from '../utilities/colors';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { widthToDp, heightToDp } from '../utilities/responsiveUtils';
@@ -39,19 +39,26 @@ const mapDispatchToProps = (dispatch) => {
 class Profile extends Component {
     constructor(props) {
         super(props);
+        this.scrollY = new Animated.Value(0);
+        const inputRange = [
 
+            0,
+            200
+        ]
+
+        this.blur = this.scrollY.interpolate(
+            {
+                inputRange,
+                outputRange: [0, 1]
+            }
+        )
         this.state = {
             imageUri: null,
             cloudUrl: null
         }
-
-        // this.selectPicture = this.selectPicture.bind(this)
     }
 
-    // componentDidUpdate() {
-    //     console.log("****DP***", this.props.dp)
-    //     console.log("****Props***", this.props)
-    // }
+
 
     selectPicture = () => {
         let options = {
@@ -112,105 +119,135 @@ class Profile extends Component {
         });
     };
 
+
+
     render() {
+        const arr = [1, 2, 3, 4, 5, 6, 6, 7, , 8, 9, 10, 11, 12, 13, 14, 15]
         return (
-            <ScrollView contentContainerStyle={styles.container}>
-                <View style={styles.Header}>
-                    <View style={styles.infoView}>
-                        <View style={styles.imageView}>
-                            {
-                                this.props.user.dpUrl ?
-                                    <Image
-                                        source={{ uri: this.props.user.dpUrl }}
-                                        style={styles.imgStyle}
-                                    />
 
-                                    :
-                                    <Image
-                                        source={require('../../assets/profile.jpg')}
-                                        style={styles.imgStyle}
-                                    />
-                            }
+            <View style={styles.container}>
 
-                            <View style={styles.btnImgView}>
-                                <TouchableOpacity style={{
-                                    width: '100%', height: '100%', paddingLeft: 5, paddingRight: 5,
-                                    justifyContent: "center", alignItems: 'center',
-                                }}
-                                    onPress={
-                                        this.selectPicture
-                                    }
-                                >
-                                    <Text style={styles.btnTxtImg}>
-                                        Change Picture
-                                    </Text>
-                                </TouchableOpacity>
+                <Animated.FlatList
+                    ListHeaderComponent=
+                    {
+                        <>
+
+                            <View style={styles.Header}>
+
+                                <View style={styles.infoView}>
+                                    <View style={styles.imageView}>
+                                        {
+                                            this.props.user.dpUrl ?
+                                                <Image
+                                                    source={{ uri: this.props.user.dpUrl }}
+                                                    style={styles.imgStyle}
+                                                />
+
+                                                :
+                                                <Image
+                                                    source={require('../../assets/profile.jpg')}
+                                                    style={styles.imgStyle}
+                                                />
+                                        }
+
+                                        <View style={styles.btnImgView}>
+                                            <TouchableOpacity style={{
+                                                width: '100%', height: '100%', paddingLeft: 5, paddingRight: 5,
+                                                justifyContent: "center", alignItems: 'center',
+                                            }}
+                                                onPress={
+                                                    this.selectPicture
+                                                }
+                                            >
+                                                <Text style={styles.btnTxtImg}>
+                                                    Change Picture
+                                                </Text>
+                                            </TouchableOpacity>
+                                        </View>
+                                    </View>
+                                    <View style={styles.aboutView}>
+                                        <Text style={styles.txtName}  > Ayaz Sheikh</Text>
+                                        <Text style={styles.txtUserName}>@AyazSheikh101</Text>
+                                        <Text style={styles.txtDesc}>
+                                            falana dhimkana aur kuch nahi baus aise hi farigh admi
+                                            falana dhimkana aur kuch nhi
+                                        </Text>
+                                    </View>
+                                </View>
+                                <View style={styles.statsView}>
+                                    <TouchableOpacity style={styles.statNumView}>
+                                        <Text style={styles.txtStatsVal}>
+                                            123
+                                        </Text>
+                                        <Text style={styles.txtStatsName}>
+                                            Posts
+                                        </Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity style={styles.statNumView}>
+                                        <Text style={styles.txtStatsVal}>
+                                            160
+                                        </Text>
+                                        <Text style={styles.txtStatsName}>
+                                            Following
+                                        </Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity style={styles.statNumView}>
+                                        <Text style={styles.txtStatsVal}>
+                                            2.1M
+                                        </Text>
+                                        <Text style={styles.txtStatsName}>
+                                            Followers
+                                        </Text>
+                                    </TouchableOpacity>
+                                </View>
+                                <Animated.View style={{
+                                    height: heightToDp(40),
+                                    width: widthToDp(100),
+                                    backgroundColor: '#FFF',
+                                    position: 'absolute',
+                                    left: 0,
+                                    top: 0,
+                                    elevation: 100,
+                                    opacity:this.blur
+                                }}/>
                             </View>
-                        </View>
-                        <View style={styles.aboutView}>
-                            <Text style={styles.txtName}  > Ayaz Sheikh</Text>
-                            <Text style={styles.txtUserName}>@AyazSheikh101</Text>
-                            <Text style={styles.txtDesc}>
-                                falana dhimkana aur kuch nahi baus aise hi farigh admi
-                                falana dhimkana aur kuch nhi
-                            </Text>
-                        </View>
-                    </View>
-                    <View style={styles.statsView}>
-                        <TouchableOpacity style={styles.statNumView}>
-                            <Text style={styles.txtStatsVal}>
-                                123
-                            </Text>
-                            <Text style={styles.txtStatsName}>
-                                Posts
-                            </Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.statNumView}>
-                            <Text style={styles.txtStatsVal}>
-                                160
-                            </Text>
-                            <Text style={styles.txtStatsName}>
-                                Following
-                            </Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.statNumView}>
-                            <Text style={styles.txtStatsVal}>
-                                2.1M
-                            </Text>
-                            <Text style={styles.txtStatsName}>
-                                Followers
-                            </Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>
+                        </>
+                    }
+                    data={arr}
+                    keyExtractor={(item) => item}
+                    // showsVerticalScrollIndicator={false}
+                    numColumns={2}
+                    scrollEventThrottle={32}
+                    contentContainerStyle={{
+                        // justifyContent: 'center',
+                        // padding: 5,
+                        paddingBottom: 120
+
+                    }}
+                    // pagingEnabled
+                    onScroll={
+                        Animated.event(
+                            [{ nativeEvent: { contentOffset: { y: this.scrollY } } }],
+                            { useNativeDriver: false }
+                        )
+                        // (e) =>{
+                        //     console.log( e.nativeEvent.contentOffset.y)
+                        // }
+                    }
+                    renderItem={
+                        ({ item, index }) => {
 
 
-
-                <View style={styles.postContainer}>
-                    <View style={styles.imgPostView}>
-                        <Image style={styles.imgPostStyle}
-                            source={require('../../assets/p6.jpg')} />
-                    </View>
-                    <View style={styles.imgPostView}>
-                        <Image style={styles.imgPostStyle}
-                            source={require('../../assets/p2.jpeg')} />
-                    </View>
-                    <View style={styles.imgPostView}>
-                        <Image style={styles.imgPostStyle}
-                            source={require('../../assets/p5.jpg')} />
-                    </View>
-                    <View style={styles.imgPostView}>
-                        <Image style={styles.imgPostStyle}
-                            source={require('../../assets/p4.jpg')} />
-                    </View>
-                    <View style={styles.imgPostView}>
-                        <Image style={styles.imgPostStyle}
-                            source={require('../../assets/p3.jpg')} />
-                    </View>
-                </View>
-
-
-            </ScrollView>
+                            return (
+                                <View key={index} style={styles.imgPostView}>
+                                    <Image style={styles.imgPostStyle}
+                                        source={require('../../assets/p6.jpg')} />
+                                </View>
+                            );
+                        }
+                    }
+                />
+            </View>
         )
     }
 
@@ -220,14 +257,16 @@ export default connect(mapStateToProps, mapDispatchToProps)(Profile);
 
 const styles = StyleSheet.create({
     container: {
-        alignItems: 'flex-start',
+        flex: 1,
         backgroundColor: '#F0F1F5',
-        paddingBottom: 130
+        justifyContent: 'center',
+        alignItems: 'center'
+        // paddingBottom: 120
     },
     Header: {
         height: heightToDp(40),
         width: widthToDp(100),
-        flex: 2,
+
         justifyContent: 'center',
         alignItems: 'center'
     },
@@ -327,6 +366,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         margin: 5,
+        
         elevation: 2
     },
     imgPostStyle: {
