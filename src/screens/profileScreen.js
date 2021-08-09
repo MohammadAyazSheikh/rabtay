@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, ScrollView, Image, FlatList, Animated } from 'react-native';
+import { View, Text, StyleSheet,Image, Animated } from 'react-native';
 import { BackGroundColor } from '../utilities/colors';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { widthToDp, heightToDp } from '../utilities/responsiveUtils';
@@ -7,7 +7,9 @@ import * as ImagePicker from 'react-native-image-picker';
 import storage from '@react-native-firebase/storage';
 import { UploadDP } from '../redux/actions/dpUploadActions';
 import { connect } from 'react-redux';
-import { utils } from '@react-native-firebase/app';
+import uuid from 'react-native-uuid';
+
+// import { utils } from '@react-native-firebase/app';
 
 
 
@@ -18,11 +20,7 @@ const mapStateToProps = state => {
     }
 }
 
-// const mapDispatchToProps = dispatch => (
-//     {
-//         UploadDp: (url, uid) => (dispatch(UploadDP(url, uid)))
-//     }
-// )
+
 
 
 const mapDispatchToProps = (dispatch) => {
@@ -43,7 +41,7 @@ class Profile extends Component {
         const inputRange = [
 
             0,
-            200
+            290
         ]
 
         this.blur = this.scrollY.interpolate(
@@ -91,7 +89,8 @@ class Profile extends Component {
                 this.setState({ imageUri: source.assets[0].uri })
                 // alert(this.state.uri)
 
-                const reference = storage().ref(`users/${this.props.user.id}/images/test.jpg`);
+                let imgID = uuid.v4();
+                const reference = storage().ref(`users/${this.props.user.id}/images//${imgID}.jpg`);
 
                 console.log('Uploading...!');
 
@@ -100,13 +99,11 @@ class Profile extends Component {
                 task.then(async () => {
                     console.log('Image uploaded to the bucket!');
 
-                    const urlCloud = await storage().ref(`users/${this.props.user.id}/images/test.jpg`).getDownloadURL();
+                    const urlCloud = await storage().ref(`users/${this.props.user.id}/images/${imgID}.jpg`).getDownloadURL();
                     this.props.UploadDp(urlCloud, this.props.user.id);
                     this.setState({ cloudUrl: urlCloud })
                 }).catch((e) => {
-                    status = 'Something went wrong';
                     console.log('uploading image error => ', e);
-                    this.setState({ isLoading: false, status: 'Something went wrong' });
                 });
 
                 task.on('state_changed', taskSnapshot => {
@@ -205,6 +202,7 @@ class Profile extends Component {
                                     width: widthToDp(100),
                                     backgroundColor: '#FFF',
                                     position: 'absolute',
+                                    borderRadius:10,
                                     left: 0,
                                     top: 0,
                                     elevation: 100,

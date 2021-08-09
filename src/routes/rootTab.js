@@ -8,7 +8,8 @@ import {
 } from 'react-native';
 
 import CenterButton from '../components/tabCenterButton';
-import Profile from '../screens/profileScreen'
+import Profile from '../screens/profileScreen';
+import Home from '../screens/homeScreen';
 
 
 const Screen = () => {
@@ -76,7 +77,7 @@ export function root_Tab() {
                 }
             }}
         >
-            <rootTab.Screen name="Home" component={Screen} />
+            <rootTab.Screen name="Home" component={Home} />
             <rootTab.Screen name="Message" component={Screen} options={{ tabBarBadge: 3 }} />
             <rootTab.Screen name="Add" component={Screen}
                 options={{
@@ -112,5 +113,5 @@ const styles = {
     shadowOpacity: 0.25,
     shadowRadius: 3.5,
     elevation: 5,
-    // opacity: 0.9
+    opacity: 0.96
 }

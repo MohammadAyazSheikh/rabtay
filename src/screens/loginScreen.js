@@ -141,7 +141,8 @@ class LogIn extends Component {
 
                     >
                         <LoginIcon name="mail" style={styles.iconStyle} />
-                        <TextInput placeholder='Email' style={styles.txtInput}
+                        <TextInput placeholder='Email' placeholderTextColor = 'grey'
+                         style={styles.txtInput} textContentType = 'emailAddress' 
                             onChangeText={(val) => {
                                 validEmail(val) ? this.setState({ errEmail: null }) : this.setState({ errEmail: 'invalid email' })
                                 this.setState({ email: val })
@@ -167,7 +168,8 @@ class LogIn extends Component {
                         ]
                         } >
                         <LoginIcon name="lock" style={styles.iconStyle} />
-                        <TextInput placeholder='Password' style={styles.txtInput} secureTextEntry={this.state.showPass}
+                        <TextInput placeholder='Password' placeholderTextColor = 'grey'
+                         style={styles.txtInput} secureTextEntry={this.state.showPass}
                             onChangeText={(val) => {
                                 if (val.length > 12) {
                                     this.setState({ errPass: 'must be less than 12 characters' })

@@ -46,7 +46,7 @@ export const UploadDP = (url, uid) => (dispatch) => {
             { merge: true }
         )
         .then((res) => {
-            console.log("*********\n" + res)
+            console.log("***Dp Upload******\n" + res)
             alert('profile picture updated..!')
         })
         .catch((error) => {

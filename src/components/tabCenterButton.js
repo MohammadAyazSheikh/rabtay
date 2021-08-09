@@ -59,7 +59,8 @@ export default class CenterButton extends Component {
                     height: 70,
                     borderRadius: 35,
                     backgroundColor: '#FFF',
-                    // overflow:"visible"
+                    overflow:"visible",
+                    // elevation:100
                 }} >
 
                 <Animated.View style={
@@ -142,6 +143,7 @@ export default class CenterButton extends Component {
                         shadowRadius: 3.5,
                         justifyContent: 'center',
                         alignItems: 'center',
+                        // elevation:100
                         // position: 'absolute',
 
                     }}
