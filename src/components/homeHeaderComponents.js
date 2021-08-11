@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Text, View, StyleSheet, Image, TouchableOpacity, FlatList } from 'react-native';
 import { connect } from 'react-redux';
 import { BackGroundColor } from '../utilities/colors';
-import { widthToDp,heightToDp } from '../utilities/responsiveUtils';
+import { widthToDp, heightToDp } from '../utilities/responsiveUtils';
 
 const HomeHeader = (props) => {
     return (
@@ -33,7 +33,8 @@ export default HomeHeader;
 const styles = StyleSheet.create({
     header: {
         flexDirection: 'row',
-        backgroundColor: '#F0F1F5',
+        // backgroundColor: '#F0F1F5',
+        backgroundColor: '#FFF',
         alignItems: 'center',
         justifyContent: 'space-between',
         paddingLeft: '5%',
