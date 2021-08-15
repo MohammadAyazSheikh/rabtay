@@ -9,6 +9,7 @@ import LoginIcon from 'react-native-vector-icons/AntDesign';
 import Icon from 'react-native-vector-icons/Feather';
 import { connect } from 'react-redux';
 import { Login } from '../redux/actions/loginActions';
+import * as Animatable from 'react-native-animatable';
 
 const required = (val) => val ? true : false;
 const maxLength = (len) => (val) => !(val) || (val.length <= len);
@@ -55,6 +56,7 @@ class LogIn extends Component {
         }
         this.animateTextField = this.animateTextField.bind(this);
         this.animateEmptyField = this.animateEmptyField.bind(this);
+        this.buttonLogin = React.createRef();
     }
 
     animateTextField(textFieldErr, animatedVal) {
@@ -123,7 +125,19 @@ class LogIn extends Component {
                     styles.logoView,
                     { height: this.logoAnim }
                 ]}>
-                    <Image source={require('../../assets/logot.png')} style={styles.logoImg} />
+                    {/* <Image source={require('../../assets/logot.png')} style={styles.logoImg} /> */}
+                    <Text style={
+                        {
+                            fontSize: widthToDp(20),
+                            color: BackGroundColor,
+                            fontFamily: 'Pacifico-Regular',
+                            textShadowOffset: { width: 1.5, height: 1 },
+                            textShadowRadius: 1,
+                            textShadowColor: 'black',
+                        }
+                    }>
+                        Rabtay
+                    </Text>
                 </Animated.View>
                 <View style={styles.bottomView}>
 
@@ -141,8 +155,8 @@ class LogIn extends Component {
 
                     >
                         <LoginIcon name="mail" style={styles.iconStyle} />
-                        <TextInput placeholder='Email' placeholderTextColor = 'grey'
-                         style={styles.txtInput} textContentType = 'emailAddress' 
+                        <TextInput placeholder='Email' placeholderTextColor='grey'
+                            style={styles.txtInput} textContentType='emailAddress'
                             onChangeText={(val) => {
                                 validEmail(val) ? this.setState({ errEmail: null }) : this.setState({ errEmail: 'invalid email' })
                                 this.setState({ email: val })
@@ -168,8 +182,8 @@ class LogIn extends Component {
                         ]
                         } >
                         <LoginIcon name="lock" style={styles.iconStyle} />
-                        <TextInput placeholder='Password' placeholderTextColor = 'grey'
-                         style={styles.txtInput} secureTextEntry={this.state.showPass}
+                        <TextInput placeholder='Password' placeholderTextColor='grey'
+                            style={styles.txtInput} secureTextEntry={this.state.showPass}
                             onChangeText={(val) => {
                                 if (val.length > 12) {
                                     this.setState({ errPass: 'must be less than 12 characters' })
@@ -211,30 +225,33 @@ class LogIn extends Component {
                             Forget Password?
                         </Text>
                     </TouchableOpacity>
+                    <Animatable.View ref = {this.buttonLogin}   >
+                        <TouchableOpacity
+                            style={styles.btnLogIn}
+                            onPress={() => {
 
-                    <TouchableOpacity
-                        style={styles.btnLogIn}
-                        onPress={() => {
+                                if (!this.state.email)
+                                    this.animateEmptyField(this.inputAnim);
 
-                            if (!this.state.email)
-                                this.animateEmptyField(this.inputAnim);
-
-                            if (!this.state.pass)
-                                this.animateEmptyField(this.inputAnim2);
+                                if (!this.state.pass)
+                                    this.animateEmptyField(this.inputAnim2);
 
 
-                            if (this.state.email !== '' && !this.state.pass !== ''
-                                && this.state.errPass == null && this.state.errEmail == null) {
-                                this.props.Login(this.state.email, this.state.pass)
+                                if (this.state.email !== '' && !this.state.pass !== ''
+                                    && this.state.errPass == null && this.state.errEmail == null) {
+                                    this.props.Login(this.state.email, this.state.pass)
+                                }
+
+                                this.buttonLogin.current.bounce(800);
+                            }}
+                        >
+                            {/* <Text style={styles.btnTxt}>Login</Text> */}
+                            {
+                                this.props.user.isLoading ? <ActivityIndicator size='large' color='white' /> :
+                                    <Text style={styles.btnTxt}>Login</Text>
                             }
-                        }}
-                    >
-                        {/* <Text style={styles.btnTxt}>Login</Text> */}
-                        {
-                            this.props.user.isLoading ? <ActivityIndicator size='large' color='white' /> :
-                                <Text style={styles.btnTxt}>Login</Text>
-                        }
-                    </TouchableOpacity>
+                        </TouchableOpacity>
+                    </Animatable.View>
                 </View>
             </View>
         );
@@ -259,6 +276,7 @@ export const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: "center",
         borderBottomLeftRadius: widthToDp(100),
+        elevation:10
     },
     bottomView: {
         flexDirection: 'column',
@@ -281,7 +299,7 @@ export const styles = StyleSheet.create({
     txtInput: {
         width: '75%',
         height: '100%',
-        color:BackGroundColor
+        color: BackGroundColor
 
     },
     iconStyle: {

@@ -18,7 +18,19 @@ export default class Registration extends Component {
             <View style={styles.container}>
 
                 <View style={styles.logoView}>
-                    <Image source={require('../../assets/logot.png')} style={styles.logoImg} />
+                    {/* <Image source={require('../../assets/logot.png')} style={styles.logoImg} /> */}
+                    <Text style={
+                        {
+                            fontSize: widthToDp(20),
+                            color: BackGroundColor,//'#053881',
+                            fontFamily: 'Pacifico-Regular',
+                            textShadowOffset: {width: 1.5, height: 1},
+                            textShadowRadius:1,
+                            textShadowColor: 'black',
+                        }
+                    }>
+                        Rabtay
+                    </Text>
                 </View>
                 <View style={styles.logInView}>
                     <TouchableOpacity style={styles.btnLogIn}
@@ -64,7 +76,8 @@ export const styles = StyleSheet.create({
         backgroundColor: '#FFF',
         justifyContent: 'center',
         alignItems: "center",
-        borderBottomLeftRadius: widthToDp(100),
+        borderBottomLeftRadius: widthToDp(70),
+        elevation:10
     },
     logInView: {
         width: '100%',

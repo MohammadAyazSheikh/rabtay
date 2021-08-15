@@ -138,7 +138,19 @@ class Signup extends Component {
                     styles.logoView,
                     { height: this.logoAnim }
                 ]}>
-                    <Image source={require('../../assets/logot.png')} style={styles.logoImg} />
+                    {/* <Image source={require('../../assets/logot.png')} style={styles.logoImg} /> */}
+                    <Text style={
+                        {
+                            fontSize: widthToDp(20),
+                            color: BackGroundColor,//'#053881',
+                            fontFamily: 'Pacifico-Regular',
+                            textShadowOffset: {width: 1.5, height: 1},
+                            textShadowRadius:1,
+                            textShadowColor: 'black',
+                        }
+                    }>
+                        Rabtay
+                    </Text>
                 </Animated.View>
                 <View style={styles.bottomView}>
                     <ScrollView contentContainerStyle={styles.scrollViewStyle} >
@@ -374,6 +386,7 @@ export const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: "center",
         borderBottomLeftRadius: widthToDp(100),
+        elevation:10
     },
     bottomView: {
         flexDirection: 'column',

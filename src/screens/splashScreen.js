@@ -2,9 +2,10 @@
 import { widthToDp, heightToDp } from '../utilities/responsiveUtils';
 import React, { useEffect } from 'react';
 import {
-    StyleSheet, View, Text, Image
+    StyleSheet, View, Text, Image,
 } from 'react-native';
-
+import { BackGroundColor } from '../utilities/colors';
+import * as Animatable from 'react-native-animatable';
 
 function Splash(props) {
 
@@ -18,16 +19,28 @@ function Splash(props) {
     );
     return (
         <View
-            style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#053881' }}
+            style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: BackGroundColor }}
         >
-
-            <Image
-                style={{
-                    width: widthToDp(90),
-                    height: widthToDp(90)
-                }}
-
-                source={require('../../assets/logos.png')} />
+            <Animatable.View
+                // animation="bounceIn"
+                animation="bounce"
+                delay={0}
+                useNativeDriver={true}
+            >
+                <Text style={
+                    {
+                        fontSize: widthToDp(20),
+                        color: '#FFF',
+                        fontFamily: 'Pacifico-Regular',
+                        fontFamily: 'Pacifico-Regular',
+                        textShadowOffset: { width: 1.5, height: 1 },
+                        textShadowRadius: 1,
+                        textShadowColor: 'black',
+                    }}
+                >
+                    Rabtay
+                </Text>
+            </Animatable.View>
         </View>
 
 

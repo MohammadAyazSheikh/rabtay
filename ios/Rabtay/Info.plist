@@ -69,6 +69,12 @@
 		<string>Octicons.ttf</string>
 		<string>SimpleLineIcons.ttf</string>
 		<string>Zocial.ttf</string>
+		<string>StyleScript-Regular.ttf</string>
+		<string>DancingScript-Bold.ttf</string>
+		<string>DancingScript-Medium.ttf</string>
+		<string>DancingScript-Regular.ttf</string>
+		<string>DancingScript-SemiBold.ttf</string>
+		<string>Pacifico-Regular.ttf</string>
 	</array>
 </dict>
 </plist>

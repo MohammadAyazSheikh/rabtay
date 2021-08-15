@@ -44,8 +44,16 @@ const styles = StyleSheet.create({
 
     },
     txtHeading: {
-        fontSize: 40,
-        fontWeight: 'bold'
+        fontSize: 50,
+        // fontWeight: 'bold',
+        fontFamily:'Pacifico-Regular',
+
+        // fontSize: widthToDp(20),
+        // color: BackGroundColor,
+        fontFamily: 'Pacifico-Regular',
+        textShadowOffset: { width: 1.5, height: 1 },
+        textShadowRadius: 1,
+        // textShadowColor: 'black',
     },
     imgProfView: {
         backgroundColor: BackGroundColor,
