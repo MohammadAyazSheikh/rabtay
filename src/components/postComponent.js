@@ -5,6 +5,7 @@ import { BackGroundColor } from '../utilities/colors';
 import { widthToDp, hieghtToDp, heightToDp } from '../utilities/responsiveUtils';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome';
+import Video from 'react-native-video';
 
 class Post extends Component {
     constructor(props) {
@@ -47,10 +48,26 @@ class Post extends Component {
                         }
                     </View>
                     <View style={styles.postMedia}>
-                        <Image
-                            source={this.props.image}
-                            style={styles.imgPost}
-                        />
+
+                        {
+                            this.props.videoUrl ?
+                                < Video
+                                    resizeMode={'contain'}
+                                    // onFullScreen={true}
+                                    source={{ uri: this.props.videoUrl }}
+                                    style={styles.mediaPlayer}
+                                    volume={10}
+                                    controls
+                                    paused = {true}
+                                />
+
+                                :
+                                <Image
+                                    source={this.props.image}
+                                    style={styles.imgPost}
+                                />
+                        }
+
                     </View>
                     <View style={styles.postReactions}>
                         <View style={styles.reactionSingleView}>
@@ -90,10 +107,10 @@ const styles = StyleSheet.create({
         width: widthToDp(100),
         // height: heightToDp(45),
         // padding: widthToDp(3),
-        paddingTop:10,
-        paddingBottom:10,
-        marginTop:5,
-        marginBottom:5
+        paddingTop: 10,
+        paddingBottom: 10,
+        marginTop: 5,
+        marginBottom: 5
     },
     postHeaderView: {
         backgroundColor: '#FFF',
@@ -102,8 +119,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'flex-start',
         alignItems: 'center',
-        paddingLeft:5,
-        paddingRight:5,
+        paddingLeft: 5,
+        paddingRight: 5,
     },
     imgProfView: {
         backgroundColor: BackGroundColor,
@@ -162,7 +179,7 @@ const styles = StyleSheet.create({
         width: '100%',
         flexDirection: 'row',
         alignItems: 'center',
-        marginTop:10,
+        marginTop: 10,
         justifyContent: 'space-evenly',
     },
     reactionSingleView: {
@@ -174,6 +191,21 @@ const styles = StyleSheet.create({
         fontSize: 13,
         marginLeft: 5,
         color: '#7A8FA6'
-    }
+    },
+
+    mediaPlayer: {
+            // position: 'absolute',
+            // top: 0,
+            // left: 0,
+            // bottom: 0,
+            // right: 0,
+            // backgroundColor: 'black',
+            // justifyContent: 'center',
+            // flex:1,
+            width:'100%',
+            height:'100%',
+           
+            // resizeMode:'cover'
+          },
 
 })

@@ -46,7 +46,7 @@ class Home extends Component {
                         // justifyContent: 'center',
                         // padding: 5,
                         paddingBottom: 120,
-                        backgroundColor:'#FFF'
+                        backgroundColor: '#FFF'
 
                     }}
 
@@ -56,10 +56,11 @@ class Home extends Component {
 
                             return (
                                 <Post
-                                    uName = {item.uName}
+                                    uName={item.uName}
                                     time={item.time}
                                     image={item.img}
                                     description={item.desc}
+                                    videoUrl={item.videoUrl}
                                 />
                             );
                         }

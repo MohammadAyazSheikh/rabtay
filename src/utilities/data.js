@@ -40,4 +40,13 @@ export const post =
             desc:'test description dummy text  description dummy text description dummy text  description dummy text description dummy text  description dummy text description dummy',
             time:'an hour ago'
         },   
+
+        {
+            uName:'Ahsan Jilani',
+            id: 6,
+            img: null,
+            videoUrl:'https://www.w3schools.com/html/mov_bbb.mp4',
+            desc:'test description dummy',
+            time:'3 days ago'
+        },
     ]
