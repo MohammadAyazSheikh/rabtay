@@ -1,12 +1,9 @@
 import React, { Component } from 'react';
 import { Text, View, StyleSheet, Image, TouchableOpacity, FlatList } from 'react-native';
 import { connect } from 'react-redux';
-import { BackGroundColor } from '../utilities/colors';
 import HomeHeader from '../components/homeHeaderComponents';
 import Post from '../components/postComponent';
 import { post } from '../utilities/data';
-import { widthToDp, hieghtToDp, heightToDp } from '../utilities/responsiveUtils';
-import { Item } from 'react-native-paper/lib/typescript/components/List/List';
 
 
 const mapStateToProps = state => {
@@ -34,9 +31,9 @@ class Home extends Component {
             <View style={styles.container}>
 
 
-
+                <HomeHeader {...this.props} user={this.props.user} />
                 <FlatList
-                    ListHeaderComponent={<HomeHeader user={this.props.user} />}
+                    // ListHeaderComponent={<HomeHeader {...this.props} user={this.props.user} />}
                     data={post}
                     keyExtractor={(item) => item.id}
                     // showsVerticalScrollIndicator={false}

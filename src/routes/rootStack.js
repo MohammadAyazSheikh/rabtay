@@ -7,21 +7,12 @@ import LogIn from '../screens/loginScreen';
 import Signup from '../screens/signupScreen';
 import { root_Tab } from './rootTab';
 import { connect } from 'react-redux';
-import {
-    Text, View
-} from 'react-native';
+import Search from '../screens/searchScreen';
+import User from '../screens/userScreen'
+
 const rootStack = createStackNavigator();
 
-const Home = () => {
 
-    return (
-        <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-            <Text>
-                Home
-            </Text>
-        </View>
-    )
-}
 
 
 const mapStateToProps = state => {
@@ -54,6 +45,16 @@ function RootStack(props) {
                             }}
                         >
                             <rootStack.Screen name="Home" component={root_Tab}
+                                options={{
+                                    headerShown: false
+                                }}
+                            />
+                             <rootStack.Screen name="Search" component={Search}
+                                options={{
+                                    headerShown: false
+                                }}
+                            />
+                             <rootStack.Screen name="User" component={User}
                                 options={{
                                     headerShown: false
                                 }}

@@ -10,6 +10,9 @@ import {
 import CenterButton from '../components/tabCenterButton';
 import Profile from '../screens/profileScreen';
 import Home from '../screens/homeScreen';
+import UserScreen from '../screens/userScreen';
+import Notification from '../screens/notificationScreen';
+
 
 
 const Screen = () => {
@@ -43,7 +46,7 @@ export function root_Tab() {
                             let size_ = 40;
                             focused ? size_ = 35 : size_ = 30;
                             return <Ionic name='chatbubble-ellipses' size={size_} color={color} />;
-                          
+
                         } else if (route.name === 'Profile') {
                             let size_ = 30;
                             focused ? size_ = 35 : size_ = 30;
@@ -88,7 +91,7 @@ export function root_Tab() {
                 }}
             />
             <rootTab.Screen name="Profile" component={Profile} />
-            <rootTab.Screen name="Notification" component={Screen} />
+            <rootTab.Screen name="Notification" component={Notification} />
         </rootTab.Navigator>
 
 

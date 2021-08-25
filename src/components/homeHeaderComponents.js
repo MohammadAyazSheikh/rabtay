@@ -1,30 +1,24 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, Image, TouchableOpacity, FlatList } from 'react-native';
-import { connect } from 'react-redux';
-import { BackGroundColor } from '../utilities/colors';
+import { Text, View, StyleSheet, Image, TouchableOpacity, StatusBar } from 'react-native'
 import { widthToDp, heightToDp } from '../utilities/responsiveUtils';
-
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import { BackGroundColor } from '../utilities/colors';
 const HomeHeader = (props) => {
     return (
-        <View style={styles.header}>
-            <Text style={styles.txtHeading}>Rabtay</Text>
-            <TouchableOpacity style={styles.imgProfView}>
-                {
-                    props.user.dpUrl ?
-                        <Image
-                            source={{ uri: props.user.dpUrl }}
-                            style={styles.imgStyle}
-                        />
+        <>
+            {/* <StatusBar backgroundColor = '#FFF' /> */}
+            <View style={styles.header}>
+                <Text style={styles.txtHeading}>Rabtay</Text>
+                <TouchableOpacity style={styles.imgProfView}
+                    onPress={() => {
+                        props.navigation.navigate('Search');
+                    }}
+                >
+                    <AntDesign name='search1' size={40} />
+                </TouchableOpacity>
 
-                        :
-                        <Image
-                            source={require('../../assets/profile.jpg')}
-                            style={styles.imgStyle}
-                        />
-                }
-            </TouchableOpacity>
-
-        </View>
+            </View>
+        </>
     )
 }
 export default HomeHeader;
@@ -45,23 +39,24 @@ const styles = StyleSheet.create({
     },
     txtHeading: {
         fontSize: 50,
-        // fontWeight: 'bold',
-        fontFamily:'Pacifico-Regular',
-
-        // fontSize: widthToDp(20),
-        // color: BackGroundColor,
         fontFamily: 'Pacifico-Regular',
         textShadowOffset: { width: 1.5, height: 1 },
         textShadowRadius: 1,
-        // textShadowColor: 'black',
+        textShadowColor: 'black',
+        color:BackGroundColor,
+        
     },
     imgProfView: {
-        backgroundColor: BackGroundColor,
+        // borderColor: BackGroundColor,
+        // borderWidth:2,
+        justifyContent: 'center',
+        alignItems: 'center',
         width: 50,
         height: 50,
         borderRadius: 50,
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        marginTop: 20
     },
     imgStyle: {
         width: 48,

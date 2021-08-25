@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {
-    Text, View, Image, TouchableOpacity, FlatList,
-    StyleSheet, Dimensions,
+    Text, View, TouchableOpacity, 
+    StyleSheet, StatusBar
 } from 'react-native';
 import { widthToDp, heightToDp } from '../utilities/responsiveUtils';
 import { BackGroundColor } from '../utilities/colors';
@@ -15,47 +15,50 @@ export default class Registration extends Component {
 
 
         return (
-            <View style={styles.container}>
+            <>
+                <StatusBar backgroundColor='#FFF'  />
+                <View style={styles.container}>
 
-                <View style={styles.logoView}>
-                    {/* <Image source={require('../../assets/logot.png')} style={styles.logoImg} /> */}
-                    <Text style={
-                        {
-                            fontSize: widthToDp(20),
-                            color: BackGroundColor,//'#053881',
-                            fontFamily: 'Pacifico-Regular',
-                            textShadowOffset: {width: 1.5, height: 1},
-                            textShadowRadius:1,
-                            textShadowColor: 'black',
-                        }
-                    }>
-                        Rabtay
-                    </Text>
-                </View>
-                <View style={styles.logInView}>
-                    <TouchableOpacity style={styles.btnLogIn}
-                        onPress={() => {
-                            this.props.navigation.navigate('LogIn');
-                        }}
-                    >
-                        <Text style={styles.btnTxt}>
-                            LogIn
+                    <View style={styles.logoView}>
+                        {/* <Image source={require('../../assets/logot.png')} style={styles.logoImg} /> */}
+                        <Text style={
+                            {
+                                fontSize: widthToDp(20),
+                                color: BackGroundColor,//'#053881',
+                                fontFamily: 'Pacifico-Regular',
+                                textShadowOffset: { width: 1.5, height: 1 },
+                                textShadowRadius: 1,
+                                textShadowColor: 'black',
+                            }
+                        }>
+                            Rabtay
                         </Text>
-                    </TouchableOpacity>
-                    <Text style={{ color: 'white', margin: 10, fontWeight: 'bold' }}>
-                        OR
-                    </Text>
-                    <TouchableOpacity style={styles.btnLogIn}
-                        onPress={() => {
-                            this.props.navigation.navigate('SignUp');
-                        }}
-                    >
-                        <Text style={styles.btnTxt}>
-                            SignUp
+                    </View>
+                    <View style={styles.logInView}>
+                        <TouchableOpacity style={styles.btnLogIn}
+                            onPress={() => {
+                                this.props.navigation.navigate('LogIn');
+                            }}
+                        >
+                            <Text style={styles.btnTxt}>
+                                LogIn
+                            </Text>
+                        </TouchableOpacity>
+                        <Text style={{ color: 'white', margin: 10, fontWeight: 'bold' }}>
+                            OR
                         </Text>
-                    </TouchableOpacity>
+                        <TouchableOpacity style={styles.btnLogIn}
+                            onPress={() => {
+                                this.props.navigation.navigate('SignUp');
+                            }}
+                        >
+                            <Text style={styles.btnTxt}>
+                                SignUp
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
-            </View>
+            </>
         );
     }
 }
@@ -77,7 +80,7 @@ export const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: "center",
         borderBottomLeftRadius: widthToDp(70),
-        elevation:10
+        elevation: 10
     },
     logInView: {
         width: '100%',
