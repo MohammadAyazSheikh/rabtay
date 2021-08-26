@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Text, View, StyleSheet, Image, TouchableOpacity, FlatList, TouchableHighlight } from 'react-native';
-import { connect } from 'react-redux';
 import { BackGroundColor } from '../utilities/colors';
 import { heightToDp, widthToDp } from '../utilities/responsiveUtils';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
@@ -8,11 +7,6 @@ import Icon from 'react-native-vector-icons/SimpleLineIcons';
 
 
 
-const mapStateToProps = state => {
-    return {
-        user: state.user.user,
-    }
-}
 
 
 
@@ -23,14 +17,14 @@ const swipeFromRightOpen = () => {
 const rightSwipeActions = () => {
     return (
         <View style={styles.BtnSwipeView}   >
-            <TouchableOpacity style={[styles.btnSwipe,{backgroundColor:'tomato'}]}>
-                <Icon name = 'user-unfollow' size= {25} color = '#FFF'/>
+            <TouchableOpacity style={[styles.btnSwipe, { backgroundColor: 'tomato' }]}>
+                <Icon name='user-unfollow' size={25} color='#FFF' />
                 <Text style={[styles.txtBtn,]}>
                     Ignore
                 </Text>
             </TouchableOpacity>
-            <TouchableOpacity style={[styles.btnSwipe,{backgroundColor:BackGroundColor}]}>
-            <Icon name = 'user-follow' size= {25} color = '#FFF'/>
+            <TouchableOpacity style={[styles.btnSwipe, { backgroundColor: BackGroundColor }]}>
+                <Icon name='user-follow' size={25} color='#FFF' />
                 <Text style={styles.txtBtn}>
                     Follow
                 </Text>
@@ -39,7 +33,7 @@ const rightSwipeActions = () => {
     );
 };
 
-class Notification extends Component {
+class SingleNotification extends Component {
     constructor(props) {
         super(props);
 
@@ -50,24 +44,20 @@ class Notification extends Component {
 
 
     render() {
-
-
         return (
-            <View style={styles.container}>
-
-
+            <View style={styles.mainView}>
                 <Swipeable
-
                     renderRightActions={rightSwipeActions}
                     onSwipeableRightOpen={swipeFromRightOpen}
+
                 >
                     <View style={styles.NotificationView}>
                         <View style={styles.infoView}>
                             <View style={styles.imageView}>
-                                <Image source={require('../../assets/p5.jpg')} style={styles.imageStyle} />
+                                <Image source={this.props.image} style={styles.imageStyle} />
                             </View>
                             <View style={styles.textView}>
-                                <Text style={styles.txtName}>Ali Rehman
+                                <Text style={styles.txtName}>{this.props.uName}
                                     <Text style={styles.txtDesc}> sends you follow request</Text>
                                 </Text>
                                 <Text style={styles.txtTime}>2 hourse ago</Text>
@@ -80,20 +70,20 @@ class Notification extends Component {
     }
 }
 
-export default connect(mapStateToProps, null)(Notification);
+export default SingleNotification;
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center'
+
+    mainView: {
+        elevation: 10,
+        width: widthToDp(100),
+        height: heightToDp(14),
+        marginVertical:5,
     },
     NotificationView: {
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: 'grey',
-
-        elevation: 10,
         width: widthToDp(100),
         height: heightToDp(14),
     },
@@ -147,19 +137,17 @@ const styles = StyleSheet.create({
         height: '100%',
         flexDirection: 'row',
     },
-    btnSwipe:{
-        justifyContent:'center',
-        alignItems:'center',
-        width:'50%',
-        height:'100%'
+    btnSwipe: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '50%',
+        height: '100%'
     },
-    txtBtn:{
-        color:'#FFF',
-        fontWeight:'bold'
+    txtBtn: {
+        color: '#FFF',
+        fontWeight: 'bold'
     }
 
-})
-
-
+});
 
 

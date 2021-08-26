@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, Image, TouchableOpacity, FlatList, TouchableHighlight } from 'react-native';
+import { Text, View, StyleSheet, FlatList, } from 'react-native';
 import { connect } from 'react-redux';
-import { BackGroundColor } from '../utilities/colors';
-import { heightToDp, widthToDp } from '../utilities/responsiveUtils';
-import Swipeable from 'react-native-gesture-handler/Swipeable';
-import Icon from 'react-native-vector-icons/SimpleLineIcons';
+import { post } from '../utilities/data';
+import SingleNotification from '../components/notificationComponent';
 
 
 
@@ -17,28 +15,6 @@ const mapStateToProps = state => {
 
 
 
-const swipeFromRightOpen = () => {
-    // alert('Swipe from right');
-};
-const rightSwipeActions = () => {
-    return (
-        <View style={styles.BtnSwipeView}   >
-            <TouchableOpacity style={[styles.btnSwipe,{backgroundColor:'tomato'}]}>
-                <Icon name = 'user-unfollow' size= {25} color = '#FFF'/>
-                <Text style={[styles.txtBtn,]}>
-                    Ignore
-                </Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={[styles.btnSwipe,{backgroundColor:BackGroundColor}]}>
-            <Icon name = 'user-follow' size= {25} color = '#FFF'/>
-                <Text style={styles.txtBtn}>
-                    Follow
-                </Text>
-            </TouchableOpacity>
-        </View>
-    );
-};
-
 class Notification extends Component {
     constructor(props) {
         super(props);
@@ -49,32 +25,21 @@ class Notification extends Component {
     }
 
 
+
     render() {
-
-
         return (
             <View style={styles.container}>
-
-
-                <Swipeable
-
-                    renderRightActions={rightSwipeActions}
-                    onSwipeableRightOpen={swipeFromRightOpen}
-                >
-                    <View style={styles.NotificationView}>
-                        <View style={styles.infoView}>
-                            <View style={styles.imageView}>
-                                <Image source={require('../../assets/p5.jpg')} style={styles.imageStyle} />
-                            </View>
-                            <View style={styles.textView}>
-                                <Text style={styles.txtName}>Ali Rehman
-                                    <Text style={styles.txtDesc}> sends you follow request</Text>
-                                </Text>
-                                <Text style={styles.txtTime}>2 hourse ago</Text>
-                            </View>
-                        </View>
-                    </View>
-                </Swipeable>
+                <FlatList
+                    data={post}
+                    keyExtractor={(item) => item.id}
+                    renderItem={({ item, index }) =>
+                        <SingleNotification
+                            uName={item.uName}
+                            image={item.img}
+                        />
+                    }
+                    contentContainerStyle = {{  paddingBottom: 120,}}
+                />
             </View>
         )
     }
@@ -88,77 +53,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center'
     },
-    NotificationView: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'grey',
-
-        elevation: 10,
-        width: widthToDp(100),
-        height: heightToDp(14),
-    },
-
-    infoView: {
-        width: '100%',
-        height: '100%',
-        backgroundColor: '#FFF',
-        flexDirection: 'row',
-        justifyContent: 'flex-start',
-        alignItems: 'center',
-        padding: 5
-    },
-    imageView: {
-        width: widthToDp(26),
-        height: widthToDp(26),
-        borderRadius: widthToDp(25),
-        borderWidth: 2,
-        borderColor: BackGroundColor,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: BackGroundColor
-    },
-    imageStyle: {
-        width: widthToDp(25),
-        height: widthToDp(25),
-        borderRadius: widthToDp(25),
-        resizeMode: 'cover'
-    },
-    textView: {
-        paddingLeft: 10,
-        flex: 1,
-    },
-    txtName: {
-        fontSize: 15,
-        fontWeight: 'bold',
-        color: '#000'
-    },
-    txtDesc: {
-        fontSize: 14,
-        fontWeight: 'normal'
-    },
-    txtTime: {
-        color: 'grey'
-    },
-    BtnSwipeView: {
-        backgroundColor: 'lightgrey',
-        justifyContent: 'center',
-        alignItems: 'center',
-        width: '55%',
-        height: '100%',
-        flexDirection: 'row',
-    },
-    btnSwipe:{
-        justifyContent:'center',
-        alignItems:'center',
-        width:'50%',
-        height:'100%'
-    },
-    txtBtn:{
-        color:'#FFF',
-        fontWeight:'bold'
-    }
-
-})
+});
 
 
 
