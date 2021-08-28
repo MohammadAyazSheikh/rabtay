@@ -16,18 +16,18 @@ const User = (props) => {
             onPress={() => {
                 props.navigation.navigate('User', {
                     name: props.name,
-                    desc:props.desc,
-                    image:props.image
+                    desc: props.desc,
+                    image: props.image
                 })
             }}
         >
             {
-                props.image? 
-                <Image source={props.image} style={styles.imageStyle} />
-                :
-                <Image source={require('../../assets/p5.jpg')} style={styles.imageStyle} />
+                props.image ?
+                    <Image source={props.image} style={styles.imageStyle} />
+                    :
+                    <Image source={require('../../assets/p5.jpg')} style={styles.imageStyle} />
             }
-           
+
             <View style={styles.infoView}>
                 <Text style={styles.txtName}>{props.name}</Text>
                 <Text style={styles.txtDesc}>{props.desc.substr(0, 100)}</Text>
@@ -40,10 +40,19 @@ export default class Search extends Component {
     constructor(props) {
         super(props);
         this.textInputAnim = new Animated.Value(0);
+
+        this.scrollY = new Animated.Value(0);
+        this._scrollY = this.scrollY.interpolate({ inputRange: [0, 1], outputRange: [0, 1], extrapolateLeft: 'clamp' });
+        this.headerTranslate = Animated.diffClamp(this._scrollY, 0, heightToDp(10)).interpolate({
+            inputRange: [0, 1],
+            outputRange: [0, -1],
+        });
+
+
         this.animateTextInput = this.animateTextInput.bind(this)
 
         this.state = {
-            Users: null
+            Users:null
         }
     }
 
@@ -53,17 +62,41 @@ export default class Search extends Component {
             {
                 toValue: 1,
                 useNativeDriver: true,
-                stiffness: 100
             }
         ).start();
     }
     componentDidMount() {
         this.animateTextInput()
     }
+
+
     render() {
         return (
             <View style={styles.container}>
-                <View style={styles.header}>
+                {/* *************************************List************************* */}
+
+                <View style={[styles.itemsView]}>
+                    <Animated.FlatList
+                    
+                        onScroll={
+                            Animated.event(
+                                [{ nativeEvent: { contentOffset: { y: this.scrollY } } }],
+                                { useNativeDriver: true }
+                            )
+                        }
+                        contentContainerStyle={{ paddingLeft: 2, paddingRight: 2, paddingTop:heightToDp(10) }}
+                        data={this.state.Users}
+                        keyExtractor={(item) => item.id}
+                        renderItem={({ index, item }) => <User {...this.props} name={item.uName} desc={item.desc} image={item.img} />}
+                    />
+                </View>
+
+                {/********************************* Header ******************************/}
+
+                <Animated.View style={[styles.header, {
+                    transform: [{ translateY: this.headerTranslate }],
+                    position: 'absolute'
+                }]}>
                     <TouchableOpacity style={styles.btnSearch}
                         onPress={
                             () => { this.props.navigation.navigate('Home') }
@@ -86,15 +119,8 @@ export default class Search extends Component {
                             }}
                         />
                     </Animated.View>
-                </View>
-                <View style={styles.itemsView}>
-                    <FlatList
-                        contentContainerStyle={{ paddingLeft: 2, paddingRight: 2 }}
-                        data={this.state.Users}
-                        keyExtractor={(item) => item.id}
-                        renderItem={({ index, item }) => <User {...this.props} name={item.uName} desc={item.desc} image = {item.img} />}
-                    />
-                </View>
+                </Animated.View>
+
             </View>
         );
     }
@@ -104,17 +130,16 @@ export const styles = StyleSheet.create({
 
     container: {
         flex: 1,
-        backgroundColor: '#FFF'
+        backgroundColor: '#FFF',
+       
     },
     header: {
         flexDirection: 'row',
-        // backgroundColor: '#F0F1F5',
         backgroundColor: '#FFF',
         alignItems: 'center',
         justifyContent: 'space-evenly',
         width: widthToDp(100),
         height: heightToDp(10),
-        // backgroundColor: 'grey'
     },
     inputView: {
         width: '80%',
@@ -136,10 +161,11 @@ export const styles = StyleSheet.create({
         alignItems: 'center',
     },
     itemsView: {
-        flex: 1,
+        // flex: 3,
+        width: widthToDp(100),
+        height: heightToDp(100),
         justifyContent: 'center',
         alignItems: 'center',
-        // padding: 10
     },
     singleItemView: {
         flexDirection: 'row',

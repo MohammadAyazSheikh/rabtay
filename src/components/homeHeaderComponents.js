@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, Image, TouchableOpacity, StatusBar } from 'react-native'
+import { Text, View, StyleSheet, Image, TouchableOpacity, StatusBar,Animated } from 'react-native'
 import { widthToDp, heightToDp } from '../utilities/responsiveUtils';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { BackGroundColor } from '../utilities/colors';
@@ -7,7 +7,7 @@ const HomeHeader = (props) => {
     return (
         <>
             {/* <StatusBar backgroundColor = '#FFF' /> */}
-            <View style={styles.header}>
+            <Animated.View style={[styles.header,{transform:[{translateY:props.headerTranslate}]}]}>
                 <Text style={styles.txtHeading}>Rabtay</Text>
                 <TouchableOpacity style={styles.imgProfView}
                     onPress={() => {
@@ -17,7 +17,7 @@ const HomeHeader = (props) => {
                     <AntDesign name='search1' size={40} />
                 </TouchableOpacity>
 
-            </View>
+            </Animated.View>
         </>
     )
 }
@@ -35,6 +35,7 @@ const styles = StyleSheet.create({
         paddingRight: '5%',
         width: widthToDp(100),
         height: heightToDp(14),
+        position:'absolute'
 
     },
     txtHeading: {

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet,Image, Animated } from 'react-native';
+import { View, Text, StyleSheet, Image, Animated } from 'react-native';
 import { BackGroundColor } from '../utilities/colors';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { widthToDp, heightToDp } from '../utilities/responsiveUtils';
@@ -41,15 +41,26 @@ class Profile extends Component {
         const inputRange = [
 
             0,
-            290
+            300
         ]
 
         this.blur = this.scrollY.interpolate(
             {
                 inputRange,
-                outputRange: [0, 1]
-            }
+                outputRange: [0, 0.5],
+            },
         )
+
+
+        this.moveBar = this.scrollY.interpolate(
+            {
+                inputRange: [0, 1269],
+                outputRange: [0, widthToDp(100) - 10],
+                extrapolate: 'clamp'
+            },
+        )
+
+
         this.state = {
             imageUri: null,
             cloudUrl: null
@@ -119,16 +130,31 @@ class Profile extends Component {
 
 
     render() {
-        const arr = [1, 2, 3, 4, 5, 6, 6, 7, , 8, 9, 10, 11, 12, 13, 14, 15]
+        const arr = [1, 2, 3, 4, 5, 6, 6, 7, , 8, 9, 10, 11, 12, 13, 14, 15];
+
         return (
 
             <View style={styles.container}>
+                <View style={{ justifyContent: 'flex-start', width: '100%' }}>
+                    <Animated.View
+                        style={{
+                            width: 10,
+                            height: 10,
+                            borderRadius: 10,
+                            backgroundColor: BackGroundColor,
+                            transform: [{
+                                translateX: this.moveBar
+                            }]
+                            // position: 'absolute'
+                        }}
+                    />
+                </View>
+
 
                 <Animated.FlatList
                     ListHeaderComponent=
                     {
                         <>
-
                             <View style={styles.Header}>
 
                                 <View style={styles.infoView}>
@@ -200,14 +226,15 @@ class Profile extends Component {
                                 <Animated.View style={{
                                     height: heightToDp(40),
                                     width: widthToDp(100),
-                                    backgroundColor: '#FFF',
+                                    backgroundColor: '#000',
                                     position: 'absolute',
-                                    borderRadius:10,
+                                    borderRadius: 10,
                                     left: 0,
                                     top: 0,
                                     elevation: 100,
-                                    opacity:this.blur
-                                }}/>
+                                    opacity: this.blur,
+                                    // backgroundColor: `rgba(0,0,0, ${this.blur})`
+                                }} />
                             </View>
                         </>
                     }
@@ -226,7 +253,7 @@ class Profile extends Component {
                     onScroll={
                         Animated.event(
                             [{ nativeEvent: { contentOffset: { y: this.scrollY } } }],
-                            { useNativeDriver: false }
+                            { useNativeDriver: true }
                         )
                         // (e) =>{
                         //     console.log( e.nativeEvent.contentOffset.y)
@@ -364,7 +391,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         margin: 5,
-        
+
         elevation: 2
     },
     imgPostStyle: {

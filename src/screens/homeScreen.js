@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, Image, TouchableOpacity, FlatList } from 'react-native';
+import { Text, View, StyleSheet, Image, TouchableOpacity, FlatList, Animated } from 'react-native';
 import { connect } from 'react-redux';
 import HomeHeader from '../components/homeHeaderComponents';
 import Post from '../components/postComponent';
 import { post } from '../utilities/data';
+import { widthToDp, heightToDp } from '../utilities/responsiveUtils';
 
 
 const mapStateToProps = state => {
@@ -18,6 +19,12 @@ class Home extends Component {
     constructor(props) {
         super(props);
 
+        this.scrollY = new Animated.Value(0);
+        this._scrollY = this.scrollY.interpolate({ inputRange: [0, 1], outputRange: [0, 1], extrapolateLeft: 'clamp' });
+        this.headerTranslate = Animated.diffClamp(this._scrollY, 15, heightToDp(14)).interpolate({
+            inputRange: [0, 1],
+            outputRange: [0, -1],
+        });
         this.state = {
 
         };
@@ -30,21 +37,21 @@ class Home extends Component {
         return (
             <View style={styles.container}>
 
-
-                <HomeHeader {...this.props} user={this.props.user} />
-                <FlatList
+                <Animated.FlatList
+                    onScroll={
+                        Animated.event(
+                            [{ nativeEvent: { contentOffset: { y: this.scrollY } } }],
+                            { useNativeDriver: true }
+                        )
+                    }
                     // ListHeaderComponent={<HomeHeader {...this.props} user={this.props.user} />}
                     data={post}
                     keyExtractor={(item) => item.id}
-                    // showsVerticalScrollIndicator={false}
-                    // numColumns={2}
-                    // scrollEventThrottle={32}
+
                     contentContainerStyle={{
-                        // justifyContent: 'center',
-                        // padding: 5,
+                        paddingTop: heightToDp(14),
                         paddingBottom: 120,
                         backgroundColor: '#FFF'
-
                     }}
 
                     renderItem={
@@ -64,7 +71,7 @@ class Home extends Component {
                     }
                 />
 
-
+                <HomeHeader {...this.props} user={this.props.user} headerTranslate={this.headerTranslate} />
             </View>
         )
     }
@@ -75,7 +82,7 @@ export default connect(mapStateToProps, null)(Home);
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
+        // justifyContent: 'center',
         alignItems: 'center'
     },
 })
