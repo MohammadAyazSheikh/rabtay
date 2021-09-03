@@ -43,7 +43,7 @@ export default class Search extends Component {
 
         this.scrollY = new Animated.Value(0);
         this._scrollY = this.scrollY.interpolate({ inputRange: [0, 1], outputRange: [0, 1], extrapolateLeft: 'clamp' });
-        this.headerTranslate = Animated.diffClamp(this._scrollY, 0, heightToDp(10)).interpolate({
+        this.headerTranslate = Animated.diffClamp(this._scrollY, 1, heightToDp(10)).interpolate({
             inputRange: [0, 1],
             outputRange: [0, -1],
         });
