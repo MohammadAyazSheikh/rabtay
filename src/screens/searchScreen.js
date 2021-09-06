@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import {
     Text, View, TouchableOpacity, Image, FlatList,
-    StyleSheet, StatusBar, TextInput, Animated
+    StyleSheet, StatusBar, TextInput, Animated, ScrollView
 } from 'react-native';
 import { widthToDp, heightToDp } from '../utilities/responsiveUtils';
 import { BackGroundColor } from '../utilities/colors';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { post } from '../utilities/data';
+import PlaceHolder from '../components/placeHolderComponent';
 
 
 const User = (props) => {
@@ -35,7 +36,7 @@ const User = (props) => {
         </TouchableOpacity>
     )
 }
-
+const arr = [1, 2, 3, 4, 5,6]
 export default class Search extends Component {
     constructor(props) {
         super(props);
@@ -52,7 +53,8 @@ export default class Search extends Component {
         this.animateTextInput = this.animateTextInput.bind(this)
 
         this.state = {
-            Users:null
+            Users: null,
+            isLoading: false
         }
     }
 
@@ -76,19 +78,35 @@ export default class Search extends Component {
                 {/* *************************************List************************* */}
 
                 <View style={[styles.itemsView]}>
-                    <Animated.FlatList
-                    
-                        onScroll={
-                            Animated.event(
-                                [{ nativeEvent: { contentOffset: { y: this.scrollY } } }],
-                                { useNativeDriver: true }
-                            )
-                        }
-                        contentContainerStyle={{ paddingLeft: 2, paddingRight: 2, paddingTop:heightToDp(10) }}
-                        data={this.state.Users}
-                        keyExtractor={(item) => item.id}
-                        renderItem={({ index, item }) => <User {...this.props} name={item.uName} desc={item.desc} image={item.img} />}
-                    />
+                    {
+                        this.state.isLoading ?
+                            <ScrollView 
+                            contentContainerStyle = {{ paddingTop: heightToDp(10),paddingHorizontal:10}}
+                            showsVerticalScrollIndicator = {false}
+                            >
+                                {
+                                    arr.map((item) => {
+                                        return (
+                                            <PlaceHolder opacity={0.8} key = {item} />
+                                        );
+                                    })
+                                }
+                            </ScrollView>
+                            :
+                            <Animated.FlatList
+
+                                onScroll={
+                                    Animated.event(
+                                        [{ nativeEvent: { contentOffset: { y: this.scrollY } } }],
+                                        { useNativeDriver: true }
+                                    )
+                                }
+                                contentContainerStyle={{ paddingLeft: 2, paddingRight: 2, paddingTop: heightToDp(10) }}
+                                data={this.state.Users}
+                                keyExtractor={(item) => item.id}
+                                renderItem={({ index, item }) => <User {...this.props} name={item.uName} desc={item.desc} image={item.img} />}
+                            />
+                    }
                 </View>
 
                 {/********************************* Header ******************************/}
@@ -113,14 +131,18 @@ export default class Search extends Component {
                             placeholder='Password'
                             placeholderTextColor='grey'
                             onChangeText={(value) => {
+                                this.setState({isLoading:true});
+                                setTimeout(() => {
+                                    this.setState({isLoading:false});
+                                }, 1500);
+
                                 let str = value.replace(/\s+/g, '').toLocaleLowerCase();
                                 let filterdUser = post.filter((item) => item.uName.replace(/\s+/g, '').toLocaleLowerCase().includes(str));
-                                this.setState({ Users: filterdUser })
+                                this.setState({ Users: filterdUser });
                             }}
                         />
                     </Animated.View>
                 </Animated.View>
-
             </View>
         );
     }
@@ -131,7 +153,7 @@ export const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#FFF',
-       
+
     },
     header: {
         flexDirection: 'row',
