@@ -1,19 +1,15 @@
 import React, { Component, useEffect, useRef } from 'react';
 import { Text, View, StyleSheet, Image, TouchableOpacity, Animated } from 'react-native';
-import { connect } from 'react-redux';
-import { BackGroundColor } from '../utilities/colors';
 import { widthToDp, hieghtToDp, heightToDp } from '../utilities/responsiveUtils';
-import AntDesign from 'react-native-vector-icons/AntDesign';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome';
-import Video from 'react-native-video';
 
-function PlaceHolder({opacity}) {
+
+function PlaceHolder({ opacity }) {
 
     const boxAnim = useRef(new Animated.Value(1)).current;
 
     const startAnim = () => {
 
-        Animated.loop(
+        return Animated.loop(
             Animated.sequence([
                 Animated.timing(
                     boxAnim,
@@ -36,6 +32,8 @@ function PlaceHolder({opacity}) {
     }
     useEffect(() => {
         startAnim();
+
+        return boxAnim.removeAllListeners();
     }, [])
     return (
         <Animated.View style={[styles.box, { opacity: boxAnim }]}>

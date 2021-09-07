@@ -2,7 +2,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { View, Text, Animated, TextInput, StyleSheet } from "react-native";
 import Svg, { G, Circle } from "react-native-svg";
-import { circle } from 'react-native/Libraries/Animated/Easing';
+
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 const AnimatedInput = Animated.createAnimatedComponent(TextInput);
