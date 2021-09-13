@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { View, Text, StyleSheet, Image, Animated } from 'react-native';
+import React, { Component, useState } from 'react';
+import { View, Text, StyleSheet, Image, Animated, Modal, Pressable } from 'react-native';
 import { BackGroundColor } from '../utilities/colors';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { widthToDp, heightToDp } from '../utilities/responsiveUtils';
@@ -8,9 +8,43 @@ import storage from '@react-native-firebase/storage';
 import { UploadDP } from '../redux/actions/dpUploadActions';
 import { connect } from 'react-redux';
 import uuid from 'react-native-uuid';
+import { post } from '../utilities/data';
+import Icon from 'react-native-vector-icons/AntDesign';
 
+var data = post.concat(post);
 // import { utils } from '@react-native-firebase/app';
 
+
+const PopUpPic = ({ isOpen, close, image }) => {
+    const [modalVisible, setModalVisible] = useState(false);
+    return (
+        <Modal
+            animationType="fade"
+            transparent={true}
+            visible={isOpen}
+            onRequestClose={() => {
+                Alert.alert("Modal has been closed.");
+                setModalVisible(!modalVisible);
+            }}
+        >
+            <View style={[
+                StyleSheet.absoluteFillObject,
+                { backgroundColor: '#000', position: 'absolute', opacity: 0.8 }
+            ]} />
+            <View style={styles.centeredView}>
+                <View style={styles.modalView}>
+                    <Image source={image} style={styles.modaleImg} />
+                    <Pressable
+                        style={{ padding: 3, borderRadius: 20, backgroundColor: '#FFF', position: 'absolute', left: 20, top: 20 }}
+                        onPress={() => close()}
+                    >
+                        <Icon name='closecircle' size={25} color={BackGroundColor} />
+                    </Pressable>
+                </View>
+            </View>
+        </Modal>
+    )
+}
 
 
 const mapStateToProps = state => {
@@ -51,19 +85,11 @@ class Profile extends Component {
             },
         )
 
-
-        this.moveBar = this.scrollY.interpolate(
-            {
-                inputRange: [0, 1269],
-                outputRange: [0, widthToDp(100) - 10],
-                extrapolate: 'clamp'
-            },
-        )
-
-
         this.state = {
             imageUri: null,
-            cloudUrl: null
+            cloudUrl: null,
+            isOpen: false,
+            popUpImage: null,
         }
     }
 
@@ -101,7 +127,7 @@ class Profile extends Component {
                 // alert(this.state.uri)
 
                 let imgID = uuid.v4();
-                const reference = storage().ref(`users/${this.props.user.id}/images//${imgID}.jpg`);
+                const reference = storage().ref(`users/${this.props.user.id}/images/${imgID}.jpg`);
 
                 console.log('Uploading...!');
 
@@ -130,27 +156,8 @@ class Profile extends Component {
 
 
     render() {
-        const arr = [1, 2, 3, 4, 5, 6, 6, 7, , 8, 9, 10, 11, 12, 13, 14, 15];
-
         return (
-
             <View style={styles.container}>
-                <View style={{ justifyContent: 'flex-start', width: '100%' }}>
-                    <Animated.View
-                        style={{
-                            width: 10,
-                            height: 10,
-                            borderRadius: 10,
-                            backgroundColor: BackGroundColor,
-                            transform: [{
-                                translateX: this.moveBar
-                            }]
-                            // position: 'absolute'
-                        }}
-                    />
-                </View>
-
-
                 <Animated.FlatList
                     ListHeaderComponent=
                     {
@@ -238,16 +245,14 @@ class Profile extends Component {
                             </View>
                         </>
                     }
-                    data={arr}
-                    keyExtractor={(item) => item}
+                    data={data}
+                    keyExtractor={(item) => uuid.v4()}
                     // showsVerticalScrollIndicator={false}
                     numColumns={2}
                     scrollEventThrottle={32}
                     contentContainerStyle={{
-                        // justifyContent: 'center',
-                        // padding: 5,
-                        paddingBottom: 120
-
+                        paddingBottom: 120,
+                        alignItems: 'center',
                     }}
                     // pagingEnabled
                     onScroll={
@@ -261,17 +266,30 @@ class Profile extends Component {
                     }
                     renderItem={
                         ({ item, index }) => {
-
-
                             return (
-                                <View key={index} style={styles.imgPostView}>
+                                <TouchableOpacity
+                                    onLongPress={() => {
+                                        this.setState({ popUpImage: item.img })
+                                        this.setState({ isOpen: true })
+                                    }}
+                                    style={styles.imgPostView}>
                                     <Image style={styles.imgPostStyle}
-                                        source={require('../../assets/p6.jpg')} />
-                                </View>
+                                        source={item.img} />
+                                </TouchableOpacity>
                             );
                         }
                     }
                 />
+
+                <PopUpPic
+                    isOpen={this.state.isOpen}
+                    close={() => { this.setState({ isOpen: false }) }}
+                    image={this.state.popUpImage}
+                />
+                {/* <View style={[
+                    StyleSheet.absoluteFillObject,
+                    { backgroundColor: '#000', position: 'absolute', opacity: this.state.isOpen ? 0.8 : 0 }
+                ]} /> */}
             </View>
         )
     }
@@ -391,13 +409,46 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         margin: 5,
-
         elevation: 2
     },
     imgPostStyle: {
         width: widthToDp(45),
         height: widthToDp(45),
         resizeMode: 'contain'
+    },
+
+
+    centeredView: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    modalView: {
+        // margin: 20,
+        // width:'95%',
+        // height:'55%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: "white",
+        borderRadius: 10,
+        padding: 5,
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 10
+    },
+    modaleImg: {
+        width: widthToDp(90),
+        height: heightToDp(60),
+        borderRadius: 10,
+        resizeMode: 'cover',
+        backgroundColor: 'red',
     }
+
 })
 

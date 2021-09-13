@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {
     Text, View, TouchableOpacity,
-    StyleSheet, StatusBar
+    StyleSheet, StatusBar, Animated
 } from 'react-native';
 import { widthToDp, heightToDp } from '../utilities/responsiveUtils';
 import { BackGroundColor } from '../utilities/colors';
@@ -15,7 +15,7 @@ export default class Register extends Component {
 
 
         return (
-            <View style={styles.container}>
+            <Animated.View style={[styles.container, { backgroundColor: this.props.backColor }]}>
                 <View style={styles.logoView}>
                     {/* <Image source={require('../../assets/logot.png')} style={styles.logoImg} /> */}
                     <Text style={
@@ -31,7 +31,7 @@ export default class Register extends Component {
                         Rabtay
                     </Text>
                 </View>
-                <View style={styles.logInView}>
+                <Animated.View style={[styles.logInView,{backgroundColor:this.props.backColor}]}>
                     <TouchableOpacity style={styles.btnLogIn}
                         onPress={() => {
                             this.props.navigation.navigate('LogIn');
@@ -53,8 +53,8 @@ export default class Register extends Component {
                             SignUp
                         </Text>
                     </TouchableOpacity>
-                </View>
-            </View>
+                </Animated.View>
+            </Animated.View>
         );
     }
 }

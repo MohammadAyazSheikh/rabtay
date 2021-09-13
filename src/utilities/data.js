@@ -44,7 +44,7 @@ export const post =
         {
             uName:'Ahsan Jilani',
             id: 6,
-            img: null,
+            img: img2,
             videoUrl:'https://www.w3schools.com/html/mov_bbb.mp4',
             desc:'test description dummy',
             time:'3 days ago'

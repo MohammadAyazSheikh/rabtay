@@ -1,101 +1,117 @@
-import React, { Component, createRef } from 'react';
-import {
-    Text, View, TouchableOpacity,
-    StyleSheet, StatusBar, Animated, Button
-} from 'react-native';
-import { widthToDp, heightToDp } from '../utilities/responsiveUtils';
-import { BackGroundColor } from '../utilities/colors';
-import Svg, { G, Circle, Path, Line } from "react-native-svg";
+import React from 'react';
+import { Dimensions, FlatList, Image, StyleSheet, Text, View } from 'react-native';
 
-const AnimatedPath = Animated.createAnimatedComponent(Path);
+const { width } = Dimensions.get('screen');
+const smallWidth = width / 3;
+let data = [
+    1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
+];
 
-export default class Registration extends Component {
-
-    constructor(props) {
-        super(props);
-        this.offesetAnim = new Animated.Value(0);
-
-        this.PathRef = createRef()
-    }
-
-
-    componentDidMount() {
-        this.offesetAnim.addListener((v) => {
-            this.PathRef.current
-                .setNativeProps({
-                    strokeDashoffset: v.value
-                });
-        })
-    }
-
-    componentWillUnmount() {
-        this.offesetAnim.removeAllListeners();
-    }
-    render() {
-        return (
-            <View style={styles.container}>
-                <Svg width={45 * 8} height={9 * 8} viewBox={`0 0 ${46} ${10}`} fill="none" style={styles.Svg}>
-                    <AnimatedPath
-                        d="M3.91992 5.87695H2.51953V9H0.761719V0.46875H3.93164C4.93945 0.46875 5.7168 0.693359 6.26367 1.14258C6.81055 1.5918 7.08398 2.22656 7.08398 3.04688C7.08398 3.62891 6.95703 4.11523 6.70312 4.50586C6.45312 4.89258 6.07227 5.20117 5.56055 5.43164L7.40625 8.91797V9H5.51953L3.91992 5.87695ZM2.51953 4.45312H3.9375C4.37891 4.45312 4.7207 4.3418 4.96289 4.11914C5.20508 3.89258 5.32617 3.58203 5.32617 3.1875C5.32617 2.78516 5.21094 2.46875 4.98047 2.23828C4.75391 2.00781 4.4043 1.89258 3.93164 1.89258H2.51953V4.45312ZM13.2422 7.24219H10.1602L9.57422 9H7.70508L10.8809 0.46875H12.5098L15.7031 9H13.834L13.2422 7.24219ZM10.6348 5.81836H12.7676L11.6953 2.625L10.6348 5.81836ZM16.5 9V0.46875H19.4883C20.5234 0.46875 21.3086 0.667969 21.8438 1.06641C22.3789 1.46094 22.6465 2.04102 22.6465 2.80664C22.6465 3.22461 22.5391 3.59375 22.3242 3.91406C22.1094 4.23047 21.8105 4.46289 21.4277 4.61133C21.8652 4.7207 22.209 4.94141 22.459 5.27344C22.7129 5.60547 22.8398 6.01172 22.8398 6.49219C22.8398 7.3125 22.5781 7.93359 22.0547 8.35547C21.5312 8.77734 20.7852 8.99219 19.8164 9H16.5ZM18.2578 5.28516V7.58789H19.7637C20.1777 7.58789 20.5 7.49023 20.7305 7.29492C20.9648 7.0957 21.082 6.82227 21.082 6.47461C21.082 5.69336 20.6777 5.29688 19.8691 5.28516H18.2578ZM18.2578 4.04297H19.5586C20.4453 4.02734 20.8887 3.67383 20.8887 2.98242C20.8887 2.5957 20.7754 2.31836 20.5488 2.15039C20.3262 1.97852 19.9727 1.89258 19.4883 1.89258H18.2578V4.04297ZM30.4219 1.89258H27.8086V9H26.0508V1.89258H23.4727V0.46875H30.4219V1.89258ZM35.543 7.24219H32.4609L31.875 9H30.0059L33.1816 0.46875H34.8105L38.0039 9H36.1348L35.543 7.24219ZM32.9355 5.81836H35.0684L33.9961 2.625L32.9355 5.81836ZM40.8633 4.3125L42.6387 0.46875H44.5605L41.7598 5.90625V9H39.9727V5.90625L37.1719 0.46875H39.0996L40.8633 4.3125Z"
-                        fill="none"
-                        stroke='white'
-                        strokeWidth={0.5}
-                        strokeDasharray='1'
-                        ref={this.PathRef}
-                    />
-
-                    {/* <AnimatedPath
-                        d="M3.91992 5.87695H2.51953V9H0.761719V0.46875H3.93164C4.93945 0.46875 5.7168 0.693359 6.26367 1.14258C6.81055 1.5918 7.08398 2.22656 7.08398 3.04688C7.08398 3.62891 6.95703 4.11523 6.70312 4.50586C6.45312 4.89258 6.07227 5.20117 5.56055 5.43164L7.40625 8.91797V9H5.51953L3.91992 5.87695ZM2.51953 4.45312H3.9375C4.37891 4.45312 4.7207 4.3418 4.96289 4.11914C5.20508 3.89258 5.32617 3.58203 5.32617 3.1875C5.32617 2.78516 5.21094 2.46875 4.98047 2.23828C4.75391 2.00781 4.4043 1.89258 3.93164 1.89258H2.51953V4.45312ZM13.2422 7.24219H10.1602L9.57422 9H7.70508L10.8809 0.46875H12.5098L15.7031 9H13.834L13.2422 7.24219ZM10.6348 5.81836H12.7676L11.6953 2.625L10.6348 5.81836ZM16.5 9V0.46875H19.4883C20.5234 0.46875 21.3086 0.667969 21.8438 1.06641C22.3789 1.46094 22.6465 2.04102 22.6465 2.80664C22.6465 3.22461 22.5391 3.59375 22.3242 3.91406C22.1094 4.23047 21.8105 4.46289 21.4277 4.61133C21.8652 4.7207 22.209 4.94141 22.459 5.27344C22.7129 5.60547 22.8398 6.01172 22.8398 6.49219C22.8398 7.3125 22.5781 7.93359 22.0547 8.35547C21.5312 8.77734 20.7852 8.99219 19.8164 9H16.5ZM18.2578 5.28516V7.58789H19.7637C20.1777 7.58789 20.5 7.49023 20.7305 7.29492C20.9648 7.0957 21.082 6.82227 21.082 6.47461C21.082 5.69336 20.6777 5.29688 19.8691 5.28516H18.2578ZM18.2578 4.04297H19.5586C20.4453 4.02734 20.8887 3.67383 20.8887 2.98242C20.8887 2.5957 20.7754 2.31836 20.5488 2.15039C20.3262 1.97852 19.9727 1.89258 19.4883 1.89258H18.2578V4.04297ZM30.4219 1.89258H27.8086V9H26.0508V1.89258H23.4727V0.46875H30.4219V1.89258ZM35.543 7.24219H32.4609L31.875 9H30.0059L33.1816 0.46875H34.8105L38.0039 9H36.1348L35.543 7.24219ZM32.9355 5.81836H35.0684L33.9961 2.625L32.9355 5.81836ZM40.8633 4.3125L42.6387 0.46875H44.5605L41.7598 5.90625V9H39.9727V5.90625L37.1719 0.46875H39.0996L40.8633 4.3125Z"
-                        fill="none"
-                        stroke='white'
-                        strokeWidth={0.5}
-                        strokeDasharray='0'
-                        ref={this.PathRef}
-                    /> */}
-                </Svg>
-
-                <Button title='Press' onPress={() => {
-
-                    Animated.timing(this.offesetAnim, {
-                        toValue: 0,
-                        duration: 500,
-                        delay: 0,
-                        useNativeDriver: true
-                    }).start(
-                        () => {
-                            // animation(toValue === 0 ? percentage : 0)
-                            console.log('ended')
-                        }
-                    );
-                }} />
-
-            </View>
-        );
-    }
+export default function InstagramLayout() {
+    const finalData = modifyData(data);
+    return (
+        <FlatList
+            data={finalData}
+            keyExtractor={iten => iten.id}
+            renderItem={renderItem}
+        />
+    );
 }
 
-{/* <Path
-strokeWidth={5}
-stroke='green'
-fill = 'black'
-d = 'm10 50 h100 v100 h-100 v-100'
-strokeDasharray = '50 20'
-// strokeDashoffset = '10'
+const renderItem = ({ item }) => {
+    if (item.type == 1) return <TypeOne item={item} />;
+    if (item.type == 2) return <TypeTwo item={item} />;
+    if (item.type == 3) return <TypeThree item={item} />;
+    if (item.type == 4) return <TypeTwo item={item} />;
+};
 
-/> */}
+const TypeOne = ({ item }) => (
+    <View style={styles.row}>
+        <View style={styles.flex}>
+            <View style={styles.item1}>
+                <CommonItempart data={item.data[0]} />
+            </View>
+            <View style={styles.item1}>
+                <CommonItempart data={item.data[1]} />
+            </View>
+        </View>
+        <View style={styles.item2}>
+            <CommonItempart data={item.data[2]} />
+        </View>
+    </View>
+);
 
-export const styles = StyleSheet.create({
+const TypeTwo = ({ item }) => (
+    <View style={[styles.row, styles.rowWrap]}>
+        {item.data.map(x => (
+            <View key={x} style={styles.item1}>
+                <CommonItempart data={x} />
+            </View>
+        ))}
+    </View>
+);
 
-    container: {
-        flex: 1,
-        backgroundColor: BackGroundColor,
-        justifyContent: 'space-around',
-        alignItems: 'center'
-    },
+const TypeThree = ({ item }) => (
+    <View style={styles.row}>
+        <View style={styles.item2}>
+            <CommonItempart data={item.data[0]} />
+        </View>
+        <View style={styles.flex}>
+            <View style={styles.item1}>
+                <CommonItempart data={item.data[1]} />
+            </View>
+            <View style={styles.item1}>
+                <CommonItempart data={item.data[2]} />
+            </View>
+        </View>
+    </View>
+);
 
-    Svg: {
-        borderWidth: 1,
-    }
+const CommonItempart = ({ data }) =>
+    data ? (
+        <View style={styles.item1Inner}>
+            <Image source={{ uri: 'https://data.whicdn.com/images/329292597/original.jpg' }}
+                resizeMode='cover' style={styles.fill} />
+            <Text style={styles.index}>{data}</Text>
+        </View>
+    ) : null;
 
+const styles = StyleSheet.create({
+    row: { flexDirection: 'row', width: '100%' },
+    rowWrap: { flexWrap: 'wrap' },
+    flex: { flex: 1 },
+    item1: { height: smallWidth, width: smallWidth, padding: 1 },
+    item2: { height: smallWidth * 2, width: smallWidth * 2, padding: 1 },
+    item1Inner: { flex: 1, backgroundColor: '#bbb' },
+    index: { color: '#fff', fontSize: 20, position: 'absolute', bottom: 5, right: 5 },
+    fill: { height: '100%', width: '100%' }
 });
 
+const modifyData = arr => {
+    let finalData = [];
+    let type1 = true;
+    let type = 1;
+    let add = true;
+    for (let i = 0; i < arr.length; i += type1 ? 6 : 3) {
+        let j = 0;
+        let data = [];
+        while (j < (type1 ? 3 : 6)) {
+            arr[i + j] && data.push(arr[i + j]);
+            j += 1;
+        }
+        finalData.push({
+            id: Math.random().toString(),
+            data,
+            type,
+        });
+        type1 = !type1;
+        if (type == 1) {
+            add = true;
+        }
+        if (type == 4) {
+            add = false;
+        }
+        add ? type++ : type--;
+    }
+    return finalData;
+};

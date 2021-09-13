@@ -20,24 +20,30 @@ const Indicator = ({ scrollX }) => {
                     const inputRange = [(index - 1) * widthToDp(100), index * widthToDp(100), (index + 1) * widthToDp(100)];
                     const scale = scrollX.interpolate({
                         inputRange,
-                        outputRange: [0.8, 1.5, 0.8],
+                        outputRange: [1, 1.7, 1],
                         extrapolate: 'clamp'
                     });
 
                     const opacity = scrollX.interpolate({
                         inputRange,
-                        outputRange: [0.5, 1, .5],
+                        outputRange: [0.5, 1, 0.5],
+                        extrapolate: 'clamp'
+                    });
+
+                    const skew = scrollX.interpolate({
+                        inputRange,
+                        outputRange: ['0deg', '180deg', '0deg'],
                         extrapolate: 'clamp'
                     });
 
                     const backgroundColor = scrollX.interpolate({
                         inputRange: bgsRevers.map((_, i) => i * widthToDp(100)),
-                        outputRange: bgsRevers.map((bg) => bg),
+                        outputRange: bgsRevers,
                     });
 
 
 
-                    return (<Animated.View key={item.id} style={[styles.indicator, { transform: [{ scale }], opacity, backgroundColor }]} />);
+                    return (<Animated.View key={item.id} style={[styles.indicator, { transform: [{ scale },{skewX:skew}], opacity, backgroundColor,borderRadius:10 }]} />);
                 })
             }
         </View>
@@ -50,7 +56,7 @@ const BackColor = ({ scrollX }) => {
 
     const backgroundColor = scrollX.interpolate({
         inputRange: bgs.map((_, i) => i * widthToDp(100)),
-        outputRange: bgs.map((bg) => bg),
+        outputRange: bgs,
     });
 
     return (
@@ -129,11 +135,15 @@ export default class Registration extends Component {
 
                             const textColor = this.scrollX.interpolate({
                                 inputRange: bgsRevers.map((_, i) => i * widthToDp(100)),
-                                outputRange: bgsRevers.map((bg) => bg),
+                                outputRange: bgsRevers,
+                            });
+                            const backColor = this.scrollX.interpolate({
+                                inputRange: bgs.map((_, i) => i * widthToDp(100)),
+                                outputRange: bgs,
                             });
                             return item.isScreen ?
                                 <View style={{ width: widthToDp(100) }}>
-                                    <Register {...this.props} />
+                                    <Register {...this.props} backColor = {backColor} />
                                 </View>
                                 :
                                 <View style={{ justifyContent: 'center', alignItems: 'center', width: widthToDp(100) }}>
