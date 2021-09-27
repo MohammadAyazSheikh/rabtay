@@ -199,8 +199,8 @@ class Profile extends Component {
                                         <Text style={styles.txtName}  > Ayaz Sheikh</Text>
                                         <Text style={styles.txtUserName}>@AyazSheikh101</Text>
                                         <Text style={styles.txtDesc}>
-                                            falana dhimkana aur kuch nahi baus aise hi farigh admi
-                                            falana dhimkana aur kuch nhi
+                                        In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate 
+                                        the visual form of a document.
                                         </Text>
                                     </View>
                                 </View>

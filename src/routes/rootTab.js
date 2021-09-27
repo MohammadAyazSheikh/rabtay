@@ -10,8 +10,8 @@ import {
 import CenterButton from '../components/tabCenterButton';
 import Profile from '../screens/profileScreen';
 import Home from '../screens/homeScreen';
-import UserScreen from '../screens/userScreen';
 import Notification from '../screens/notificationScreen';
+import ChatTab from './chatTopTab';
 
 
 
@@ -81,7 +81,7 @@ export function root_Tab() {
             }}
         >
             <rootTab.Screen name="Home" component={Home} />
-            <rootTab.Screen name="Message" component={Screen} options={{ tabBarBadge: 3 }} />
+            <rootTab.Screen name="Message" component={ChatTab} options={{ tabBarBadge: 3 }} />
             <rootTab.Screen name="Add" component={Screen}
                 options={{
 
