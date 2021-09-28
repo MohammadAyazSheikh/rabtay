@@ -156,6 +156,7 @@ class LogIn extends Component {
                     >
                         <LoginIcon name="mail" style={styles.iconStyle} />
                         <TextInput placeholder='Email' placeholderTextColor='grey'
+                            keyboardType='email-address'
                             style={styles.txtInput} textContentType='emailAddress'
                             onChangeText={(val) => {
                                 validEmail(val) ? this.setState({ errEmail: null }) : this.setState({ errEmail: 'invalid email' })
@@ -225,7 +226,7 @@ class LogIn extends Component {
                             Forget Password?
                         </Text>
                     </TouchableOpacity>
-                    <Animatable.View ref = {this.buttonLogin}   >
+                    <Animatable.View ref={this.buttonLogin}   >
                         <TouchableOpacity
                             style={styles.btnLogIn}
                             onPress={() => {
@@ -276,7 +277,7 @@ export const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: "center",
         borderBottomLeftRadius: widthToDp(100),
-        elevation:10
+        elevation: 10
     },
     bottomView: {
         flexDirection: 'column',

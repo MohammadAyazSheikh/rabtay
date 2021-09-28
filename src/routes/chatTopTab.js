@@ -1,8 +1,9 @@
 import React from 'react';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import Message from '../screens/messageScreen';
+import Friends from '../screens/friendScreen';
 import { BackGroundColor } from '../utilities/colors';
-import { widthToDp } from '../utilities/responsiveUtils';
+import { heightToDp, widthToDp } from '../utilities/responsiveUtils';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 
@@ -23,18 +24,20 @@ export default function ChatTab() {
                     backgroundColor: '#FFF',
                     top: 10,
                     borderRadius: 15,
-                    width:'90%',
-                    alignSelf:'center',
-                    paddingVertical:3
+                    width: '90%',
+                    alignSelf: 'center',
+                    paddingVertical: 3,
+                    position:'absolute' // to hide background view
                 },
-
+                tabBarPressColor: 'skyblue',
                 tabBarIndicatorStyle: {
                     backgroundColor: BackGroundColor,
                     height: '100%',
-                    width:'50%',
-                    borderRadius:10 
+                    width: '50%',
+                    borderRadius: 10
                 },
-
+            //  tabBarItemStyle:{backgroundColor:'red'}
+        
                 // tabBarIcon:() => <Icon name = 'bell' size = {15}/>
             }}
         >
@@ -45,7 +48,7 @@ export default function ChatTab() {
             />
             <Tab.Screen
                 name="Friends"
-                component={Message}
+                component={Friends}
                 options={{ tabBarLabel: 'Friends' }}
             />
         </Tab.Navigator>

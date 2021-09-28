@@ -49,4 +49,49 @@ export const post =
             desc:'test description dummy',
             time:'3 days ago'
         },
+
+        {
+            id: 7,
+            uName:'Ali Khan',
+            img: img1,
+            desc:'test description dummy text test description dummy text test description dummy text test description dummy text',
+            time:'just now'
+        },
+        {
+            id: 8,
+            uName:'Kareem Rehmaan',
+            img: img2,
+            desc:'test description dummy text test description dummy text  description dummy text',
+            time:'9 mints ago'
+        },
+        {
+            id: 9,
+            uName:'Asad Usmani',
+            img: img3,
+            desc:'test description dummy text test description dummy text  description dummy text description dummy text  description dummy text description dummy text  description dummy text description dummy text  description dummy text description dummy text  description dummy text',
+            time:'9 mints ago'
+        },
+        {
+            uName:'Ahsan Jilani',
+            id: 410,
+            img: img4,
+            desc:'test description dummy',
+            time:'an hour ago'
+        },
+        {
+            id: 55,
+            uName:'Farhan Sheikh',
+            img: img5,
+            desc:'test description dummy text  description dummy text description dummy text  description dummy text description dummy text  description dummy text description dummy',
+            time:'an hour ago'
+        },   
+
+        {
+            uName:'Ahsan Jilani',
+            id: 68,
+            img: img2,
+            videoUrl:'https://www.w3schools.com/html/mov_bbb.mp4',
+            desc:'test description dummy',
+            time:'3 days ago'
+        },
     ]

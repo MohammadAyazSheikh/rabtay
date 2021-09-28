@@ -6,12 +6,11 @@ import {
 import { BackGroundColor } from "../utilities/colors";
 import { heightToDp, widthToDp } from "../utilities/responsiveUtils";
 import { data } from "../utilities/messageData";
-import Icon from "react-native-vector-icons/FontAwesome";
-import Icon2 from "react-native-vector-icons/Entypo";
+import Icon from "react-native-vector-icons/FontAwesome5";
 import PlaceHolder from "../components/placeHolderComponent";
 
 
-const RenderMessages = ({ isActive, uName, message, time, image }) => {
+const RenderFriends= ({ isActive, uName, message, time, image }) => {
 
     return (
         <TouchableOpacity style={styles.messageView}>
@@ -26,15 +25,12 @@ const RenderMessages = ({ isActive, uName, message, time, image }) => {
                     <Text style={styles.txtName}>{uName}</Text>
                     <Text style={styles.txtTime}>{time}</Text>
                 </View>
-                <View style={styles.footerView}>
-                    <Text style={styles.txtMessage}>{message}</Text>
-                </View>
             </View>
         </TouchableOpacity>
     );
 }
 const arr = [1, 2, 3]
-class Message extends Component {
+class Friends extends Component {
 
     constructor(props) {
         super(props);
@@ -46,11 +42,6 @@ class Message extends Component {
             outputRange: [0, -1],
         });
 
-        this._scrollY_ = this.scrollY.interpolate({ inputRange: [0, 100], outputRange: [0, 1], extrapolateLeft: 'clamp' });
-        this.addButtonAnim = Animated.diffClamp(this._scrollY_, 0, 1).interpolate({
-            inputRange: [0, 1],
-            outputRange: [0, -1],
-        });
         this.state = {
             isLoading: false,
             messages: data
@@ -94,7 +85,7 @@ class Message extends Component {
                                 )
                             }
                             renderItem={({ index, item }) =>
-                                <RenderMessages
+                                <RenderFriends
                                     uName={item.uName}
                                     message={item.uName}
                                     time={item.time}
@@ -123,21 +114,13 @@ class Message extends Component {
                         }
                     />
                 </Animated.View>
-
-                <Animated.View style={[styles.addBtnView, { transform: [{ scale: this.addButtonAnim },{rotate:'180deg'}] }]}>
-                    <TouchableOpacity style={styles.addBtn}>
-                        <Icon2 name='new-message' size={25} color='#FFF' />
-                    </TouchableOpacity>
-                </Animated.View>
-
-
             </View>
 
         )
     }
 }
 
-export default Message;
+export default Friends;
 
 const styles = StyleSheet.create({
     container: {
@@ -203,10 +186,10 @@ const styles = StyleSheet.create({
         elevation: 5,
     },
     chatView: {
-        // backgroundColor: 'red',
         flex: 1,
         height: '100%',
         paddingHorizontal: 5,
+        justifyContent:'center',
     },
     headerView: {
         flexDirection: 'row',
@@ -234,22 +217,6 @@ const styles = StyleSheet.create({
     txtMessage: {
         fontSize: widthToDp(4),
         color: 'grey'
-    },
-    addBtnView: {
-        position: 'absolute',
-        backgroundColor: BackGroundColor,
-        width: 50,
-        height: 50,
-        borderRadius: 50,
-        elevation: 5,
-        right: 20,
-        bottom: '20%'
-    },
-    addBtn: {
-        width: 50,
-        height: 50,
-        borderRadius: 50,
-        justifyContent: 'center',
-        alignItems: 'center'
     }
+
 })
