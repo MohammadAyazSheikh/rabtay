@@ -10,11 +10,16 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import Icon2 from "react-native-vector-icons/Entypo";
 import PlaceHolder from "../components/placeHolderComponent";
 
-
-const RenderMessages = ({ isActive, uName, message, time, image }) => {
+// props.navigation.navigate('Search');
+const RenderMessages = ({ isActive, uName, message, time, image, navigation }) => {
 
     return (
-        <TouchableOpacity style={styles.messageView}>
+        <TouchableOpacity
+            style={styles.messageView}
+            onPress={() => {
+                navigation.navigate('Chat');
+            }}
+        >
             <View style={styles.imageView}>
                 <Image source={image} style={styles.imageStyle} />
                 {isActive ?
@@ -27,7 +32,7 @@ const RenderMessages = ({ isActive, uName, message, time, image }) => {
                     <Text style={styles.txtTime}>{time}</Text>
                 </View>
                 <View style={styles.footerView}>
-                    <Text style={styles.txtMessage}>{message}</Text>
+                    <Text style={styles.txtMessage}>{message.length > 60 ? message.slice(0, 60) + ' ....' : message}</Text>
                 </View>
             </View>
         </TouchableOpacity>
@@ -46,7 +51,7 @@ class Message extends Component {
             outputRange: [0, -1],
         });
 
-        this._scrollY_ = this.scrollY.interpolate({ inputRange: [0, 100], outputRange: [0, 1], extrapolateLeft: 'clamp' });
+        this._scrollY_ = this.scrollY.interpolate({ inputRange: [0, 15], outputRange: [1, 0], extrapolateLeft: 'clamp' });
         this.addButtonAnim = Animated.diffClamp(this._scrollY_, 0, 1).interpolate({
             inputRange: [0, 1],
             outputRange: [0, -1],
@@ -96,10 +101,11 @@ class Message extends Component {
                             renderItem={({ index, item }) =>
                                 <RenderMessages
                                     uName={item.uName}
-                                    message={item.uName}
+                                    message={item.message}
                                     time={item.time}
                                     image={item.img}
                                     isActive={item.isActive}
+                                    {...this.props}
                                 />
                             }
                         />
@@ -124,7 +130,7 @@ class Message extends Component {
                     />
                 </Animated.View>
 
-                <Animated.View style={[styles.addBtnView, { transform: [{ scale: this.addButtonAnim },{rotate:'180deg'}] }]}>
+                <Animated.View style={[styles.addBtnView, { transform: [{ scale: this.addButtonAnim }, { rotate: '180deg' }] }]}>
                     <TouchableOpacity style={styles.addBtn}>
                         <Icon2 name='new-message' size={25} color='#FFF' />
                     </TouchableOpacity>

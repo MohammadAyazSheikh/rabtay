@@ -9,6 +9,7 @@ import { root_Tab } from './rootTab';
 import { connect } from 'react-redux';
 import Search from '../screens/searchScreen';
 import User from '../screens/userScreen'
+import Chat from '../screens/chatScreen';
 
 const rootStack = createStackNavigator();
 
@@ -55,6 +56,11 @@ function RootStack(props) {
                                 }}
                             />
                              <rootStack.Screen name="User" component={User}
+                                options={{
+                                    headerShown: false
+                                }}
+                            />
+                             <rootStack.Screen name="Chat" component={Chat}
                                 options={{
                                     headerShown: false
                                 }}

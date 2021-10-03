@@ -9,6 +9,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 const Tab = createMaterialTopTabNavigator();
 
+
 export default function ChatTab() {
     return (
         <Tab.Navigator
@@ -51,6 +52,7 @@ export default function ChatTab() {
                 component={Friends}
                 options={{ tabBarLabel: 'Friends' }}
             />
+            
         </Tab.Navigator>
     );
 }
