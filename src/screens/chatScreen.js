@@ -1,15 +1,62 @@
 import React, { Component } from "react";
 import {
     Text, View, StyleSheet, TouchableOpacity, Image,
-    Animated, TextInput, Keyboard, Platform, ScrollView, StatusBar
+    Animated, TextInput, Keyboard, Platform, ScrollView, StatusBar, FlatList
 } from 'react-native';
 import { BackGroundColor } from "../utilities/colors";
 import { heightToDp, widthToDp } from "../utilities/responsiveUtils";
 import Iconic from "react-native-vector-icons/Ionicons";
 import FA from "react-native-vector-icons/FontAwesome";
 import PlaceHolder from "../components/placeHolderComponent";
+import { data } from "../utilities/chatData";
+import { color } from "react-native-reanimated";
 
 
+const RenderMessage = ({ sender, reciever, image, message, isImage, index }) => {
+    let i;
+    if (index == data.length - 1)
+        i = index;
+    else
+        i = index + 1
+    return (
+        reciever ?
+            isImage ?
+                <Image source={image} style={[styles.imgStyleMessage,{alignSelf:'flex-end'}]} />
+                :
+                <View style={
+                    [
+                        styles.messageRecievedStyle,
+                        { marginBottom: data[i].sender ? 10 : 2 }
+                    ]
+                }>
+                    <Text style={[styles.txtSender]}>{message}</Text>
+                </View>
+
+            :
+
+            < View >
+                {
+
+                    isImage ?
+                        <Image source={image} style={[styles.imgStyleMessage]} />
+                        :
+                        <View style={[styles.messageRecievedStyle, styles.messageSentStyle,]}>
+                            <Text style={[styles.txtSender]}>{message}</Text>
+                        </View>
+                }
+
+                {
+                    !data[i].sender || data[data.length - 1].sender && index == data.length - 1 ?
+                        <Image source={image} style={[styles.imgStyle, { marginBottom: 10 }]} />
+                        :
+                        <View />
+
+                }
+            </View >
+
+
+    );
+}
 
 class Chat extends Component {
 
@@ -21,7 +68,6 @@ class Chat extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <StatusBar backgroundColor={BackGroundColor} />
                 <View style={styles.headerView}>
                     <View style={styles.backBtnView}>
                         <TouchableOpacity style={{ padding: 5 }}
@@ -52,7 +98,26 @@ class Chat extends Component {
                     </View>
                 </View>
                 <View style={styles.bodyView}>
+                    <View style={styles.chatView}>
+                        <FlatList
+                            data={data}
+                            keyExtractor={(item) => item.id}
+                            contentContainerStyle={{ paddingHorizontal: 5 }}
+                            renderItem={({ item, index }) =>
+                                <RenderMessage
+                                    sender={item.sender}
+                                    reciever={item.reciever}
+                                    image={item.img}
+                                    message={item.message}
+                                    index={index}
+                                    isImage={item.isImage}
+                                />
+                            }
+                        />
+                    </View>
+                    <View style={styles.bottomView}>
 
+                    </View>
                 </View>
             </View>
 
@@ -146,6 +211,59 @@ const styles = StyleSheet.create({
             width: 0,
             height: 0.5
         }
-    }
+    },
+
+    chatView: {
+        backgroundColor: '#FFF',
+        width: widthToDp(100),
+        height: '90%',
+    },
+
+    messageRecievedStyle: {
+        maxWidth: '80%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 10,
+        backgroundColor: BackGroundColor,
+        marginVertical: 2,
+        alignSelf: 'flex-end',
+        borderTopLeftRadius: 20,
+        borderBottomLeftRadius: 20,
+        borderTopRightRadius: 5,
+        borderBottomRightRadius: 5,
+        elevation: 10
+    },
+    messageSentStyle: {
+        backgroundColor: '#1F2421',
+        alignSelf: 'flex-start',
+        borderTopLeftRadius: 5,
+        borderBottomLeftRadius: 5,
+        borderTopRightRadius: 20,
+        borderBottomRightRadius: 20,
+    },
+    txtSender: {
+        fontSize: 14,// widthToDp(3.5)
+        color: '#FFF',
+        textShadowColor: '#000',
+        textShadowRadius: 0.5,
+        textShadowOffset: {
+            width: 0,
+            height: 0.5
+        }
+    },
+    imgStyleMessage: {
+        width: widthToDp(60),
+        height: widthToDp(60),
+        borderRadius: 5,
+        // borderWidth: 1,
+        // borderColor: '#FFF',
+    },
+    bottomView: {
+        backgroundColor: 'blue',
+        width: widthToDp(100),
+        height: '10%'
+    },
+
+
 
 })

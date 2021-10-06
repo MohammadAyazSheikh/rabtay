@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, Image, TouchableOpacity, FlatList, Animated } from 'react-native';
+import { Text, View, StyleSheet, Image, TouchableOpacity, StatusBar, Animated } from 'react-native';
 import { connect } from 'react-redux';
 import HomeHeader from '../components/homeHeaderComponents';
 import Post from '../components/postComponent';
 import { post } from '../utilities/data';
+import { BackGroundColor } from "../utilities/colors";
 import { widthToDp, heightToDp } from '../utilities/responsiveUtils';
 
 
@@ -36,7 +37,6 @@ class Home extends Component {
 
         return (
             <View style={styles.container}>
-
                 <Animated.FlatList
                     onScroll={
                         Animated.event(
