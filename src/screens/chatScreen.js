@@ -21,13 +21,13 @@ class Chat extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <StatusBar />
+                <StatusBar backgroundColor={BackGroundColor} />
                 <View style={styles.headerView}>
                     <View style={styles.backBtnView}>
                         <TouchableOpacity style={{ padding: 5 }}
-                        onPress = {()=>{this.props.navigation.navigate('Messages')}}
+                            onPress={() => { this.props.navigation.navigate('Messages') }}
                         >
-                            <Iconic name='arrow-back' color='#FFF' size={35}></Iconic>
+                            <Iconic name='arrow-back' color='#FFF' size={35} style={styles.iconStyles} ></Iconic>
                         </TouchableOpacity>
                     </View>
                     <View style={styles.centerView}>
@@ -41,13 +41,13 @@ class Chat extends Component {
                     </View>
                     <View style={styles.leftButtonView}>
                         <TouchableOpacity style={{ padding: 5 }}>
-                            <Iconic name='call' color='#FFF' size={30}></Iconic>
+                            <Iconic name='call' color='#FFF' size={30} style={styles.iconStyles}></Iconic>
                         </TouchableOpacity>
                         <TouchableOpacity style={{ padding: 5 }}>
-                            <Iconic name='videocam' color='#FFF' size={30}></Iconic>
+                            <Iconic name='videocam' color='#FFF' size={30} style={styles.iconStyles}></Iconic>
                         </TouchableOpacity>
-                        <TouchableOpacity style={{ padding: 5,}}>
-                            <FA name='exclamation-circle' color='#FFF' size={30}></FA>
+                        <TouchableOpacity style={{ padding: 5, }}>
+                            <FA name='exclamation-circle' color='#FFF' size={30} style={styles.iconStyles}></FA>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -108,9 +108,21 @@ const styles = StyleSheet.create({
         color: '#FFF',
         fontSize: 18,
         fontWeight: 'bold',
+        textShadowColor: '#000',
+        textShadowRadius: 2,
+        textShadowOffset: {
+            width: 0,
+            height: 1
+        }
     },
     txtActive: {
-        color: 'grey'
+        color: 'grey',
+        textShadowColor: '#000',
+        textShadowRadius: 1,
+        textShadowOffset: {
+            width: 0,
+            height: 0.5
+        }
     },
     leftButtonView: {
         // backgroundColor: 'yellow',
@@ -121,12 +133,19 @@ const styles = StyleSheet.create({
     },
     bodyView: {
         backgroundColor: '#FFF',
-        elevation:5,
+        elevation: 5,
         width: '100%',
         height: heightToDp(90),
         borderTopLeftRadius: heightToDp(90) / 18,
-        borderTopRightRadius: heightToDp(90) / 18, 
+        borderTopRightRadius: heightToDp(90) / 18,
     },
-
+    iconStyles: {
+        textShadowColor: '#000',
+        textShadowRadius: 1,
+        textShadowOffset: {
+            width: 0,
+            height: 0.5
+        }
+    }
 
 })
