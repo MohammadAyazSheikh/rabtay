@@ -1,7 +1,7 @@
-import React, { Component } from "react";
+import React, { Component, createRef } from "react";
 import {
-    Text, View, StyleSheet, TouchableOpacity, Image,
-    Animated, TextInput, Platform, ScrollView, FlatList
+    Text, View, StyleSheet, TouchableOpacity, Image, Dimensions,
+    Animated, TextInput, Platform, Keyboard, FlatList, KeyboardAvoidingView
 } from 'react-native';
 import { BackGroundColor, blueGradeint2, blackGradient1 } from "../utilities/colors";
 import { heightToDp, widthToDp } from "../utilities/responsiveUtils";
@@ -10,6 +10,8 @@ import FA from "react-native-vector-icons/FontAwesome";
 import PlaceHolder from "../components/placeHolderComponent";
 import { data } from "../utilities/chatData";
 import LinearGradient from 'react-native-linear-gradient';
+
+const AnimatedInput = Animated.createAnimatedComponent(TextInput);
 
 
 const RenderMessage = ({ sender, reciever, image, message, isImage, index }) => {
@@ -63,12 +65,67 @@ class Chat extends Component {
 
     constructor(props) {
         super(props);
+        this.keyboardHeight = new Animated.Value(5);
+        this.scaleInputAnim = new Animated.Value(widthToDp(60));
+        this.inputRef = createRef();
     }
 
 
+    componentDidMount() {
+        const show = Platform.OS == 'android' ? 'keyboardDidShow' : 'keyboardWillShow';
+        const hide = Platform.OS == 'android' ? 'keyboardDidHide' : 'keyboardWillHide';
+
+        this.keyboardWillShowSub = Keyboard.addListener(show, this.keyboardWillShow);
+        this.keyboardWillHideSub = Keyboard.addListener(hide, this.keyboardWillHide);
+
+        // this.scaleInputAnim.addListener((v) => {
+        //     // console.log(v.value)
+        //     this.inputRef.current
+        //         .setNativeProps({
+        //             width: v.value,
+        //         });
+        // });
+    }
+    componentWillUnmount() {
+        this.keyboardWillShowSub.remove();
+        this.keyboardWillHideSub.remove();
+        // this.scaleInputAnim.removeAllListeners();
+    }
+
+    keyboardWillShow = (event) => {
+
+        Animated.timing(this.keyboardHeight, {
+            duration: event.duration,
+            // toValue:   event.endCoordinates.height/100*60, 
+            toValue: 25,
+            useNativeDriver: false
+        }).start();
+        this.animatedInput(300, widthToDp(98));
+
+    };
+
+    keyboardWillHide = (event) => {
+        Animated.timing(this.keyboardHeight, {
+            duration: event.duration,
+            toValue: 5,
+            useNativeDriver: false
+        }).start();
+
+        this.animatedInput(300, widthToDp(60));
+
+    };
+
+    animatedInput(duration, toValue) {
+        Animated.timing(this.scaleInputAnim, {
+            duration,
+            toValue,
+            useNativeDriver: false
+        }).start();
+    }
     render() {
         return (
-            <View style={styles.container}>
+
+            <KeyboardAvoidingView style={styles.container} behavior='padding'>
                 <View style={styles.headerView}>
                     <View style={styles.backBtnView}>
                         <TouchableOpacity style={{ padding: 5 }}
@@ -116,16 +173,38 @@ class Chat extends Component {
                             }
                         />
                     </View>
-                    <View style={styles.bottomView}>
+                    <Animated.View style={[styles.bottomView, { paddingBottom: this.keyboardHeight }]}>
                         <View style={styles.bottomBtnView}>
-
+                            <TouchableOpacity style={{ padding: 5 }}>
+                                <Iconic name='camera' color={BackGroundColor} size={30} style={styles.iconStyles} />
+                            </TouchableOpacity >
+                            <TouchableOpacity style={{ padding: 5 }}>
+                                <FA name='picture-o' color={BackGroundColor} size={25} style={styles.iconStyles} />
+                            </TouchableOpacity >
+                            <TouchableOpacity style={{ padding: 5 }}>
+                                <Iconic name='mic' color={BackGroundColor} size={30} style={styles.iconStyles} />
+                            </TouchableOpacity >
                         </View>
-                        <View style={styles.txtInputView}>
-
-                        </View>
-                    </View>
+                        <Animated.View style={[styles.txtInputView, { width: this.scaleInputAnim }]}>
+                            <AnimatedInput
+                                ref={this.inputRef}
+                                placeholder='write somthing'
+                                style={styles.txtInput}
+                                placeholderTextColor='#FFF'
+                                onFocus={() => {
+                                    this.animatedInput(300, widthToDp(97))
+                                }}
+                                onBlur={() => {
+                                    this.animatedInput(300, widthToDp(60))
+                                }}
+                            />
+                            <TouchableOpacity style={{ padding: 5 }}>
+                                <Iconic name='send' color={BackGroundColor} size={25} style={styles.iconStyles} />
+                            </TouchableOpacity >
+                        </Animated.View>
+                    </Animated.View>
                 </View>
-            </View>
+            </KeyboardAvoidingView >
 
         )
     }
@@ -261,26 +340,44 @@ const styles = StyleSheet.create({
         width: widthToDp(60),
         height: widthToDp(60),
         borderRadius: 5,
-        // borderWidth: 1,
-        // borderColor: '#FFF',
     },
     bottomView: {
-        backgroundColor: 'grey',
-        // width: widthToDp(100),
-        flex:1
+        backgroundColor: '#FFF',
+        width: '100%',
+        flexDirection: 'row',
+        position: 'absolute',
+        paddingVertical: 5,
+        bottom: 0
     },
 
     bottomBtnView: {
-        backgroundColor: '#FFF',
+        // backgroundColor: '#FFF',
         height: '100%',
-        width: '45%'
+        width: '40%',
+        flexDirection: 'row',
+        justifyContent: 'space-evenly',
+        alignItems: 'center',
     },
     txtInputView: {
-        backgroundColor: 'green',
+        backgroundColor: '#FFF',
         height: '100%',
-        width: '65%'
+        width: '60%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexDirection: 'row',
+        position: 'absolute',
+        top: 5,
+        right: 0,
+
+    },
+    txtInput: {
+        // borderWidth: 1,
+        flex: 1,
+        borderRadius: 30,
+        paddingHorizontal: 10,
+        backgroundColor: BackGroundColor,
+        elevation: 2,
+        color: '#FFF',
+        // height:300
     }
-
-
-
-})
+});
