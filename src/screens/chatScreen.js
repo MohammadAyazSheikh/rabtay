@@ -1,15 +1,15 @@
 import React, { Component } from "react";
 import {
     Text, View, StyleSheet, TouchableOpacity, Image,
-    Animated, TextInput, Keyboard, Platform, ScrollView, StatusBar, FlatList
+    Animated, TextInput, Platform, ScrollView, FlatList
 } from 'react-native';
-import { BackGroundColor } from "../utilities/colors";
+import { BackGroundColor, blueGradeint2, blackGradient1 } from "../utilities/colors";
 import { heightToDp, widthToDp } from "../utilities/responsiveUtils";
 import Iconic from "react-native-vector-icons/Ionicons";
 import FA from "react-native-vector-icons/FontAwesome";
 import PlaceHolder from "../components/placeHolderComponent";
 import { data } from "../utilities/chatData";
-import { color } from "react-native-reanimated";
+import LinearGradient from 'react-native-linear-gradient';
 
 
 const RenderMessage = ({ sender, reciever, image, message, isImage, index }) => {
@@ -21,16 +21,16 @@ const RenderMessage = ({ sender, reciever, image, message, isImage, index }) => 
     return (
         reciever ?
             isImage ?
-                <Image source={image} style={[styles.imgStyleMessage,{alignSelf:'flex-end'}]} />
+                <Image source={image} style={[styles.imgStyleMessage, { alignSelf: 'flex-end' }]} />
                 :
-                <View style={
+                <LinearGradient colors={[BackGroundColor, blueGradeint2]} style={
                     [
                         styles.messageRecievedStyle,
                         { marginBottom: data[i].sender ? 10 : 2 }
                     ]
                 }>
                     <Text style={[styles.txtSender]}>{message}</Text>
-                </View>
+                </LinearGradient >
 
             :
 
@@ -40,11 +40,12 @@ const RenderMessage = ({ sender, reciever, image, message, isImage, index }) => 
                     isImage ?
                         <Image source={image} style={[styles.imgStyleMessage]} />
                         :
-                        <View style={[styles.messageRecievedStyle, styles.messageSentStyle,]}>
+                        <LinearGradient colors={[blackGradient1, '#6E8894']} style={[styles.messageRecievedStyle, styles.messageSentStyle,]}>
                             <Text style={[styles.txtSender]}>{message}</Text>
-                        </View>
+                        </LinearGradient>
                 }
 
+                {/* putting image after sender last in a row message */}
                 {
                     !data[i].sender || data[data.length - 1].sender && index == data.length - 1 ?
                         <Image source={image} style={[styles.imgStyle, { marginBottom: 10 }]} />
@@ -116,7 +117,12 @@ class Chat extends Component {
                         />
                     </View>
                     <View style={styles.bottomView}>
+                        <View style={styles.bottomBtnView}>
 
+                        </View>
+                        <View style={styles.txtInputView}>
+
+                        </View>
                     </View>
                 </View>
             </View>
@@ -259,10 +265,21 @@ const styles = StyleSheet.create({
         // borderColor: '#FFF',
     },
     bottomView: {
-        backgroundColor: 'blue',
-        width: widthToDp(100),
-        height: '10%'
+        backgroundColor: 'grey',
+        // width: widthToDp(100),
+        flex:1
     },
+
+    bottomBtnView: {
+        backgroundColor: '#FFF',
+        height: '100%',
+        width: '45%'
+    },
+    txtInputView: {
+        backgroundColor: 'green',
+        height: '100%',
+        width: '65%'
+    }
 
 
 
