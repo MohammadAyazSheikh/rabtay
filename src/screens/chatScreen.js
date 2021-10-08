@@ -65,9 +65,13 @@ class Chat extends Component {
 
     constructor(props) {
         super(props);
-        this.keyboardHeight = new Animated.Value(5);
+        this.keyboardHeight = new Animated.Value(10);
         this.scaleInputAnim = new Animated.Value(widthToDp(60));
-        this.inputRef = createRef();
+        this.scaleYInputAnim = new Animated.Value(0);
+        this.state = {
+            inputHieght: 30,
+            newLines: 0
+        }
     }
 
 
@@ -78,45 +82,37 @@ class Chat extends Component {
         this.keyboardWillShowSub = Keyboard.addListener(show, this.keyboardWillShow);
         this.keyboardWillHideSub = Keyboard.addListener(hide, this.keyboardWillHide);
 
-        // this.scaleInputAnim.addListener((v) => {
-        //     // console.log(v.value)
-        //     this.inputRef.current
-        //         .setNativeProps({
-        //             width: v.value,
-        //         });
-        // });
     }
     componentWillUnmount() {
         this.keyboardWillShowSub.remove();
         this.keyboardWillHideSub.remove();
-        // this.scaleInputAnim.removeAllListeners();
+        this.scaleYInputAnim.removeAllListeners();
     }
 
     keyboardWillShow = (event) => {
-
-        Animated.timing(this.keyboardHeight, {
-            duration: event.duration,
-            // toValue:   event.endCoordinates.height/100*60, 
-            toValue: 25,
-            useNativeDriver: false
-        }).start();
-        this.animatedInput(300, widthToDp(98));
+        // toValue:   event.endCoordinates.height/100*60, 
+        this.AnimateScaleYInput(event.duration, this.state.inputHieght);
+        this.animatedInput(200, widthToDp(98));
 
     };
 
-    keyboardWillHide = (event) => {
-        Animated.timing(this.keyboardHeight, {
-            duration: event.duration,
-            toValue: 5,
-            useNativeDriver: false
-        }).start();
-
-        this.animatedInput(300, widthToDp(60));
+    keyboardWillHide = (event) => {                         //10
+        this.AnimateScaleYInput(event.duration, this.state.newLines == 0 ? 10 : this.state.inputHieght);
+        this.animatedInput(200, widthToDp(60));
 
     };
 
     animatedInput(duration, toValue) {
         Animated.timing(this.scaleInputAnim, {
+            duration,
+            toValue,
+            useNativeDriver: false
+        }).start();
+    }
+
+    AnimateScaleYInput(duration, toValue) {
+        console.log('cauth')
+        Animated.timing(this.keyboardHeight, {
             duration,
             toValue,
             useNativeDriver: false
@@ -186,19 +182,39 @@ class Chat extends Component {
                             </TouchableOpacity >
                         </View>
                         <Animated.View style={[styles.txtInputView, { width: this.scaleInputAnim }]}>
-                            <AnimatedInput
-                                ref={this.inputRef}
+                            <TextInput
                                 placeholder='write somthing'
                                 style={styles.txtInput}
                                 placeholderTextColor='#FFF'
-                                onFocus={() => {
-                                    this.animatedInput(300, widthToDp(97))
-                                }}
-                                onBlur={() => {
-                                    this.animatedInput(300, widthToDp(60))
-                                }}
+                                keyboardType='default'
+                                multiline
+                                onChangeText={
+                                    (val) => {
+
+                                        let text = val || ' ';
+                                        let newLines = text.match(/\n/g) || '';
+                                        console.log(newLines.length)
+                                        this.setState({ newLines });
+                                        if (newLines.length < 4 && val.substr(val.length - 1, 2).includes('\n') && this.state.inputHieght < 75) {
+                                            this.setState({ inputHieght: newLines.length * 25 }, () => {
+                                                this.AnimateScaleYInput(200, this.state.inputHieght);
+                                            })
+
+                                        }
+
+                                        if (newLines.length < 4 && val.substr(val.length - 1, 2).includes('\n') && this.state.inputHieght >= 75) {
+                                            this.setState({ inputHieght: newLines.length * 25 }, () => {
+                                                this.AnimateScaleYInput(200, this.state.inputHieght);
+                                            })
+
+                                        }
+
+                                    }
+
+                                }
                             />
-                            <TouchableOpacity style={{ padding: 5 }}>
+                            < TouchableOpacity style={{ padding: 5 }
+                            }>
                                 <Iconic name='send' color={BackGroundColor} size={25} style={styles.iconStyles} />
                             </TouchableOpacity >
                         </Animated.View>
@@ -360,7 +376,8 @@ const styles = StyleSheet.create({
     },
     txtInputView: {
         backgroundColor: '#FFF',
-        height: '100%',
+        // height: '100%',
+        maxHeight: 110,
         width: '60%',
         justifyContent: 'center',
         alignItems: 'center',
@@ -368,16 +385,15 @@ const styles = StyleSheet.create({
         position: 'absolute',
         top: 5,
         right: 0,
-
     },
     txtInput: {
-        // borderWidth: 1,
+
         flex: 1,
+        // height: '100%',
         borderRadius: 30,
         paddingHorizontal: 10,
         backgroundColor: BackGroundColor,
         elevation: 2,
         color: '#FFF',
-        // height:300
     }
 });
