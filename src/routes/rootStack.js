@@ -9,11 +9,12 @@ import Splash from '../screens/splashScreen';
 import Registration from '../screens/registrationScreen';
 import LogIn from '../screens/loginScreen';
 import Signup from '../screens/signupScreen';
-import { root_Tab } from './rootTab';
+import { Root_Tab } from './rootTab';
 import { connect } from 'react-redux';
 import Search from '../screens/searchScreen';
 import User from '../screens/userScreen'
 import Chat from '../screens/chatScreen';
+import NewPost from '../screens/newPostScreen';
 
 const rootStack = createStackNavigator();
 
@@ -52,7 +53,7 @@ function RootStack(props) {
                                     },
                                 }}
                             >
-                                <rootStack.Screen name="Home" component={root_Tab}
+                                <rootStack.Screen name="Home" component={Root_Tab}
                                     options={{
                                         headerShown: false
                                     }}
@@ -68,6 +69,11 @@ function RootStack(props) {
                                     }}
                                 />
                                 <rootStack.Screen name="Chat" component={Chat}
+                                    options={{
+                                        headerShown: false
+                                    }}
+                                />
+                                <rootStack.Screen name="NewPost" component={NewPost}
                                     options={{
                                         headerShown: false
                                     }}
@@ -112,6 +118,7 @@ function RootStack(props) {
                                         headerShown: false
                                     }}
                                 />
+
 
                                 {/* <rootStack.Screen name="Home" component={Home}
                             options={{

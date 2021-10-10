@@ -6,6 +6,8 @@ import {
     Text, View, StyleSheet, Image, Animated
 } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import * as ImagePicker from 'react-native-image-picker';
+
 
 export default class CenterButton extends Component {
     constructor(props) {
@@ -15,9 +17,35 @@ export default class CenterButton extends Component {
         this.scaleBtn = new Animated.Value(0);
         this.state = {
             showBtn: true,
+            imageUri: null
         }
     }
+    selectPicture = () => {
+        let options = {
+            storageOptions: {
+                skipBackup: true,
+                path: 'images',
 
+            },
+        };
+
+        ImagePicker.launchCamera(options, async res => {
+            console.log('Response = ', res);
+
+            if (res.didCancel) {
+                console.log('User cancelled image picker');
+            } else if (res.error) {
+                console.log('ImagePicker Error: ', res.error);
+            } else if (res.customButton) {
+                console.log('User tapped custom button: ', res.customButton);
+                alert(res.customButton);
+            } else {
+                let source = res;
+                this.setState({ imageUri: source.assets[0].uri })
+                console.log(this.state.imageUri);
+            }
+        });
+    };
     animateBtn = (x_, y_, stiff, scale_) => {
         Animated.parallel([
             Animated.spring(
@@ -59,7 +87,7 @@ export default class CenterButton extends Component {
                     height: 70,
                     borderRadius: 35,
                     backgroundColor: '#FFF',
-                    overflow:"visible",
+                    overflow: "visible",
                     // elevation:100
                 }} >
 
@@ -86,8 +114,9 @@ export default class CenterButton extends Component {
                             height: 50,
                             borderRadius: 30,
                             backgroundColor: '#2fbbf0',
-
-                        }}>
+                        }}
+                        onPress={this.selectPicture.bind(this)}
+                    >
                         <Material name='camera-iris' size={30} color='#FFF' />
                     </TouchableOpacity>
                 </Animated.View>
@@ -113,7 +142,9 @@ export default class CenterButton extends Component {
                             height: 50,
                             borderRadius: 30,
                             backgroundColor: '#2fbbf0'
-                        }}>
+                        }}
+                        onPress={() => { this.props.navigation.navigate('NewPost') }}
+                    >
                         <Ant name='picture' size={30} color='#FFF' />
                     </TouchableOpacity>
                 </Animated.View>

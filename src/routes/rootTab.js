@@ -33,7 +33,7 @@ const Screen = () => {
 const rootTab = createBottomTabNavigator();
 
 
-export function root_Tab() {
+export function Root_Tab(props) {
     return (
 
         <rootTab.Navigator
@@ -85,7 +85,7 @@ export function root_Tab() {
             <rootTab.Screen name="Add" component={Screen}
                 options={{
 
-                    tabBarButton: (props) => (
+                    tabBarButton: (/*props*/) => (
                         <CenterButton {...props} />
                     ),
                 }}
