@@ -6,45 +6,16 @@ import { widthToDp, heightToDp } from '../utilities/responsiveUtils';
 import * as ImagePicker from 'react-native-image-picker';
 import storage from '@react-native-firebase/storage';
 import { UploadDP } from '../redux/actions/dpUploadActions';
+import { Logout } from '../redux/actions/logoutActions';
 import { connect } from 'react-redux';
 import uuid from 'react-native-uuid';
 import { post } from '../utilities/data';
-import Icon from 'react-native-vector-icons/AntDesign';
+import IconFeather from 'react-native-vector-icons/Feather';
+import More from '../components/profileMoreModalComponent';
+import PopUpPic from '../components/profileImagePopupModal';
 
 var data = post.concat(post);
-// import { utils } from '@react-native-firebase/app';
 
-
-const PopUpPic = ({ isOpen, close, image }) => {
-    const [modalVisible, setModalVisible] = useState(false);
-    return (
-        <Modal
-            animationType="fade"
-            transparent={true}
-            visible={isOpen}
-            onRequestClose={() => {
-                Alert.alert("Modal has been closed.");
-                setModalVisible(!modalVisible);
-            }}
-        >
-            <View style={[
-                StyleSheet.absoluteFillObject,
-                { backgroundColor: '#000', position: 'absolute', opacity: 0.8 }
-            ]} />
-            <View style={styles.centeredView}>
-                <View style={styles.modalView}>
-                    <Image source={image} style={styles.modaleImg} />
-                    <Pressable
-                        style={{ padding: 3, borderRadius: 20, backgroundColor: '#FFF', position: 'absolute', left: 20, top: 20 }}
-                        onPress={() => close()}
-                    >
-                        <Icon name='closecircle' size={25} color={BackGroundColor} />
-                    </Pressable>
-                </View>
-            </View>
-        </Modal>
-    )
-}
 
 
 const mapStateToProps = state => {
@@ -61,6 +32,9 @@ const mapDispatchToProps = (dispatch) => {
     return {
         UploadDp: (url, uid) => {
             dispatch(UploadDP(url, uid));
+        },
+        Logout: () => {
+            dispatch(Logout());
         }
     }
 };
@@ -90,6 +64,7 @@ class Profile extends Component {
             cloudUrl: null,
             isOpen: false,
             popUpImage: null,
+            isMorePanelOpen: false
         }
     }
 
@@ -146,9 +121,6 @@ class Profile extends Component {
                 task.on('state_changed', taskSnapshot => {
                     console.log(`${taskSnapshot.bytesTransferred} transferred out of ${taskSnapshot.totalBytes}`);
                 });
-
-
-
             }
         });
     };
@@ -196,11 +168,19 @@ class Profile extends Component {
                                         </View>
                                     </View>
                                     <View style={styles.aboutView}>
-                                        <Text style={styles.txtName}  > Ayaz Sheikh</Text>
+
+                                        <View style={{ justifyContent: 'space-between', width: '100%', alignItems: 'center', flexDirection: 'row' }}>
+                                            <Text style={styles.txtName}  > Ayaz Sheikh</Text>
+                                            <TouchableOpacity style={styles.btnMoreStyle}
+                                                onPress={() => { this.setState({ isMorePanelOpen: true }) }}
+                                            >
+                                                <IconFeather size={25} color={BackGroundColor} name='more-vertical' />
+                                            </TouchableOpacity>
+                                        </View>
                                         <Text style={styles.txtUserName}>@AyazSheikh101</Text>
                                         <Text style={styles.txtDesc}>
-                                        In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate 
-                                        the visual form of a document.
+                                            In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate
+                                            the visual form of a document.
                                         </Text>
                                     </View>
                                 </View>
@@ -230,7 +210,7 @@ class Profile extends Component {
                                         </Text>
                                     </TouchableOpacity>
                                 </View>
-                                <Animated.View style={{
+                                {/* <Animated.View style={{
                                     height: heightToDp(40),
                                     width: widthToDp(100),
                                     backgroundColor: '#000',
@@ -241,7 +221,7 @@ class Profile extends Component {
                                     elevation: 100,
                                     opacity: this.blur,
                                     // backgroundColor: `rgba(0,0,0, ${this.blur})`
-                                }} />
+                                }} /> */}
                             </View>
                         </>
                     }
@@ -286,10 +266,11 @@ class Profile extends Component {
                     close={() => { this.setState({ isOpen: false }) }}
                     image={this.state.popUpImage}
                 />
-                {/* <View style={[
-                    StyleSheet.absoluteFillObject,
-                    { backgroundColor: '#000', position: 'absolute', opacity: this.state.isOpen ? 0.8 : 0 }
-                ]} /> */}
+                <More
+                    isOpen={this.state.isMorePanelOpen}
+                    close={() => { this.setState({ isMorePanelOpen: false }) }}
+                    Logout={() => { this.props.Logout() }}
+                />
             </View>
         )
     }
@@ -416,39 +397,10 @@ const styles = StyleSheet.create({
         height: widthToDp(45),
         resizeMode: 'contain'
     },
-
-
-    centeredView: {
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
+    btnMoreStyle: {
+        padding: 2,
+        borderRadius: 20,
     },
-    modalView: {
-        // margin: 20,
-        // width:'95%',
-        // height:'55%',
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: "white",
-        borderRadius: 10,
-        padding: 5,
-        alignItems: "center",
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 2
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 4,
-        elevation: 10
-    },
-    modaleImg: {
-        width: widthToDp(90),
-        height: heightToDp(60),
-        borderRadius: 10,
-        resizeMode: 'cover',
-        backgroundColor: 'red',
-    }
 
 })
 

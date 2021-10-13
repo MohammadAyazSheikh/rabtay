@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import {
-    Text, View, StyleSheet, Image, TouchableOpacity,
-    TextInput, StatusBar, Animated
+    Text, View, StyleSheet, Image, TouchableOpacity,  TextInput, 
 } from 'react-native';
 import { connect } from 'react-redux';
 import { BackGroundColor } from "../utilities/colors";
@@ -10,7 +9,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Entypo from 'react-native-vector-icons/Entypo';
 import { ScrollView } from 'react-native-gesture-handler';
 import * as ImagePicker from 'react-native-image-picker';
-import { ThemeProvider } from '@react-navigation/native';
+
 
 const mapStateToProps = state => {
     return {

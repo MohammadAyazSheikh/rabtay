@@ -144,8 +144,8 @@ class Signup extends Component {
                             fontSize: widthToDp(20),
                             color: BackGroundColor,//'#053881',
                             fontFamily: 'Pacifico-Regular',
-                            textShadowOffset: {width: 1.5, height: 1},
-                            textShadowRadius:1,
+                            textShadowOffset: { width: 1.5, height: 1 },
+                            textShadowRadius: 1,
                             textShadowColor: 'black',
                         }
                     }>
@@ -169,7 +169,7 @@ class Signup extends Component {
                         >
                             <AntDesign name="user" style={styles.iconStyle} />
                             <TextInput placeholder='First Name' style={styles.txtInput}
-
+                                placeholderTextColor='grey'
                                 onChangeText={(val) => {
                                     this.setState({ Fname: val });
                                     if (this.state.Fname)
@@ -204,7 +204,7 @@ class Signup extends Component {
                         >
                             <AntDesign name="user" style={styles.iconStyle} />
                             <TextInput placeholder='Last Name' style={styles.txtInput}
-
+                                placeholderTextColor='grey'
                                 onChangeText={(val) => {
                                     this.setState({ Lname: val })
                                     if (this.state.Lname)
@@ -262,6 +262,7 @@ class Signup extends Component {
                         >
                             <AntDesign name="mail" style={styles.iconStyle} />
                             <TextInput placeholder='Email' style={styles.txtInput}
+                                placeholderTextColor='grey'
                                 onChangeText={(val) => {
                                     validEmail(val) ? this.setState({ emailErr: null }) : this.setState({ emailErr: 'invalid email' })
                                     this.setState({ email: val })
@@ -297,9 +298,8 @@ class Signup extends Component {
                         >
                             <AntDesign name="lock" style={styles.iconStyle} />
                             <TextInput placeholder='Password' style={styles.txtInput}
+                                placeholderTextColor='grey'
                                 onChangeText={(val) => {
-
-
 
                                     if (val.length > 12) {
                                         this.setState({ passErr: 'must be less than 12 characters' })
@@ -386,7 +386,7 @@ export const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: "center",
         borderBottomLeftRadius: widthToDp(100),
-        elevation:10
+        elevation: 10
     },
     bottomView: {
         flexDirection: 'column',
@@ -415,7 +415,7 @@ export const styles = StyleSheet.create({
     txtInput: {
         width: '75%',
         height: '100%',
-
+        color: BackGroundColor
     },
     iconStyle: {
         color: BackGroundColor,

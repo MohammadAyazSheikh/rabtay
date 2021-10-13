@@ -3,6 +3,10 @@ export const AUTH_SUCCES = 'AUTH_SUCCES';
 export const AUTH_FAILED = 'AUTH_FAILED';
 export const AUTH_LOADING = 'AUTH_LOADING';
 
+export const LOGOUT_SUCCES = 'LOGOUT_SUCCES';
+export const LOGOUT_FAILED = 'LOGOUT_FAILED';
+export const LOGOUT_LOADING = 'LOGOUT_LOADING';
+
 export const DP_UPLAOD_LOADING = 'DP_UPLAOD_LOADING';
 export const DP_UPLAOD_FAILED = 'DP_UPLAOD_FAILED';
 export const DP_UPLAOD_SUCCES = 'DP_UPLAOD_SUCCES';
