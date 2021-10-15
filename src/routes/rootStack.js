@@ -35,7 +35,7 @@ function RootStack(props) {
 
             <NavigationContainer>
                 {
-                    props.user.user ?
+                    props.user.user?
                         (
                             <rootStack.Navigator initialRouteName="Home"
                                 screenOptions={{

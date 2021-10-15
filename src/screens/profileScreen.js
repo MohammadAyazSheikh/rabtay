@@ -139,7 +139,7 @@ class Profile extends Component {
                                 <View style={styles.infoView}>
                                     <View style={styles.imageView}>
                                         {
-                                            this.props.user.dpUrl ?
+                                            !this.props.user?.dpUrl == null ?
                                                 <Image
                                                     source={{ uri: this.props.user.dpUrl }}
                                                     style={styles.imgStyle}

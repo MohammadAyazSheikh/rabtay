@@ -8,6 +8,8 @@ import { BackGroundColor } from '../utilities/colors';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { post } from '../utilities/data';
 import PlaceHolder from '../components/placeHolderComponent';
+import { connect } from 'react-redux';
+import { SearchUsers } from '../redux/actions/searchUsersActions';
 
 
 const User = (props) => {
@@ -24,9 +26,9 @@ const User = (props) => {
         >
             {
                 props.image ?
-                    <Image source={props.image} style={styles.imageStyle} />
+                    <Image source={{ uri: props.image }} style={styles.imageStyle} />
                     :
-                    <Image source={require('../../assets/p5.jpg')} style={styles.imageStyle} />
+                    <Image source={require('../../assets/profile.jpg')} style={styles.imageStyle} />
             }
 
             <View style={styles.infoView}>
@@ -36,8 +38,24 @@ const User = (props) => {
         </TouchableOpacity>
     )
 }
-const arr = [1, 2, 3, 4, 5,6]
-export default class Search extends Component {
+const arr = [1, 2, 3, 4, 5, 6];
+
+
+const mapStateToProps = state => {
+    return {
+        users: state.searchedUsers
+    }
+}
+
+const mapDispatchToProps = dispatch => (
+    {
+        searchUsers: () =>
+            dispatch(SearchUsers())
+    }
+)
+
+
+class Search extends Component {
     constructor(props) {
         super(props);
         this.textInputAnim = new Animated.Value(0);
@@ -68,7 +86,8 @@ export default class Search extends Component {
         ).start();
     }
     componentDidMount() {
-        this.animateTextInput()
+        this.animateTextInput();
+        this.props.searchUsers();
     }
 
 
@@ -80,14 +99,14 @@ export default class Search extends Component {
                 <View style={[styles.itemsView]}>
                     {
                         this.state.isLoading ?
-                            <ScrollView 
-                            contentContainerStyle = {{ paddingTop: heightToDp(10),paddingHorizontal:10}}
-                            showsVerticalScrollIndicator = {false}
+                            <ScrollView
+                                contentContainerStyle={{ paddingTop: heightToDp(10), paddingHorizontal: 10 }}
+                                showsVerticalScrollIndicator={false}
                             >
                                 {
                                     arr.map((item) => {
                                         return (
-                                            <PlaceHolder opacity={0.8} key = {item} />
+                                            <PlaceHolder opacity={0.8} key={item} />
                                         );
                                     })
                                 }
@@ -104,7 +123,10 @@ export default class Search extends Component {
                                 contentContainerStyle={{ paddingLeft: 2, paddingRight: 2, paddingTop: heightToDp(10) }}
                                 data={this.state.Users}
                                 keyExtractor={(item) => item.id}
-                                renderItem={({ index, item }) => <User {...this.props} name={item.uName} desc={item.desc} image={item.img} />}
+                                renderItem={({ index, item }) => <User
+                                    {...this.props} name={`${item.users.fname}  ${item.users.lname}`}
+                                    desc={'  '}
+                                    image={item.users.dpUrl} />}
                             />
                     }
                 </View>
@@ -131,13 +153,17 @@ export default class Search extends Component {
                             placeholder='Password'
                             placeholderTextColor='grey'
                             onChangeText={(value) => {
-                                this.setState({isLoading:true});
-                                setTimeout(() => {
-                                    this.setState({isLoading:false});
-                                }, 1500);
+                                // this.setState({ isLoading: true });
+                                // setTimeout(() => {
+                                //     this.setState({ isLoading: false });
+                                // }, 1500);
 
                                 let str = value.replace(/\s+/g, '').toLocaleLowerCase();
-                                let filterdUser = post.filter((item) => item.uName.replace(/\s+/g, '').toLocaleLowerCase().includes(str));
+                                // let filterdUser = post.filter((item) => item.uName.replace(/\s+/g, '').toLocaleLowerCase().includes(str));
+                                // this.setState({ Users: filterdUser });
+
+
+                                let filterdUser = this.props.users.users.filter((item) => item.uname.replace(/\s+/g, '').toLocaleLowerCase().includes(str));
                                 this.setState({ Users: filterdUser });
                             }}
                         />
@@ -147,6 +173,8 @@ export default class Search extends Component {
         );
     }
 }
+
+export default connect(mapStateToProps, mapDispatchToProps)(Search);
 
 export const styles = StyleSheet.create({
 
