@@ -1,6 +1,7 @@
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import * as ActionTypes from '../actionTypes';
+import { baseUrl } from '../../utilities/config';
 
 export const signupSuccess = (user) => (
     {
@@ -25,40 +26,55 @@ export const Register = (fname, lname, email, pass, dob, gender) => (dispatch) =
 
     dispatch(signupLoading());
 
-    auth()
-        .createUserWithEmailAndPassword(email, pass)
-        .then((response) => {
+    const data = {
+        uname: email,
+        password: pass,
+        fname: fname,
+        lname: lname,
+        dob: new Date(dob),
+        gender: gender,
+    };
 
 
-            // console.log(response);
 
-            const uid = response.user.uid;
+    return fetch(`${baseUrl}users/signup`,
+        {
+            method: "POST",
+            body: JSON.stringify(userData),
+            headers: {
+                "Content-Type": "application/json"
+            },
+            credentials: "same-origin"
+        }
+    )
+        .then(response => {
+            if (response.ok) {
+                return response;
+            }
+            else {
+                var error = new Error('Error ' + response.status + ': ' + response.statusText); //erro if user not found etc
+                error.response = response;
+                throw error;
+            }
+        },
+            error => {
+                var errmess = new Error(error.message);  //error if we face problem to connect server
+                throw errmess;
+            })
+        .then((res) => res.json())
+        .then(
+            data => {
+                //console.log("\n***response**\n\n"+data)
+                dispatch(signUpSucces(data))
+                //setTimeout(() =>dispatch(signUpSucces(data)),3000) 
+            }
+        )
+        .catch(
+            error => {
+                console.log('post Signup consolog Error', error.message);
+                alert('Your signup req could not be posted\nError: ' + error.message);
+                dispatch(signUpFailed(error.message))
+            }
+        );
 
-            const data = {
-                id: uid,
-                email: email,
-                fname: fname,
-                lname: lname,
-                dob: new Date(dob),
-                gender: gender,
-            };
-
-            const usersRef = firestore().collection('users')
-
-            usersRef
-                .doc(uid)
-                .set(data)
-                .then((response) => {
-                    dispatch(signupSuccess(data));
-                    alert('signedin');
-                })
-                .catch((error) => {
-                    alert(error);
-                    dispatch(signupFailed(error));
-                });
-        })
-        .catch((error) => {
-            dispatch(signupFailed(error));
-            alert(error)
-        });
 }
