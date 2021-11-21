@@ -1,7 +1,6 @@
-import auth from '@react-native-firebase/auth';
-import firestore from '@react-native-firebase/firestore';
 import * as ActionTypes from '../actionTypes';
 import { baseUrl } from '../../utilities/config';
+
 
 export const signupSuccess = (user) => (
     {
@@ -26,8 +25,8 @@ export const Register = (fname, lname, email, pass, dob, gender) => (dispatch) =
 
     dispatch(signupLoading());
 
-    const data = {
-        uname: email,
+    const userData = {
+        username: email,
         password: pass,
         fname: fname,
         lname: lname,
@@ -65,7 +64,7 @@ export const Register = (fname, lname, email, pass, dob, gender) => (dispatch) =
         .then(
             data => {
                 //console.log("\n***response**\n\n"+data)
-                dispatch(signUpSucces(data))
+                dispatch(signupSuccess(data));
                 //setTimeout(() =>dispatch(signUpSucces(data)),3000) 
             }
         )
@@ -73,7 +72,7 @@ export const Register = (fname, lname, email, pass, dob, gender) => (dispatch) =
             error => {
                 console.log('post Signup consolog Error', error.message);
                 alert('Your signup req could not be posted\nError: ' + error.message);
-                dispatch(signUpFailed(error.message))
+                dispatch(signupFailed(error.message))
             }
         );
 
