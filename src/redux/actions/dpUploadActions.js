@@ -1,4 +1,4 @@
-import firestore from '@react-native-firebase/firestore';
+import { baseUrl } from '../../utilities/config';
 import * as ActionTypes from '../actionTypes';
 
 
@@ -35,41 +35,78 @@ export const UploadDP = (url, uid) => (dispatch) => {
 
     dispatch(dpUploadLoading);
 
-    const usersRef = firestore().collection('users');
 
-    usersRef
-        .doc(uid)
-        .set(
-            {
-                dpUrl: url
+    const data = new FormData();
+  
+
+    return fetch(`${baseUrl}upload`,
+        {
+            method: 'post',
+            body: data,
+            headers: {
+                'Content-Type': 'multipart/form-data;',
             },
-            { merge: true }
-        )
-        .then((res) => {
-            console.log("***Dp Upload******\n" + res)
-            alert('profile picture updated..!')
-        })
-        .catch((error) => {
-            alert('failed to upload..!\nerror:' + error);
-            dispatch(dpUploadFailed(error));
-        });
-
-    usersRef
-        .doc(uid)
-        .get()
-        .then(firestoreDocument => {
-            if (!firestoreDocument.exists) {
-                alert("User does not exist anymore.")
-                return;
+            credentials: "same-origin"
+        }
+    )
+        .then(response => {
+            if (response.ok) {
+                return response;
             }
-            const user = firestoreDocument.data()
+            else {
+                var error = new Error('Error ' + response.status + ': ' + response.statusText); //erro if user not found etc
+                error.response = response;
+                throw error;
+            }
+        },
+            error => {
+                var errmess = new Error(error.message);  //error if we face problem to connect server
+                throw errmess;
+            })
+        .then((res) => res.json())
+        .then(
+            data => {
 
-            dispatch(updateDp(user))
-            dispatch(dpUploadSuccess(url));
-        })
-        .catch(error => {
-            dispatch(loginFailed(error));
-            alert(error);
-            dispatch(dpUploadFailed(error));
-        });
+                dispatch(dpUploadSuccess(url));
+                alert(data);;
+            }
+        )
+        .catch(
+            error => {
+                console.log('post Picture consolog Error', error.message);
+                alert('Could not upload image\nError: ' + error.message);
+                dispatch(dpUploadFailed(error.message));
+            }
+        );
+
+
+
 }
+
+
+
+// const uploadImage = async (fileUrl) => {
+//     //Check if any file is selected or not
+
+//     //If file selected then create FormData
+
+//     const data = new FormData();
+//     data.append('name', 'Image Upload');
+//     data.append('file_attachment', fileUrl);
+//     let res = await fetch(
+//         baseUrl + 'upload',
+//         {
+//             method: 'post',
+//             body: data,
+//             headers: {
+//                 'Content-Type': 'multipart/form-data; ',
+//             },
+//         }
+//     );
+//     let responseJson = await res.json();
+//     alert(responseJson);
+//     if (responseJson.status == 1) {
+//         alert('Upload Successful');
+//     }
+
+// };

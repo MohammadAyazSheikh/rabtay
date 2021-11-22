@@ -13,6 +13,7 @@ import { post } from '../utilities/data';
 import IconFeather from 'react-native-vector-icons/Feather';
 import More from '../components/profileMoreModalComponent';
 import PopUpPic from '../components/profileImagePopupModal';
+import { baseUrl } from '../../src/utilities/config';
 
 var data = post.concat(post);
 
@@ -102,25 +103,42 @@ class Profile extends Component {
                 // alert(this.state.uri)
 
                 let imgID = uuid.v4();
-                const reference = storage().ref(`users/${this.props.user.id}/images/${imgID}.jpg`);
+                // const reference = storage().ref(`users/${this.props.user.id}/images/${imgID}.jpg`);
 
                 console.log('Uploading...!');
+                // this.props.UploadDp(source.assets[0].uri, this.props.user._id);
 
-                let task = reference.putFile(this.state.imageUri);
 
-                task.then(async () => {
-                    console.log('Image uploaded to the bucket!');
+                var data = new FormData();
+                data.append('imageFile', { uri: source.assets[0].uri, name: 'profile_photo.jpg', type: 'image/jpg' });
 
-                    const urlCloud = await storage().ref(`users/${this.props.user.id}/images/${imgID}.jpg`).getDownloadURL();
-                    this.props.UploadDp(urlCloud, this.props.user.id);
-                    this.setState({ cloudUrl: urlCloud })
-                }).catch((e) => {
-                    console.log('uploading image error => ', e);
-                });
+                fetch(`${baseUrl}upload`,
+                    {
+                        method: 'POST',
+                        body: data
+                    }
+                )
+                    .then((response) => response.json())
+                    .then((responseJson) => {
 
-                task.on('state_changed', taskSnapshot => {
-                    console.log(`${taskSnapshot.bytesTransferred} transferred out of ${taskSnapshot.totalBytes}`);
-                });
+                        var err = 'error_message' in responseJson ? true : false
+                        if (err) {
+                            alert(responseJson.error_message)
+
+                        } else {
+
+
+                            alert(JSON.stringify(responseJson))
+
+                        }
+
+                    })
+                    .catch((error) => {
+                        console.error(error);
+                        alert(error)
+                    });
+
+
             }
         });
     };
