@@ -82,11 +82,13 @@ export const Login = (email, pass) => (dispatch) => {
             data => {
 
                 dispatch(loginSuccess(data));
-                storeToken('4ffsd4');
 
-                setTimeout(() => {
-                    getToken();
-                }, 5000);
+                console.log(`\n\n\n\n\n\n\n${data.token}\n\n\n\n\n\n`)
+                // storeToken('4ffsd4');
+
+                // setTimeout(() => {
+                //     getToken();
+                // }, 5000);
 
             }
         )

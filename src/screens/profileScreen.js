@@ -1,10 +1,9 @@
-import React, { Component, useState } from 'react';
-import { View, Text, StyleSheet, Image, Animated, Modal, Pressable } from 'react-native';
+import React, { Component } from 'react';
+import { View, Text, StyleSheet, Image, Animated } from 'react-native';
 import { BackGroundColor } from '../utilities/colors';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { widthToDp, heightToDp } from '../utilities/responsiveUtils';
 import * as ImagePicker from 'react-native-image-picker';
-import storage from '@react-native-firebase/storage';
 import { UploadDP } from '../redux/actions/dpUploadActions';
 import { Logout } from '../redux/actions/logoutActions';
 import { connect } from 'react-redux';
@@ -13,7 +12,6 @@ import { post } from '../utilities/data';
 import IconFeather from 'react-native-vector-icons/Feather';
 import More from '../components/profileMoreModalComponent';
 import PopUpPic from '../components/profileImagePopupModal';
-import { baseUrl } from '../../src/utilities/config';
 
 var data = post.concat(post);
 
@@ -21,7 +19,8 @@ var data = post.concat(post);
 
 const mapStateToProps = state => {
     return {
-        user: state.user.user,
+        user: state.user.user.user,
+        token: state.user.user.token,
         dp: state.dpUpload
     }
 }
@@ -102,42 +101,8 @@ class Profile extends Component {
                 this.setState({ imageUri: source.assets[0].uri })
                 // alert(this.state.uri)
 
-                let imgID = uuid.v4();
-                // const reference = storage().ref(`users/${this.props.user.id}/images/${imgID}.jpg`);
-
                 console.log('Uploading...!');
-                // this.props.UploadDp(source.assets[0].uri, this.props.user._id);
-
-
-                var data = new FormData();
-                data.append('imageFile', { uri: source.assets[0].uri, name: 'profile_photo.jpg', type: 'image/jpg' });
-
-                fetch(`${baseUrl}upload`,
-                    {
-                        method: 'POST',
-                        body: data
-                    }
-                )
-                    .then((response) => response.json())
-                    .then((responseJson) => {
-
-                        var err = 'error_message' in responseJson ? true : false
-                        if (err) {
-                            alert(responseJson.error_message)
-
-                        } else {
-
-
-                            alert(JSON.stringify(responseJson))
-
-                        }
-
-                    })
-                    .catch((error) => {
-                        console.error(error);
-                        alert(error)
-                    });
-
+                this.props.UploadDp(source.assets[0].uri, this.props.token);
 
             }
         });

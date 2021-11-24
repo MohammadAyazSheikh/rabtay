@@ -1,6 +1,6 @@
 import { baseUrl } from '../../utilities/config';
 import * as ActionTypes from '../actionTypes';
-
+import uuid from 'react-native-uuid';
 
 export const dpUploadSuccess = (dpUrl) => (
     {
@@ -31,20 +31,24 @@ export const updateDp = (user) => (
 
 
 
-export const UploadDP = (url, uid) => (dispatch) => {
+export const UploadDP = (url, token) => (dispatch) => {
 
     dispatch(dpUploadLoading);
 
 
-    const data = new FormData();
-  
+    const imgID = uuid.v4();
 
-    return fetch(`${baseUrl}upload`,
+    const data = new FormData();
+
+    data.append('imageFile', { uri: url, name: `${imgID}.jpg`, type: 'image/jpg' });
+
+    fetch(`${baseUrl}upload`,
         {
-            method: 'post',
+            method: 'POST',
             body: data,
             headers: {
-                'Content-Type': 'multipart/form-data;',
+                // 'Content-Type': 'multipart/form-data;',
+                "Authorization": token
             },
             credentials: "same-origin"
         }
@@ -63,7 +67,7 @@ export const UploadDP = (url, uid) => (dispatch) => {
                 var errmess = new Error(error.message);  //error if we face problem to connect server
                 throw errmess;
             })
-        .then((res) => res.json())
+        .then((response) => response.json())
         .then(
             data => {
 
@@ -78,6 +82,51 @@ export const UploadDP = (url, uid) => (dispatch) => {
                 dispatch(dpUploadFailed(error.message));
             }
         );
+
+
+    //--------------
+
+
+    // return fetch(`${baseUrl}upload`,
+    //     {
+    //         method: 'post',
+    //         body: data,
+    //         headers: {
+    //             'Content-Type': 'multipart/form-data;',
+    //             "Authorization": token
+    //         },
+    //         credentials: "same-origin"
+    //     }
+    // )
+    //     .then(response => {
+    //         if (response.ok) {
+    //             return response;
+    //         }
+    //         else {
+    //             var error = new Error('Error ' + response.status + ': ' + response.statusText); //erro if user not found etc
+    //             error.response = response;
+    //             throw error;
+    //         }
+    //     },
+    //         error => {
+    //             var errmess = new Error(error.message);  //error if we face problem to connect server
+    //             throw errmess;
+    //         })
+    //     .then((res) => res.json())
+    //     .then(
+    //         data => {
+
+    //             dispatch(dpUploadSuccess(url));
+    //             alert(data);;
+    //         }
+    //     )
+    //     .catch(
+    //         error => {
+    //             console.log('post Picture consolog Error', error.message);
+    //             alert('Could not upload image\nError: ' + error.message);
+    //             dispatch(dpUploadFailed(error.message));
+    //         }
+    //     );
 
 
 
