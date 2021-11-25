@@ -71,8 +71,9 @@ export const UploadDP = (url, token) => (dispatch) => {
         .then(
             data => {
 
-                dispatch(dpUploadSuccess(url));
-                alert(data);;
+                // dispatch(dpUploadSuccess(url));
+                dispatch(updateDp(data))
+             console.log(`\n\n\n\n====dp update data\n${JSON.stringify(data)}======\n\n\n\n`)
             }
         )
         .catch(
@@ -83,79 +84,6 @@ export const UploadDP = (url, token) => (dispatch) => {
             }
         );
 
-
-    //--------------
-
-
-    // return fetch(`${baseUrl}upload`,
-    //     {
-    //         method: 'post',
-    //         body: data,
-    //         headers: {
-    //             'Content-Type': 'multipart/form-data;',
-    //             "Authorization": token
-    //         },
-    //         credentials: "same-origin"
-    //     }
-    // )
-    //     .then(response => {
-    //         if (response.ok) {
-    //             return response;
-    //         }
-    //         else {
-    //             var error = new Error('Error ' + response.status + ': ' + response.statusText); //erro if user not found etc
-    //             error.response = response;
-    //             throw error;
-    //         }
-    //     },
-    //         error => {
-    //             var errmess = new Error(error.message);  //error if we face problem to connect server
-    //             throw errmess;
-    //         })
-    //     .then((res) => res.json())
-    //     .then(
-    //         data => {
-
-    //             dispatch(dpUploadSuccess(url));
-    //             alert(data);;
-    //         }
-    //     )
-    //     .catch(
-    //         error => {
-    //             console.log('post Picture consolog Error', error.message);
-    //             alert('Could not upload image\nError: ' + error.message);
-    //             dispatch(dpUploadFailed(error.message));
-    //         }
-    //     );
-
-
-
 }
 
 
-
-// const uploadImage = async (fileUrl) => {
-//     //Check if any file is selected or not
-
-//     //If file selected then create FormData
-
-//     const data = new FormData();
-//     data.append('name', 'Image Upload');
-//     data.append('file_attachment', fileUrl);
-//     let res = await fetch(
-//         baseUrl + 'upload',
-//         {
-//             method: 'post',
-//             body: data,
-//             headers: {
-//                 'Content-Type': 'multipart/form-data; ',
-//             },
-//         }
-//     );
-//     let responseJson = await res.json();
-//     alert(responseJson);
-//     if (responseJson.status == 1) {
-//         alert('Upload Successful');
-//     }
-
-// };

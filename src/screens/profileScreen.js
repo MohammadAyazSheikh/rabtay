@@ -12,6 +12,7 @@ import { post } from '../utilities/data';
 import IconFeather from 'react-native-vector-icons/Feather';
 import More from '../components/profileMoreModalComponent';
 import PopUpPic from '../components/profileImagePopupModal';
+import { baseUrl } from '../utilities/config';
 
 var data = post.concat(post);
 
@@ -19,9 +20,9 @@ var data = post.concat(post);
 
 const mapStateToProps = state => {
     return {
-        user: state.user.user.user,
-        token: state.user.user.token,
-        dp: state.dpUpload
+        user: state?.user?.user?.user,
+        token: state?.user?.user?.token,
+        dp: state?.dpUpload
     }
 }
 
@@ -122,9 +123,9 @@ class Profile extends Component {
                                 <View style={styles.infoView}>
                                     <View style={styles.imageView}>
                                         {
-                                            !this.props.user?.dpUrl == null ?
+                                            !this.props.user?.profileImage?.path == '' ?
                                                 <Image
-                                                    source={{ uri: this.props.user.dpUrl }}
+                                                    source={{ uri: baseUrl + this.props.user.profileImage.path }}
                                                     style={styles.imgStyle}
                                                 />
 

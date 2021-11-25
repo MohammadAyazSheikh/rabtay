@@ -24,15 +24,15 @@ export const logoutLoading = () => ({
 export const Logout = () => (dispatch) => {
 
     dispatch(logoutLoading());
-
-    auth().signOut().
-        then(() => {
-            alert('Sign out!');
-            dispatch(logoutSuccess());
-        })
-        .catch((err) => {
-            alert(err);
-            dispatch(logoutFailed(err));
-        });
+    dispatch(logoutSuccess());
+    // auth().signOut().
+    //     then(() => {
+    //         alert('Sign out!');
+    //         dispatch(logoutSuccess());
+    //     })
+    //     .catch((err) => {
+    //         alert(err);
+    //         dispatch(logoutFailed(err));
+    //     });
 
 }

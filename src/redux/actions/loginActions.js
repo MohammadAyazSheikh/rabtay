@@ -53,7 +53,7 @@ export const Login = (email, pass) => (dispatch) => {
 
     dispatch(loginLoading());
 
-    return fetch(`${baseUrl}users/signup`,
+    return fetch(`${baseUrl}users/login`,
         {
             method: "POST",
             body: JSON.stringify({ username: email, password: pass }),

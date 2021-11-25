@@ -28,7 +28,7 @@ export const Auth_Reducer = (state = { isLoading: false, user: null, errMess: nu
             return {
                 ...state,
                 isLoading: false,
-                user: action.payload,
+                user: {...state.user,user:action.payload},
                 errMess: null,
             };
         case ActionTypes.LOGOUT_SUCCES:
