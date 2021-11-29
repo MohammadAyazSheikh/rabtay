@@ -26,9 +26,7 @@ class Home extends Component {
             inputRange: [0, 1],
             outputRange: [0, -1],
         });
-        this.state = {
-
-        };
+       
     }
 
 

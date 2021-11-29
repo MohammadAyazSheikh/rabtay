@@ -10,6 +10,7 @@ import { post } from '../utilities/data';
 import PlaceHolder from '../components/placeHolderComponent';
 import { connect } from 'react-redux';
 import { SearchUsers } from '../redux/actions/searchUsersActions';
+import { baseUrl } from '../utilities/config';
 
 
 const User = (props) => {
@@ -20,13 +21,13 @@ const User = (props) => {
                 props.navigation.navigate('User', {
                     name: props.name,
                     desc: props.desc,
-                    image: props.image
+                    image: props.image? baseUrl+ props.image :null
                 })
             }}
         >
             {
                 props.image ?
-                    <Image source={{ uri: props.image }} style={styles.imageStyle} />
+                    <Image source={{ uri:baseUrl+ props.image }} style={styles.imageStyle} />
                     :
                     <Image source={require('../../assets/profile.jpg')} style={styles.imageStyle} />
             }
@@ -49,8 +50,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => (
     {
-        searchUsers: () =>
-            dispatch(SearchUsers())
+        searchUsers: (searchText) =>
+            dispatch(SearchUsers(searchText))
     }
 )
 
@@ -87,7 +88,6 @@ class Search extends Component {
     }
     componentDidMount() {
         this.animateTextInput();
-        this.props.searchUsers();
     }
 
 
@@ -98,7 +98,8 @@ class Search extends Component {
 
                 <View style={[styles.itemsView]}>
                     {
-                        this.state.isLoading ?
+                        this.props.users.isLoading ?
+                        //+++++++ Loading Component ++++++
                             <ScrollView
                                 contentContainerStyle={{ paddingTop: heightToDp(10), paddingHorizontal: 10 }}
                                 showsVerticalScrollIndicator={false}
@@ -111,6 +112,7 @@ class Search extends Component {
                                     })
                                 }
                             </ScrollView>
+                            // <Text>Searching... </Text>
                             :
                             <Animated.FlatList
 
@@ -121,13 +123,15 @@ class Search extends Component {
                                     )
                                 }
                                 contentContainerStyle={{ paddingLeft: 2, paddingRight: 2, paddingTop: heightToDp(10) }}
-                                data={this.state.Users}
-                                keyExtractor={(item) => item.id}
+                                data={this.props.users.users}
+                                keyExtractor={(item) => item._id}
                                 renderItem={({ index, item }) => <User
-                                    {...this.props} name={`${item.users.fname}  ${item.users.lname}`}
-                                    desc={'  '}
-                                    image={item.users.dpUrl} />}
+                                    {...this.props} name={`${item.fname}  ${item.lname}`}
+                                    desc={' test desc '}
+                                    image={item.profileImage?.path} 
+                                    />}
                             />
+                            // <Text>Data... </Text>
                     }
                 </View>
 
@@ -153,18 +157,14 @@ class Search extends Component {
                             placeholder='Password'
                             placeholderTextColor='grey'
                             onChangeText={(value) => {
-                                // this.setState({ isLoading: true });
-                                // setTimeout(() => {
-                                //     this.setState({ isLoading: false });
-                                // }, 1500);
 
-                                let str = value.replace(/\s+/g, '').toLocaleLowerCase();
+                                // let str = value.replace(/\s+/g, '').toLocaleLowerCase();
                                 // let filterdUser = post.filter((item) => item.uName.replace(/\s+/g, '').toLocaleLowerCase().includes(str));
                                 // this.setState({ Users: filterdUser });
+                                this.props.searchUsers(value);
 
 
-                                let filterdUser = this.props.users.users.filter((item) => item.uname.replace(/\s+/g, '').toLocaleLowerCase().includes(str));
-                                this.setState({ Users: filterdUser });
+                                // this.setState({ Users: filterdUser });
                             }}
                         />
                     </Animated.View>

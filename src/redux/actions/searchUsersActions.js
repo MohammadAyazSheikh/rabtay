@@ -1,6 +1,5 @@
-import auth from '@react-native-firebase/auth';
-import firestore from '@react-native-firebase/firestore';
 import * as ActionTypes from '../actionTypes';
+import { baseUrl } from '../../utilities/config';
 
 
 export const searchUsersSuccess = (users) => (
@@ -18,38 +17,61 @@ export const searchUsersFailed = (errMess) => (
 )
 
 export const searchUsersLoading = () => ({
-    type: ActionTypes.SEARCH_USER_FAILED,
+    type: ActionTypes.SEARCH_USER_LOADING,
 });
 
 
-export const SearchUsers = () => (dispatch) => {
+export const SearchUsers = (searchText) => (dispatch) => {
 
     dispatch(searchUsersLoading());
 
-    const usersCollection = firestore().collection('users');
-    usersCollection
-        // .where('fname','==', 'ilyas')
-        .get()
-        .then(
-            res => {
 
-                let users = [];
 
-                res.forEach(data => {
-                    users.push(
-                        {
-                            uname: data.data().fname + data.data().lname,
-                            users: data.data()
-                        }
-                    );
-                })
 
-                dispatch(searchUsersSuccess(users));
-                console.log(users)
+    return fetch(`${baseUrl}users`,
+        {
+            method: "POST",
+            body: JSON.stringify({ username: searchText }),
+            headers: {
+                "Content-Type": "application/json"
+            },
+            credentials: "same-origin"
+        }
+    )
+        .then(response => {
+            if (response.ok) {
+                return response;
+            }
+            else {
+                var error = new Error('Error ' + response.status + ': ' + response.statusText); //erro if user not found etc
+                error.response = response;
+                throw error;
+            }
+        },
+            error => {
+                var errmess = new Error(error.message);  //error if we face problem to connect server
+                throw errmess;
             })
-        .catch((err) => {
-            dispatch(searchUsersFailed(err));
-            alert(err);
-        });
+        .then((res) => res.json())
+        .then(
+            data => {
+
+                dispatch(searchUsersSuccess(data.users));
+
+                console.log(`\n\n\n\n\n\n\n${JSON.stringify( data.users)}\n\n\n\n\n\n`)
+
+
+            }
+        )
+        .catch(
+            error => {
+                console.log('post search user failed error', error.message);
+                alert('Your user searched req could not be posted\nError: ' + error.message);
+                dispatch(searchUsersFailed(error.message))
+            }
+        );
+
+
+
 
 }
