@@ -57,7 +57,7 @@ class User extends Component {
 
 
     RnderHeader = () => {
-        const { name,desc,image} = this.props.route.params;
+        const { name, desc, image } = this.props.route.params;
         return (
             <>
                 <View style={styles.Header}>
@@ -67,7 +67,7 @@ class User extends Component {
                             {
                                 image ?
                                     <Image
-                                        source={image}
+                                        source={{ uri: image }}
                                         style={styles.imgStyle}
                                     />
 
@@ -82,7 +82,7 @@ class User extends Component {
                             <Text style={styles.txtName}  > {name}</Text>
                             <Text style={styles.txtUserName}>@{name}101</Text>
                             <Text style={styles.txtDesc}>
-                              {desc.substr(0,59)}
+                                {desc.substr(0, 59)}
                             </Text>
                         </View>
                     </View>
@@ -137,8 +137,8 @@ class User extends Component {
 
     render() {
         const arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
-   
-      
+
+
         return (
 
             <View style={styles.container}>
@@ -217,8 +217,8 @@ const styles = StyleSheet.create({
         width: widthToDp(100),
         justifyContent: 'center',
         alignItems: 'center',
-        paddingTop:15,
-      
+        paddingTop: 15,
+
     },
     infoView: {
         height: '50%',
@@ -226,7 +226,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
-      
+
     },
     imageView: {
         backgroundColor: '#FFF',

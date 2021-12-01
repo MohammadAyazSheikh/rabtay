@@ -6,7 +6,6 @@ import {
 import { widthToDp, heightToDp } from '../utilities/responsiveUtils';
 import { BackGroundColor } from '../utilities/colors';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { post } from '../utilities/data';
 import PlaceHolder from '../components/placeHolderComponent';
 import { connect } from 'react-redux';
 import { SearchUsers } from '../redux/actions/searchUsersActions';
