@@ -1,33 +1,33 @@
 import { baseUrl } from '../../utilities/config';
 import * as ActionTypes from '../actionTypes';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+// import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
-const storeToken = async (value) => {
-    try {
-        console.log("\n\n\n=======" + value + "====\n\n\n");
-        await AsyncStorage.setItem('@Token', value);
-        value = await AsyncStorage.getItem('Token');
-        console.log("\n\n\n^^^^^" + value + "^^^^^\n\n\n");
-    } catch (e) {
-        alert(e)
-    }
-}
+// const storeToken = async (value) => {
+//     try {
+//         console.log("\n\n\n=======" + value + "====\n\n\n");
+//         await AsyncStorage.setItem('@Token', value);
+//         value = await AsyncStorage.getItem('Token');
+//         console.log("\n\n\n^^^^^" + value + "^^^^^\n\n\n");
+//     } catch (e) {
+//         alert(e)
+//     }
+// }
 
-const getToken = async () => {
-    try {
-        const value = await AsyncStorage.getItem('Token');
-        if (value !== null) {
-            // We have data!!
-            console.log("\n\n\n******" + value + "*****\n\n\n");
-        }
-        else {
-            console.log("\n\n\n****** null token *****\n\n\n");
-        }
-    } catch (error) {
-        console.log('get token error')
-    }
-};
+// const getToken = async () => {
+//     try {
+//         const value = await AsyncStorage.getItem('Token');
+//         if (value !== null) {
+//             // We have data!!
+//             console.log("\n\n\n******" + value + "*****\n\n\n");
+//         }
+//         else {
+//             console.log("\n\n\n****** null token *****\n\n\n");
+//         }
+//     } catch (error) {
+//         console.log('get token error')
+//     }
+// };
 
 
 export const loginSuccess = (user) => (

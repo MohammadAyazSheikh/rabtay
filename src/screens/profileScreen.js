@@ -13,6 +13,7 @@ import IconFeather from 'react-native-vector-icons/Feather';
 import More from '../components/profileMoreModalComponent';
 import PopUpPic from '../components/profileImagePopupModal';
 import { baseUrl } from '../utilities/config';
+import io from "socket.io-client";
 
 var data = post.concat(post);
 
@@ -70,6 +71,13 @@ class Profile extends Component {
     }
 
 
+    componentDidMount() {
+        this.socket = io(baseUrl);
+        this.socket.on("chat message", msg => {
+            console.log('\n\n\nsocket connecte\n\n\n');
+            console.log('\n\n\nServer MEssg:' + msg)
+        });
+    }
 
     selectPicture = () => {
         let options = {
@@ -154,17 +162,20 @@ class Profile extends Component {
                                     <View style={styles.aboutView}>
 
                                         <View style={{ justifyContent: 'space-between', width: '100%', alignItems: 'center', flexDirection: 'row' }}>
-                                            <Text style={styles.txtName}  > Ayaz Sheikh</Text>
+                                            <Text style={styles.txtName}  > {`${this.props.user?.fname} ${this.props.user?.lname}`}</Text>
                                             <TouchableOpacity style={styles.btnMoreStyle}
                                                 onPress={() => { this.setState({ isMorePanelOpen: true }) }}
                                             >
                                                 <IconFeather size={25} color={BackGroundColor} name='more-vertical' />
                                             </TouchableOpacity>
                                         </View>
-                                        <Text style={styles.txtUserName}>@AyazSheikh101</Text>
+                                        <Text style={styles.txtUserName}>{this.props.user?.username}</Text>
                                         <Text style={styles.txtDesc}>
-                                            In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate
-                                            the visual form of a document.
+                                            {
+                                                this.props.user?.about ||
+                                                ' In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate' +
+                                                'the visual form of a document.'
+                                            }
                                         </Text>
                                     </View>
                                 </View>

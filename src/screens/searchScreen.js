@@ -20,13 +20,13 @@ const User = (props) => {
                 props.navigation.navigate('User', {
                     name: props.name,
                     desc: props.desc,
-                    image: props.image? baseUrl+ props.image :null
+                    image: props.image ? baseUrl + props.image : null
                 })
             }}
         >
             {
                 props.image ?
-                    <Image source={{ uri:baseUrl+ props.image }} style={styles.imageStyle} />
+                    <Image source={{ uri: baseUrl + props.image }} style={styles.imageStyle} />
                     :
                     <Image source={require('../../assets/profile.jpg')} style={styles.imageStyle} />
             }
@@ -98,7 +98,7 @@ class Search extends Component {
                 <View style={[styles.itemsView]}>
                     {
                         this.props.users.isLoading ?
-                        //+++++++ Loading Component ++++++
+                            //+++++++ Loading Component ++++++
                             <ScrollView
                                 contentContainerStyle={{ paddingTop: heightToDp(10), paddingHorizontal: 10 }}
                                 showsVerticalScrollIndicator={false}
@@ -126,11 +126,12 @@ class Search extends Component {
                                 keyExtractor={(item) => item._id}
                                 renderItem={({ index, item }) => <User
                                     {...this.props} name={`${item.fname}  ${item.lname}`}
-                                    desc={' test desc '}
-                                    image={item.profileImage?.path} 
-                                    />}
+                                    desc={item.about || 'nothing special about me :-|'}
+                                    image={item.profileImage?.path}
+                                    uname={item.username}
+                                />}
                             />
-                            // <Text>Data... </Text>
+                        // <Text>Data... </Text>
                     }
                 </View>
 

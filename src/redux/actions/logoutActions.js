@@ -1,7 +1,4 @@
-import auth from '@react-native-firebase/auth';
-import firestore from '@react-native-firebase/firestore';
 import * as ActionTypes from '../actionTypes';
-import { loginFailed } from './loginActions';
 
 export const logoutSuccess = () => (
     {
@@ -25,14 +22,4 @@ export const Logout = () => (dispatch) => {
 
     dispatch(logoutLoading());
     dispatch(logoutSuccess());
-    // auth().signOut().
-    //     then(() => {
-    //         alert('Sign out!');
-    //         dispatch(logoutSuccess());
-    //     })
-    //     .catch((err) => {
-    //         alert(err);
-    //         dispatch(logoutFailed(err));
-    //     });
-
 }

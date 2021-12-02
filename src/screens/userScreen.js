@@ -57,7 +57,7 @@ class User extends Component {
 
 
     RnderHeader = () => {
-        const { name, desc, image } = this.props.route.params;
+        const { name, desc, image, uname } = this.props.route.params;
         return (
             <>
                 <View style={styles.Header}>
@@ -80,7 +80,7 @@ class User extends Component {
                         </View>
                         <View style={styles.aboutView}>
                             <Text style={styles.txtName}  > {name}</Text>
-                            <Text style={styles.txtUserName}>@{name}101</Text>
+                            <Text style={styles.txtUserName}>{uname}</Text>
                             <Text style={styles.txtDesc}>
                                 {desc.substr(0, 59)}
                             </Text>
