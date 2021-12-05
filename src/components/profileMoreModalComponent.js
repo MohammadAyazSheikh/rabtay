@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Modal, Pressable } from 'react-native';
 import { BackGroundColor } from '../utilities/colors';
 import { widthToDp } from '../utilities/responsiveUtils';
 import Icon from 'react-native-vector-icons/AntDesign';
-import * as Animatable from 'react-native-animatable';
+import { socket } from '../lib/socket';
 
 const More = ({ isOpen, close, Logout }) => {
     return (
@@ -28,7 +28,8 @@ const More = ({ isOpen, close, Logout }) => {
                     <Pressable
                         style={styles.subBtnMore}
                         onPress={() => {
-                            Logout()
+                            Logout();
+                            socket.disconnect();
                         }}
                     >
                         <Text style={styles.txtMore}>Logout</Text>

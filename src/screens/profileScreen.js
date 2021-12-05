@@ -13,7 +13,8 @@ import IconFeather from 'react-native-vector-icons/Feather';
 import More from '../components/profileMoreModalComponent';
 import PopUpPic from '../components/profileImagePopupModal';
 import { baseUrl } from '../utilities/config';
-import io from "socket.io-client";
+
+
 
 var data = post.concat(post);
 
@@ -67,17 +68,14 @@ class Profile extends Component {
             isOpen: false,
             popUpImage: null,
             isMorePanelOpen: false
-        }
+        } 
     }
-
 
     componentDidMount() {
-        this.socket = io(baseUrl);
-        this.socket.on("chat message", msg => {
-            console.log('\n\n\nsocket connecte\n\n\n');
-            console.log('\n\n\nServer MEssg:' + msg)
-        });
+        // this.socket = io(baseUrl);
+        // this.socket.emit('active', { userId: this.props.user._id })
     }
+
 
     selectPicture = () => {
         let options = {

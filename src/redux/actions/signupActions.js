@@ -1,6 +1,6 @@
 import * as ActionTypes from '../actionTypes';
 import { baseUrl } from '../../utilities/config';
-
+import { socket, connectServer } from '../../lib/socket';
 
 export const signupSuccess = (user) => (
     {
@@ -65,6 +65,14 @@ export const Register = (fname, lname, email, pass, dob, gender) => (dispatch) =
             data => {
                 //console.log("\n***response**\n\n"+data)
                 dispatch(signupSuccess(data));
+
+                connectServer((socket) => {
+                    socket.emit('active', { userId: data.user._id });
+                    socket.on("active", msg => {
+                        console.log(msg);
+                    });
+
+                });
                 //setTimeout(() =>dispatch(signUpSucces(data)),3000) 
             }
         )

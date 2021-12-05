@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useEffect } from 'react';
 import {
     StatusBar,
 } from 'react-native';
@@ -15,7 +15,7 @@ import Search from '../screens/searchScreen';
 import User from '../screens/userScreen'
 import Chat from '../screens/chatScreen';
 import NewPost from '../screens/newPostScreen';
-
+// import socket from '../lib/socket';
 const rootStack = createStackNavigator();
 
 
@@ -29,13 +29,28 @@ const mapStateToProps = state => {
 
 
 function RootStack(props) {
+
+    // useEffect(() => {
+      
+    //     if (props.user.user) {
+    //         socket.emit('active', { userId: props.user.user.user._id });
+    //         socket.on("active", msg => {
+    //             console.log(msg);
+    //         });
+    //     }
+
+    //     return () => {
+           
+    //     };
+    // });
+
     return (
         <>
             <StatusBar backgroundColor={BackGroundColor} />
 
             <NavigationContainer>
                 {
-                    props.user.user?
+                    props.user.user ?
                         (
                             <rootStack.Navigator initialRouteName="Home"
                                 screenOptions={{

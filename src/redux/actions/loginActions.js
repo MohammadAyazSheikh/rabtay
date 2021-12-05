@@ -1,5 +1,6 @@
 import { baseUrl } from '../../utilities/config';
 import * as ActionTypes from '../actionTypes';
+import { connectServer, socket } from '../../lib/socket';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
@@ -82,20 +83,20 @@ export const Login = (email, pass) => (dispatch) => {
             data => {
 
                 dispatch(loginSuccess(data));
+                connectServer((socket) => {
+                    socket.emit('active', { userId: data.user._id });
+                    socket.on("active", msg => {
+                        console.log(msg);
+                    });
 
-                console.log(`\n\n\n\n\n\n\n${data.token}\n\n\n\n\n\n`)
-                // storeToken('4ffsd4');
-
-                // setTimeout(() => {
-                //     getToken();
-                // }, 5000);
+                });
 
             }
         )
         .catch(
             error => {
-                console.log('post Signup consolog Error', error.message);
-                alert('Your signup req could not be posted\nError: ' + error.message);
+                console.log('post login consolog Error', error.message);
+                alert('Your login req could not be posted\nError: ' + error.message);
                 dispatch(loginFailed(error.message))
             }
         );
