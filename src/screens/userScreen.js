@@ -6,14 +6,15 @@ import { widthToDp, heightToDp } from '../utilities/responsiveUtils';
 import { UploadDP } from '../redux/actions/dpUploadActions';
 import { connect } from 'react-redux';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
+import { connectServer, socket } from '../lib/socket';
 // import { utils } from '@react-native-firebase/app';
 
 
 
 const mapStateToProps = state => {
     return {
-        user: state.user.user,
-        dp: state.dpUpload
+        user: state?.user?.user?.user,
+        token: state?.user?.user?.token,
     }
 }
 
@@ -57,7 +58,7 @@ class User extends Component {
 
 
     RnderHeader = () => {
-        const { name, desc, image, uname } = this.props.route.params;
+        const { name, desc, image, uname, id } = this.props.route.params;
         return (
             <>
                 <View style={styles.Header}>
@@ -112,7 +113,16 @@ class User extends Component {
                             </Text>
                         </TouchableOpacity>
                     </View>
-                    <TouchableOpacity style={styles.btnFollow}>
+                    <TouchableOpacity style={styles.btnFollow}
+
+                        onPress={() => {
+                            socket.emit('notification', { to: id, from: this.props.user?._id });
+                            socket.on('notification', msg => {
+                                console.log('\n\n\n\n\n Notification Received\n')
+                                console.log(msg);
+                            });
+                        }}
+                    >
                         <Text style={styles.txtFollow}>{this.state.isFriend ? 'Unfollow' : 'Follow'}</Text>
                     </TouchableOpacity>
                     <Animated.View style={{

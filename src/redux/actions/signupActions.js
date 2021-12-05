@@ -63,7 +63,7 @@ export const Register = (fname, lname, email, pass, dob, gender) => (dispatch) =
         .then((res) => res.json())
         .then(
             data => {
-                //console.log("\n***response**\n\n"+data)
+                
                 dispatch(signupSuccess(data));
 
                 connectServer((socket) => {
@@ -73,7 +73,7 @@ export const Register = (fname, lname, email, pass, dob, gender) => (dispatch) =
                     });
 
                 });
-                //setTimeout(() =>dispatch(signUpSucces(data)),3000) 
+    
             }
         )
         .catch(

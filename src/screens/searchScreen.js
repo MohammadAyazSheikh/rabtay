@@ -129,6 +129,7 @@ class Search extends Component {
                                     desc={item.about || 'nothing special about me :-|'}
                                     image={item.profileImage?.path}
                                     uname={item.username}
+                                    id = {item._id}
                                 />}
                             />
                         // <Text>Data... </Text>
