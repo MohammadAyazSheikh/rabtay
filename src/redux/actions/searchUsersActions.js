@@ -58,7 +58,7 @@ export const SearchUsers = (searchText) => (dispatch) => {
 
                 dispatch(searchUsersSuccess(data.users));
 
-                console.log(`\n\n\n\n\n\n\n${JSON.stringify( data.users)}\n\n\n\n\n\n`)
+                console.log(`\n\n\n\n\n\n\n Serach Response\n\n ${JSON.stringify( data.users)}\n\n\n\n\n\n`)
 
 
             }

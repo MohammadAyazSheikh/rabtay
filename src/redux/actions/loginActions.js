@@ -83,12 +83,19 @@ export const Login = (email, pass) => (dispatch) => {
             data => {
 
                 dispatch(loginSuccess(data));
-                connectServer((socket) => {
-                    socket.emit('active', { userId: data.user._id });
-                    socket.on("active", msg => {
-                        console.log(msg);
-                    });
 
+                console.log(`\n\n\n\nLogin Respons${JSON.stringify(data)}\n\n`);
+
+                connectServer((socket) => {
+                    socket.emit('active', { userId: data.user._id, username: data.user.username });
+                    socket.on("active", msg => {
+                        console.log(`\n\n\active user listener msg from server\n\n ${JSON.stringify(msg)}`);
+                    });
+                });
+
+                socket.on('notification', msg => {
+                    console.log('\n\n\n\n\n Notification Received\n')
+                    console.log(JSON.stringify(msg));
                 });
 
             }

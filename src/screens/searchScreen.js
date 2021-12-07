@@ -19,8 +19,9 @@ const User = (props) => {
             onPress={() => {
                 props.navigation.navigate('User', {
                     name: props.name,
-                    desc: props.desc,
-                    image: props.image ? baseUrl + props.image : null
+                    about: props.about,
+                    image: props.image ? baseUrl + props.image : null,
+                    id: props.id
                 })
             }}
         >
@@ -33,7 +34,7 @@ const User = (props) => {
 
             <View style={styles.infoView}>
                 <Text style={styles.txtName}>{props.name}</Text>
-                <Text style={styles.txtDesc}>{props.desc.substr(0, 100)}</Text>
+                <Text style={styles.txtDesc}>{props.about.substr(0, 100)}</Text>
             </View>
         </TouchableOpacity>
     )
@@ -125,11 +126,12 @@ class Search extends Component {
                                 data={this.props.users.users}
                                 keyExtractor={(item) => item._id}
                                 renderItem={({ index, item }) => <User
-                                    {...this.props} name={`${item.fname}  ${item.lname}`}
-                                    desc={item.about || 'nothing special about me :-|'}
+                                    {...this.props}
+                                    name={`${item.fname}  ${item.lname}`}
+                                    about={item.about || 'nothing special about me :-|'}
                                     image={item.profileImage?.path}
+                                    id={item._id}
                                     uname={item.username}
-                                    id = {item._id}
                                 />}
                             />
                         // <Text>Data... </Text>

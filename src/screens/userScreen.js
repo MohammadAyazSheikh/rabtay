@@ -58,7 +58,8 @@ class User extends Component {
 
 
     RnderHeader = () => {
-        const { name, desc, image, uname, id } = this.props.route.params;
+        const { name, about, image, username, id } = this.props.route.params;
+        // console.log(`\n\n\n\n$User?Screen data ${item}`);
         return (
             <>
                 <View style={styles.Header}>
@@ -81,9 +82,9 @@ class User extends Component {
                         </View>
                         <View style={styles.aboutView}>
                             <Text style={styles.txtName}  > {name}</Text>
-                            <Text style={styles.txtUserName}>{uname}</Text>
+                            <Text style={styles.txtUserName}>{username}</Text>
                             <Text style={styles.txtDesc}>
-                                {desc.substr(0, 59)}
+                                {about.substr(0, 59)}
                             </Text>
                         </View>
                     </View>
@@ -116,11 +117,24 @@ class User extends Component {
                     <TouchableOpacity style={styles.btnFollow}
 
                         onPress={() => {
-                            socket.emit('notification', { to: id, from: this.props.user?._id });
-                            socket.on('notification', msg => {
-                                console.log('\n\n\n\n\n Notification Received\n')
-                                console.log(msg);
-                            });
+                            // console.log(id)
+
+                            let payload = {
+                                to: id,
+                                from: this.props.user?._id,
+                                description: `${name} wants to be your friend`,
+                                type: 'follow'
+                            }
+
+                            // description:`${name} wants to be your friend`, type:'follow'});
+                            socket.emit('notification',
+                                {
+                                    payload,
+                                    senderName: this.props.user.fname + this.props.user.lname
+                                }
+
+                            );
+
                         }}
                     >
                         <Text style={styles.txtFollow}>{this.state.isFriend ? 'Unfollow' : 'Follow'}</Text>
@@ -143,7 +157,9 @@ class User extends Component {
     }
 
 
+    componentDidMount() {
 
+    }
 
     render() {
         const arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
