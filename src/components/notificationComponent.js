@@ -4,8 +4,7 @@ import { BackGroundColor } from '../utilities/colors';
 import { heightToDp, widthToDp } from '../utilities/responsiveUtils';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import Icon from 'react-native-vector-icons/SimpleLineIcons';
-
-
+import { baseUrl } from '../utilities/config';
 
 
 
@@ -54,7 +53,12 @@ class SingleNotification extends Component {
                     <View style={styles.NotificationView}>
                         <View style={styles.infoView}>
                             <View style={styles.imageView}>
-                                <Image source={this.props.image} style={styles.imageStyle} />
+                                {
+                                    this.props.image ?
+                                        <Image source={{ uri: baseUrl + this.props.image }} style={styles.imageStyle} /> :
+                                        <Image source={require('../../assets/profile.jpg')} style={styles.imageStyle} />
+                                }
+
                             </View>
                             <View style={styles.textView}>
                                 <Text style={styles.txtName}>{this.props.uName}
@@ -78,7 +82,7 @@ const styles = StyleSheet.create({
         elevation: 10,
         width: widthToDp(100),
         height: heightToDp(14),
-        marginVertical:5,
+        marginVertical: 5,
     },
     NotificationView: {
         justifyContent: 'center',

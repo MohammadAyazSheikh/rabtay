@@ -6,13 +6,29 @@ import SingleNotification from '../components/notificationComponent';
 import Icon from 'react-native-vector-icons/Fontisto';
 import { widthToDp } from '../utilities/responsiveUtils';
 import { BackGroundColor } from '../utilities/colors';
+import { GetNotifications } from '../redux/actions/notificationsActions';
+
 
 
 const mapStateToProps = state => {
     return {
-        user: state.user.user,
+        // user: state?.user?.user?.user,
+        token: state?.user?.user?.token,
+        notific: state.notifications.notific
     }
 }
+
+
+
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        GetNotifications: (token) => {
+            dispatch(GetNotifications(token));
+        }
+    }
+};
+
 
 
 const RenderIcon = () => (
@@ -35,19 +51,24 @@ class Notification extends Component {
     }
 
 
+    componentDidMount() {
+        this.props.GetNotifications(this.props.token);
+    }
 
     render() {
         return (
             <View style={styles.container}>
                 {
-                    post.length > 0 ?
+                    // post.length > 0 ?
+                    this.props.notific.length > 0 ?
                         <FlatList
-                            data={post}
+                            data={this.props.notific}
                             keyExtractor={(item) => item.id}
                             renderItem={({ item, index }) =>
                                 <SingleNotification
-                                    uName={item.uName}
-                                    image={item.img}
+                                    uName={`${item.from.fname} ${item.from.lname}`}
+                                    image={item.from.profileImage?.path}
+                                    type={item.type}
                                 />
                             }
                             contentContainerStyle={{ paddingBottom: 120, }}
@@ -60,7 +81,7 @@ class Notification extends Component {
     }
 }
 
-export default connect(mapStateToProps, null)(Notification);
+export default connect(mapStateToProps, mapDispatchToProps)(Notification);
 
 const styles = StyleSheet.create({
     container: {
