@@ -1,4 +1,4 @@
-import React, { useState, Component } from 'react';
+import React, { useEffect } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Material2 from 'react-native-vector-icons/MaterialIcons';
@@ -12,6 +12,26 @@ import Profile from '../screens/profileScreen';
 import Home from '../screens/homeScreen';
 import Notification from '../screens/notificationScreen';
 import ChatTab from './chatTopTab';
+import { connect } from 'react-redux';
+import { GetNotificationsBadge } from '../redux/actions/notificBadgeActions';
+
+const mapStateToProps = state => {
+    return {
+        token: state?.user?.user?.token,
+        notificBadge: state?.notificationsBadge
+    }
+}
+
+
+
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        GetNotificationsBadge: (token) => {
+            dispatch(GetNotificationsBadge(token));
+        }
+    }
+};
 
 
 
@@ -34,8 +54,14 @@ const rootTab = createBottomTabNavigator();
 
 
 export function Root_Tab(props) {
-    return (
 
+    // 
+
+    useEffect(() => {
+        props.GetNotificationsBadge(props.token);
+    }, []);
+
+    return (
         <rootTab.Navigator
             screenOptions={
                 ({ route }) => ({
@@ -91,13 +117,15 @@ export function Root_Tab(props) {
                 }}
             />
             <rootTab.Screen name="Profile" component={Profile} />
-            <rootTab.Screen name="Notification" component={Notification} />
+            <rootTab.Screen name="Notification" component={Notification} options={{ tabBarBadge: props.notificBadge?.badge?.unread == 0 ? null : props.notificBadge?.badge?.unread }} />
         </rootTab.Navigator>
 
 
     );
 }
 
+
+export default connect(mapStateToProps, mapDispatchToProps)(Root_Tab);
 
 const styles = {
 

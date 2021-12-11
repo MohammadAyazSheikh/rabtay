@@ -28,7 +28,7 @@ const notificationsBadgeLaoding = (data) => (
 
 
 
-export const GetNotifications = (token) => (dispatch) => {
+export const GetNotificationsBadge = (token) => (dispatch) => {
 
     dispatch(notificationsBadgeLaoding());
 

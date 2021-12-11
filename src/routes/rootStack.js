@@ -9,7 +9,7 @@ import Splash from '../screens/splashScreen';
 import Registration from '../screens/registrationScreen';
 import LogIn from '../screens/loginScreen';
 import Signup from '../screens/signupScreen';
-import { Root_Tab } from './rootTab';
+import Root_Tab from './rootTab';
 import { connect } from 'react-redux';
 import Search from '../screens/searchScreen';
 import User from '../screens/userScreen'
@@ -31,7 +31,7 @@ const mapStateToProps = state => {
 function RootStack(props) {
 
     // useEffect(() => {
-      
+
     //     if (props.user.user) {
     //         socket.emit('active', { userId: props.user.user.user._id });
     //         socket.on("active", msg => {
@@ -40,7 +40,7 @@ function RootStack(props) {
     //     }
 
     //     return () => {
-           
+
     //     };
     // });
 
