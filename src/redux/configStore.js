@@ -5,6 +5,7 @@ import { Auth_Reducer } from './reducers/authReducer';
 import { DP_UPLOAD_Reducer } from './reducers/dpUploadReducer';
 import { Search_Users_Reducer } from './reducers/searchUserReducer'
 import { NOTIFICATIONS_REDUCER } from './reducers/notificationReducer';
+import { NOTIFICATIONS_BADGE_REDUCER } from './reducers/notificBadgeReducer';
 
 
 export const configureStore = () => {
@@ -14,7 +15,8 @@ export const configureStore = () => {
                 user: Auth_Reducer,
                 dpUpload: DP_UPLOAD_Reducer,
                 searchedUsers: Search_Users_Reducer,
-                notifications:NOTIFICATIONS_REDUCER
+                notifications: NOTIFICATIONS_REDUCER,
+                notificationsBadge: NOTIFICATIONS_BADGE_REDUCER
             }
         ), applyMiddleware(thunk, logger)
     );

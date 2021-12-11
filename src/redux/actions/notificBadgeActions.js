@@ -2,38 +2,40 @@ import { baseUrl } from '../../utilities/config';
 import * as ActionTypes from '../actionTypes';
 
 
-const getNotificationsSucces = (data) => (
+const notificationsBadgeSucces = (data) => (
     {
-        type: ActionTypes.GET_NOTIFICATIONS_SUCCES,
+        type: ActionTypes.NOTIFICATIONS_BADGE_SUCCES,
         payload: data
     }
 );
 
-const getNotificationsFailed = (data) => (
+const notificationsBadgeFailed = (data) => (
     {
-        type: ActionTypes.GET_NOTIFICATIONS_FAILED,
+        type: ActionTypes.NOTIFICATIONS_BADGE_FAILED,
         payload: data
     }
 );
 
 
-const getNotificationsLoading = (data) => (
+
+const notificationsBadgeLaoding = (data) => (
     {
-        type: ActionTypes.GET_NOTIFICATIONS_LOADIND,
+        type: ActionTypes.NOTIFICATIONS_BADGE_LOADIND,
         payload: data
     }
 );
+
 
 
 
 export const GetNotifications = (token) => (dispatch) => {
 
-    dispatch(getNotificationsLoading());
+    dispatch(notificationsBadgeLaoding());
 
 
 
 
-    fetch(`${baseUrl}users/notifications`,
+    fetch(`${baseUrl}users/notifications/unread`,
         {
             method: 'GET',
             headers: {
@@ -59,15 +61,15 @@ export const GetNotifications = (token) => (dispatch) => {
         .then((response) => response.json())
         .then(
             data => {
-                dispatch(getNotificationsSucces(data));
-                console.log(`\n\n\n\n====getNotification data\n${JSON.stringify(data)}======\n\n\n\n`)
+                dispatch(notificationsBadgeSucces(data));
+                console.log(`\n\n\n\n====Notification Badge data\n${JSON.stringify(data)}======\n\n\n\n`)
             }
         )
         .catch(
             error => {
                 console.log('getNotic Error', error.message);
                 alert('Could not getNotic\nError: ' + error.message);
-                dispatch(getNotificationsFailed(error.message));
+                dispatch(notificationsBadgeFailed(data));
             }
         );
 

@@ -60,10 +60,10 @@ class Notification extends Component {
             <View style={styles.container}>
                 {
                     // post.length > 0 ?
-                    this.props.notific.length > 0 ?
+                    this.props?.notific?.length > 0 ?
                         <FlatList
                             data={this.props.notific}
-                            keyExtractor={(item) => item.id}
+                            keyExtractor={(item) => item._id}
                             renderItem={({ item, index }) =>
                                 <SingleNotification
                                     uName={`${item.from.fname} ${item.from.lname}`}
