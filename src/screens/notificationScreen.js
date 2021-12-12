@@ -7,6 +7,7 @@ import Icon from 'react-native-vector-icons/Fontisto';
 import { widthToDp } from '../utilities/responsiveUtils';
 import { BackGroundColor } from '../utilities/colors';
 import { GetNotifications } from '../redux/actions/notificationsActions';
+import { notificationsBadgeClear, } from '../redux/actions/notificBadgeActions';
 
 
 
@@ -25,7 +26,13 @@ const mapDispatchToProps = (dispatch) => {
     return {
         GetNotifications: (token) => {
             dispatch(GetNotifications(token));
-        }
+        },
+        ClearNotificBadge: (data) => {
+            dispatch(notificationsBadgeClear(data));
+        },
+
+
+
     }
 };
 
@@ -44,16 +51,20 @@ const RenderIcon = () => (
 class Notification extends Component {
     constructor(props) {
         super(props);
-
-        this.state = {
-
-        };
     }
 
 
     componentDidMount() {
         this.props.GetNotifications(this.props.token);
+
+        setTimeout(() => { this.props.ClearNotificBadge({ unread: 0 }); }, 3000)
+
     }
+
+    // componentDidUpdate(){
+    //     this.props.GetNotifications(this.props.token);
+    //     this.props.ClearNotificBadge();
+    // }
 
     render() {
         return (

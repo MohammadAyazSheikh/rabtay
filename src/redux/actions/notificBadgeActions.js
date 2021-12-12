@@ -2,7 +2,7 @@ import { baseUrl } from '../../utilities/config';
 import * as ActionTypes from '../actionTypes';
 
 
-const notificationsBadgeSucces = (data) => (
+export const notificationsBadgeSucces = (data) => (
     {
         type: ActionTypes.NOTIFICATIONS_BADGE_SUCCES,
         payload: data
@@ -24,6 +24,16 @@ const notificationsBadgeLaoding = (data) => (
         payload: data
     }
 );
+
+export const notificationsBadgeClear = (data) => {
+    console.log('\n\n\n\n****Clear Notific fired***\n\n\n\n')
+    return (
+        {
+            type: ActionTypes.NOTIFICATIONS_BADGE_CLEAR,
+            payload: data
+        }
+    )
+};
 
 
 
