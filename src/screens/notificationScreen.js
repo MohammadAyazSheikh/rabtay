@@ -1,19 +1,19 @@
 import React, { Component } from 'react';
 import { Text, View, StyleSheet, FlatList, } from 'react-native';
 import { connect } from 'react-redux';
-import { post } from '../utilities/data';
 import SingleNotification from '../components/notificationComponent';
 import Icon from 'react-native-vector-icons/Fontisto';
 import { widthToDp } from '../utilities/responsiveUtils';
 import { BackGroundColor } from '../utilities/colors';
 import { GetNotifications } from '../redux/actions/notificationsActions';
-import { notificationsBadgeClear, } from '../redux/actions/notificBadgeActions';
+import { socket } from '../lib/socket';
+
 
 
 
 const mapStateToProps = state => {
     return {
-        // user: state?.user?.user?.user,
+        user: state?.user?.user?.user,
         token: state?.user?.user?.token,
         notific: state.notifications.notific
     }
@@ -30,9 +30,6 @@ const mapDispatchToProps = (dispatch) => {
         ClearNotificBadge: (data) => {
             dispatch(notificationsBadgeClear(data));
         },
-
-
-
     }
 };
 
@@ -56,15 +53,15 @@ class Notification extends Component {
 
     componentDidMount() {
         this.props.GetNotifications(this.props.token);
-
-        setTimeout(() => { this.props.ClearNotificBadge({ unread: 0 }); }, 3000)
-
+        socket.emit('notification',
+            {
+                markUnread: true,
+                id: this.props.user._id
+            }
+        );
     }
 
-    // componentDidUpdate(){
-    //     this.props.GetNotifications(this.props.token);
-    //     this.props.ClearNotificBadge();
-    // }
+
 
     render() {
         return (

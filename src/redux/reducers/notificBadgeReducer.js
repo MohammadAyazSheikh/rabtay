@@ -24,13 +24,13 @@ export const NOTIFICATIONS_BADGE_REDUCER = (state = { isLoading: true, badge: nu
                 notific: null,
                 errMess: null,
             };
-        case ActionTypes.NOTIFICATIONS_BADGE_CLEAR:
-            return {
-                ...state,
-                isLoading: false,
-                notific: action.payload,
-                errMess: null,
-            };
+        // case ActionTypes.NOTIFICATIONS_BADGE_CLEAR:
+        //     return {
+        //         ...state,
+        //         isLoading: false,
+        //         notific: action.payload,
+        //         errMess: null,
+        //     };
         default:
             return state;
     }

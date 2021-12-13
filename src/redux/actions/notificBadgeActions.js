@@ -25,15 +25,15 @@ const notificationsBadgeLaoding = (data) => (
     }
 );
 
-export const notificationsBadgeClear = (data) => {
-    console.log('\n\n\n\n****Clear Notific fired***\n\n\n\n')
-    return (
-        {
-            type: ActionTypes.NOTIFICATIONS_BADGE_CLEAR,
-            payload: data
-        }
-    )
-};
+// export const notificationsBadgeClear = (data) => {
+//     console.log('\n\n\n\n****Clear Notific fired***\n\n\n\n')
+//     return (
+//         {
+//             type: ActionTypes.NOTIFICATIONS_BADGE_CLEAR,
+//             payload: data
+//         }
+//     )
+// };
 
 
 
