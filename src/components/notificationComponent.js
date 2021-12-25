@@ -5,7 +5,8 @@ import { heightToDp, widthToDp } from '../utilities/responsiveUtils';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import Icon from 'react-native-vector-icons/SimpleLineIcons';
 import { baseUrl } from '../utilities/config';
-
+import { connect } from 'react-redux';
+import { FollowUser } from '../redux/actions/followUserActions';
 
 
 
@@ -13,7 +14,7 @@ import { baseUrl } from '../utilities/config';
 const swipeFromRightOpen = () => {
     // alert('Swipe from right');
 };
-const rightSwipeActions = () => {
+const rightSwipeActions = (fromId, token, follow) => {
     return (
         <View style={styles.BtnSwipeView}   >
             <TouchableOpacity style={[styles.btnSwipe, { backgroundColor: 'tomato' }]}>
@@ -22,7 +23,11 @@ const rightSwipeActions = () => {
                     Ignore
                 </Text>
             </TouchableOpacity>
-            <TouchableOpacity style={[styles.btnSwipe, { backgroundColor: BackGroundColor }]}>
+            <TouchableOpacity style={[styles.btnSwipe, { backgroundColor: BackGroundColor }]}
+                onPress={() => {
+                    follow(token, fromId);
+                }}
+            >
                 <Icon name='user-follow' size={25} color='#FFF' />
                 <Text style={styles.txtBtn}>
                     Follow
@@ -30,6 +35,25 @@ const rightSwipeActions = () => {
             </TouchableOpacity>
         </View>
     );
+};
+
+
+const mapStateToProps = state => {
+    return {
+        token: state?.user?.user?.token,
+    }
+}
+
+
+
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+
+        followUser: (token, contactId) => {
+            dispatch(FollowUser(token, contactId));
+        },
+    }
 };
 
 class SingleNotification extends Component {
@@ -46,7 +70,7 @@ class SingleNotification extends Component {
         return (
             <View style={styles.mainView}>
                 <Swipeable
-                    renderRightActions={rightSwipeActions}
+                    renderRightActions={() => rightSwipeActions(this.props.fromId, this.props.token, this.props.followUser)}
                     onSwipeableRightOpen={swipeFromRightOpen}
 
                 >
@@ -74,7 +98,7 @@ class SingleNotification extends Component {
     }
 }
 
-export default SingleNotification;
+export default connect(mapStateToProps, mapDispatchToProps)(SingleNotification);
 
 const styles = StyleSheet.create({
 

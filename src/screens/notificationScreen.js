@@ -7,6 +7,7 @@ import { widthToDp } from '../utilities/responsiveUtils';
 import { BackGroundColor } from '../utilities/colors';
 import { GetNotifications } from '../redux/actions/notificationsActions';
 import { socket } from '../lib/socket';
+import { ActivityIndicator } from 'react-native-paper';
 
 
 
@@ -15,7 +16,8 @@ const mapStateToProps = state => {
     return {
         user: state?.user?.user?.user,
         token: state?.user?.user?.token,
-        notific: state.notifications.notific
+        notific: state.notifications.notific,
+        isLoading: state.notifications.isLoading
     }
 }
 
@@ -67,22 +69,26 @@ class Notification extends Component {
         return (
             <View style={styles.container}>
                 {
-                    // post.length > 0 ?
-                    this.props?.notific?.length > 0 ?
-                        <FlatList
-                            data={this.props.notific}
-                            keyExtractor={(item) => item._id}
-                            renderItem={({ item, index }) =>
-                                <SingleNotification
-                                    uName={`${item.from.fname} ${item.from.lname}`}
-                                    image={item.from.profileImage?.path}
-                                    type={item.type}
-                                />
-                            }
-                            contentContainerStyle={{ paddingBottom: 120, }}
-                        />
+                    !this.props.isLoading ?
+                        // post.length > 0 ?
+                        this.props?.notific?.length > 0 ?
+                            <FlatList
+                                data={this.props.notific}
+                                keyExtractor={(item) => item._id}
+                                renderItem={({ item, index }) =>
+                                    <SingleNotification
+                                        uName={`${item.from.fname} ${item.from.lname}`}
+                                        image={item.from.profileImage?.path}
+                                        type={item.type}
+                                        fromId={item.from._id}
+                                    />
+                                }
+                                contentContainerStyle={{ paddingBottom: 120, }}
+                            />
+                            :
+                            <RenderIcon />
                         :
-                        <RenderIcon />
+                        <ActivityIndicator color='skyblue' size={50} />
                 }
             </View>
         )

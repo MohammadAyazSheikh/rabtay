@@ -2,6 +2,7 @@ import { baseUrl } from '../../utilities/config';
 import * as ActionTypes from '../actionTypes';
 import { connectServer, socket } from '../../lib/socket';
 import { notificationsBadgeSucces } from '../actions/notificBadgeActions';
+import { GetNotifications } from '../actions/notificationsActions';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
@@ -83,9 +84,11 @@ export const Login = (email, pass) => (dispatch) => {
         .then(
             data => {
 
+                
                 dispatch(loginSuccess(data));
 
-                console.log(`\n\n\n\nLogin Respons${JSON.stringify(data)}\n\n`);
+
+                // console.log(`\n\n\n\nLogin Respons${JSON.stringify(data)}\n\n`);
 
                 //********** establishing socket connection ************ */
                 connectServer((socket) => {
@@ -102,6 +105,9 @@ export const Login = (email, pass) => (dispatch) => {
                     let unread = { unread: msg.unreadNotific, succes: true }
 
                     dispatch(notificationsBadgeSucces(unread));
+                    let token = data.token;
+                    console.log(`\n\n\n\n\n\n\******${token}******n\n\n\n\n\n\n`)
+                    dispatch(GetNotifications(token));
                 });
 
             }
