@@ -7,6 +7,8 @@ import Icon from 'react-native-vector-icons/SimpleLineIcons';
 import { baseUrl } from '../utilities/config';
 import { connect } from 'react-redux';
 import { FollowUser } from '../redux/actions/followUserActions';
+import { GetNotifications } from '../redux/actions/notificationsActions';
+import { notificationsBadgeSucces } from '../redux/actions/notificBadgeActions';
 
 
 
@@ -14,7 +16,7 @@ import { FollowUser } from '../redux/actions/followUserActions';
 const swipeFromRightOpen = () => {
     // alert('Swipe from right');
 };
-const rightSwipeActions = (fromId, token, follow) => {
+const rightSwipeActions = (fromId, token, follow, GetNotifications, clearNotificBadge, notificLen) => {
     return (
         <View style={styles.BtnSwipeView}   >
             <TouchableOpacity style={[styles.btnSwipe, { backgroundColor: 'tomato' }]}>
@@ -26,6 +28,8 @@ const rightSwipeActions = (fromId, token, follow) => {
             <TouchableOpacity style={[styles.btnSwipe, { backgroundColor: BackGroundColor }]}
                 onPress={() => {
                     follow(token, fromId);
+                    GetNotifications(token);
+                    clearNotificBadge(notificLen);
                 }}
             >
                 <Icon name='user-follow' size={25} color='#FFF' />
@@ -41,6 +45,7 @@ const rightSwipeActions = (fromId, token, follow) => {
 const mapStateToProps = state => {
     return {
         token: state?.user?.user?.token,
+        notific: state.notifications.notific,
     }
 }
 
@@ -52,6 +57,12 @@ const mapDispatchToProps = (dispatch) => {
 
         followUser: (token, contactId) => {
             dispatch(FollowUser(token, contactId));
+        },
+        GetNotifications: (token) => {
+            dispatch(GetNotifications(token));
+        },
+        clearNotificBadge: (data) => {
+            dispatch(notificationsBadgeSucces(data));
         },
     }
 };
@@ -70,7 +81,8 @@ class SingleNotification extends Component {
         return (
             <View style={styles.mainView}>
                 <Swipeable
-                    renderRightActions={() => rightSwipeActions(this.props.fromId, this.props.token, this.props.followUser)}
+                    renderRightActions={() => rightSwipeActions(this.props.fromId, this.props.token,
+                        this.props.followUser, this.props.GetNotifications, this.props.clearNotificBadge, this.props.notific.length)}
                     onSwipeableRightOpen={swipeFromRightOpen}
 
                 >
