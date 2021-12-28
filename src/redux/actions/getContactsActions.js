@@ -22,6 +22,8 @@ export const getContactsLoading = () => (
     }
 )
 
+
+
 export const GetContacts = (token) => (dispatch) => {
 
     dispatch(getContactsLoading());
@@ -66,5 +68,9 @@ export const GetContacts = (token) => (dispatch) => {
         );
 
 }
+
+
+
+
 
 

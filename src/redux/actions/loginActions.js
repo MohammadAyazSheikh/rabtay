@@ -3,6 +3,7 @@ import * as ActionTypes from '../actionTypes';
 import { connectServer, socket } from '../../lib/socket';
 import { notificationsBadgeSucces } from '../actions/notificBadgeActions';
 import { GetNotifications } from '../actions/notificationsActions';
+import { GetContacts } from '../actions/getContactsActions';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
@@ -84,7 +85,7 @@ export const Login = (email, pass) => (dispatch) => {
         .then(
             data => {
 
-                
+
                 dispatch(loginSuccess(data));
 
 
@@ -93,9 +94,7 @@ export const Login = (email, pass) => (dispatch) => {
                 //********** establishing socket connection ************ */
                 connectServer((socket) => {
                     socket.emit('active', { userId: data.user._id, username: data.user.username });
-                    socket.on("active", msg => {
-                        console.log(`\n\n\active user listener msg from server\n\n ${JSON.stringify(msg)}`);
-                    });
+
                 });
 
                 //********** listening on notification event ************ */
@@ -110,6 +109,12 @@ export const Login = (email, pass) => (dispatch) => {
                     dispatch(GetNotifications(token));
                 });
 
+                // ****************************active user listener**************************************
+                socket.on("active", msg => {
+                    console.log(`\n\n\active user listener msg from server\n\n ${JSON.stringify(msg)}`);
+                    // alert(data)
+                    dispatch(GetContacts(data.token));
+                });
             }
         )
         .catch(

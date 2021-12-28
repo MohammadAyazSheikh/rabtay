@@ -7,16 +7,23 @@ import { BackGroundColor } from "../utilities/colors";
 import { heightToDp, widthToDp } from "../utilities/responsiveUtils";
 import { data } from "../utilities/messageData";
 import Icon from "react-native-vector-icons/FontAwesome5";
+import moment from "moment";
 import PlaceHolder from "../components/placeHolderComponent";
+import { baseUrl } from '../utilities/config';
 import { connect } from 'react-redux';
-import { GetContacts } from "../redux/actions/getContactsReducer";
+import { GetContacts } from "../redux/actions/getContactsActions";
 
-const RenderFriends = ({ isActive, uName, message, time, image }) => {
+
+const RenderFriends = ({ isActive, uName, time, image }) => {
 
     return (
         <TouchableOpacity style={styles.messageView}>
             <View style={styles.imageView}>
-                <Image source={image} style={styles.imageStyle} />
+                {image ?
+                    <Image source={{ uri: baseUrl + image }} style={styles.imageStyle} />
+                    :
+                    <Image source={require('../../assets/images/profile3.jpeg')} style={styles.imageStyle} />
+                }
                 {isActive ?
                     <View style={styles.activeStyles} /> : <View />
                 }
@@ -24,7 +31,12 @@ const RenderFriends = ({ isActive, uName, message, time, image }) => {
             <View style={styles.chatView}>
                 <View style={styles.headerView}>
                     <Text style={styles.txtName}>{uName}</Text>
-                    <Text style={styles.txtTime}>{time}</Text>
+                    {
+                        isActive ?
+                            <Text style={styles.txtTime}>active now</Text>
+                            :
+                            <Text style={styles.txtTime}>{time}</Text>
+                    }
                 </View>
             </View>
         </TouchableOpacity>
@@ -95,7 +107,7 @@ class Friends extends Component {
                         :
                         <Animated.FlatList
                             data={this.props.contacts.contacts}
-                            keyExtractor={(item) => item.id}
+                            keyExtractor={(item) => item.contacts.contactId._id}
                             contentContainerStyle={{
                                 paddingHorizontal: 10,
                                 paddingTop: heightToDp(17),
@@ -112,7 +124,7 @@ class Friends extends Component {
                             renderItem={({ index, item }) =>
                                 <RenderFriends
                                     uName={item.contacts.contactId.fname + ' ' + item.contacts.contactId.lname}
-                                    time={item.time}
+                                    time={moment(item.lastSeen).fromNow()}
                                     image={item.contacts.contactId?.profileImage?.path}
                                     isActive={item.isActive}
                                 />
