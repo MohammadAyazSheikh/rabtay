@@ -8,9 +8,10 @@ import { heightToDp, widthToDp } from "../utilities/responsiveUtils";
 import { data } from "../utilities/messageData";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import PlaceHolder from "../components/placeHolderComponent";
+import { connect } from 'react-redux';
+import { GetContacts } from "../redux/actions/getContactsReducer";
 
-
-const RenderFriends= ({ isActive, uName, message, time, image }) => {
+const RenderFriends = ({ isActive, uName, message, time, image }) => {
 
     return (
         <TouchableOpacity style={styles.messageView}>
@@ -29,7 +30,28 @@ const RenderFriends= ({ isActive, uName, message, time, image }) => {
         </TouchableOpacity>
     );
 }
-const arr = [1, 2, 3]
+
+
+const mapStateToProps = state => {
+    return {
+        token: state?.user?.user?.token,
+        contacts: state.contacts
+    }
+}
+
+
+
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        getContacts: (token) => {
+            dispatch(GetContacts(token));
+        }
+    }
+};
+
+const arr = [1, 2, 3];
+
 class Friends extends Component {
 
     constructor(props) {
@@ -48,6 +70,9 @@ class Friends extends Component {
         }
     }
 
+    componentDidMount() {
+        this.props.getContacts(this.props.token);
+    }
 
     render() {
         return (
@@ -69,7 +94,7 @@ class Friends extends Component {
 
                         :
                         <Animated.FlatList
-                            data={this.state.messages}
+                            data={this.props.contacts.contacts}
                             keyExtractor={(item) => item.id}
                             contentContainerStyle={{
                                 paddingHorizontal: 10,
@@ -86,10 +111,9 @@ class Friends extends Component {
                             }
                             renderItem={({ index, item }) =>
                                 <RenderFriends
-                                    uName={item.uName}
-                                    message={item.uName}
+                                    uName={item.contacts.contactId.fname + ' ' + item.contacts.contactId.lname}
                                     time={item.time}
-                                    image={item.img}
+                                    image={item.contacts.contactId?.profileImage?.path}
                                     isActive={item.isActive}
                                 />
                             }
@@ -120,7 +144,7 @@ class Friends extends Component {
     }
 }
 
-export default Friends;
+export default connect(mapStateToProps, mapDispatchToProps)(Friends);
 
 const styles = StyleSheet.create({
     container: {
@@ -189,7 +213,7 @@ const styles = StyleSheet.create({
         flex: 1,
         height: '100%',
         paddingHorizontal: 5,
-        justifyContent:'center',
+        justifyContent: 'center',
     },
     headerView: {
         flexDirection: 'row',
