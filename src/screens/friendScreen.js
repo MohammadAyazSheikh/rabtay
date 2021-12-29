@@ -77,8 +77,8 @@ class Friends extends Component {
         });
 
         this.state = {
-            isLoading: false,
-            messages: data
+            isLoading: this.props.contacts.isLaoding,
+            contacts: this.props.contacts.contacts
         }
     }
 
@@ -106,7 +106,7 @@ class Friends extends Component {
 
                         :
                         <Animated.FlatList
-                            data={this.props.contacts.contacts}
+                            data={this.state.contacts}
                             keyExtractor={(item) => item.contacts.contactId._id}
                             contentContainerStyle={{
                                 paddingHorizontal: 10,

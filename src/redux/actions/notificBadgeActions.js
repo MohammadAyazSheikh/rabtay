@@ -43,8 +43,6 @@ export const GetNotificationsBadge = (token) => (dispatch) => {
     dispatch(notificationsBadgeLaoding());
 
 
-
-
     fetch(`${baseUrl}users/notifications/unread`,
         {
             method: 'GET',

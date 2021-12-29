@@ -7,7 +7,8 @@ import Icon from 'react-native-vector-icons/SimpleLineIcons';
 import { baseUrl } from '../utilities/config';
 import { connect } from 'react-redux';
 import { FollowUser } from '../redux/actions/followUserActions';
-import { GetNotifications } from '../redux/actions/notificationsActions';
+import { GetNotifications, DltNotification } from '../redux/actions/notificationsActions';
+import { GetContacts } from '../redux/actions/getContactsActions';
 import { notificationsBadgeSucces } from '../redux/actions/notificBadgeActions';
 
 
@@ -16,10 +17,15 @@ import { notificationsBadgeSucces } from '../redux/actions/notificBadgeActions';
 const swipeFromRightOpen = () => {
     // alert('Swipe from right');
 };
-const rightSwipeActions = (fromId, token, follow, GetNotifications, clearNotificBadge, notificLen) => {
+const rightSwipeActions = (fromId, token, follow, GetNotifications, clearNotificBadge, notificLen, DltNotification, getContacts) => {
     return (
         <View style={styles.BtnSwipeView}   >
-            <TouchableOpacity style={[styles.btnSwipe, { backgroundColor: 'tomato' }]}>
+            <TouchableOpacity style={[styles.btnSwipe, { backgroundColor: 'tomato' }]}
+                onPress={() => {
+                    DltNotification(token, fromId);
+                    clearNotificBadge(notificLen);
+                }}
+            >
                 <Icon name='user-unfollow' size={25} color='#FFF' />
                 <Text style={[styles.txtBtn,]}>
                     Ignore
@@ -30,6 +36,7 @@ const rightSwipeActions = (fromId, token, follow, GetNotifications, clearNotific
                     follow(token, fromId);
                     GetNotifications(token);
                     clearNotificBadge(notificLen);
+                    getContacts(token);
                 }}
             >
                 <Icon name='user-follow' size={25} color='#FFF' />
@@ -64,6 +71,12 @@ const mapDispatchToProps = (dispatch) => {
         clearNotificBadge: (data) => {
             dispatch(notificationsBadgeSucces(data));
         },
+        DltNotification: (token, senderId) => {
+            dispatch(DltNotification(token, senderId));
+        },
+        GetContacts: (token) => {
+            dispatch(GetContacts(token));
+        },
     }
 };
 
@@ -82,7 +95,8 @@ class SingleNotification extends Component {
             <View style={styles.mainView}>
                 <Swipeable
                     renderRightActions={() => rightSwipeActions(this.props.fromId, this.props.token,
-                        this.props.followUser, this.props.GetNotifications, this.props.clearNotificBadge, this.props.notific.length)}
+                        this.props.followUser, this.props.GetNotifications, this.props.clearNotificBadge,
+                        this.props.notific.length, this.props.DltNotification, this.props.GetContacts)}
                     onSwipeableRightOpen={swipeFromRightOpen}
 
                 >

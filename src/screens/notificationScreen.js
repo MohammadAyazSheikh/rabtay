@@ -28,10 +28,7 @@ const mapDispatchToProps = (dispatch) => {
     return {
         GetNotifications: (token) => {
             dispatch(GetNotifications(token));
-        },
-        ClearNotificBadge: (data) => {
-            dispatch(notificationsBadgeClear(data));
-        },
+        }
     }
 };
 

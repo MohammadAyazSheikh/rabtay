@@ -118,19 +118,20 @@ class User extends Component {
 
                         onPress={() => {
                             // console.log(id)
-
+                            let senderName = this.props.user.fname +" " +this.props.user.lname;
                             let payload = {
                                 to: id,
                                 from: this.props.user?._id,
-                                description: `${name} wants to be your friend`,
+                                description: `${senderName} wants to be your friend`,
                                 type: 'follow'
                             }
 
-                            // description:`${name} wants to be your friend`, type:'follow'});
+
+
                             socket.emit('notification',
                                 {
                                     payload,
-                                    senderName: this.props.user.fname + this.props.user.lname
+                                    senderName: senderName
                                 }
 
                             );
