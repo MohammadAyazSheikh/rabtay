@@ -10,40 +10,61 @@ import { FollowUser } from '../redux/actions/followUserActions';
 import { GetNotifications, DltNotification } from '../redux/actions/notificationsActions';
 import { GetContacts } from '../redux/actions/getContactsActions';
 import { notificationsBadgeSucces } from '../redux/actions/notificBadgeActions';
-
+import { socket } from '../lib/socket';
 
 
 
 const swipeFromRightOpen = () => {
     // alert('Swipe from right');
 };
-const rightSwipeActions = (fromId, token, follow, GetNotifications, clearNotificBadge, notificLen, DltNotification, getContacts) => {
+const rightSwipeActions = (fromId, token, follow, GetNotifications, clearNotificBadge, notificLen, DltNotification, getContacts, user, type) => {
     return (
-        <View style={styles.BtnSwipeView}   >
-            <TouchableOpacity style={[styles.btnSwipe, { backgroundColor: 'tomato' }]}
+        <View style={[styles.BtnSwipeView, type === "accept" ? { width: '30%' } : { width: '55%' }]}   >
+            <TouchableOpacity style={[styles.btnSwipe, { backgroundColor: 'tomato' }, type === "accept" ? { width: '100%' } : { width: '50%' }]}
                 onPress={() => {
                     DltNotification(token, fromId);
                     clearNotificBadge(notificLen);
                 }}
             >
-                <Icon name='user-unfollow' size={25} color='#FFF' />
+                <Icon name={type === 'follow' ? "user-unfollow" : "trash"} size={25} color='#FFF' />
                 <Text style={[styles.txtBtn,]}>
-                    Ignore
+                    {type === 'follow' ? "Ignore" : "Delete"}
                 </Text>
             </TouchableOpacity>
-            <TouchableOpacity style={[styles.btnSwipe, { backgroundColor: BackGroundColor }]}
-                onPress={() => {
-                    follow(token, fromId);
-                    GetNotifications(token);
-                    clearNotificBadge(notificLen);
-                    getContacts(token);
-                }}
-            >
-                <Icon name='user-follow' size={25} color='#FFF' />
-                <Text style={styles.txtBtn}>
-                    Follow
-                </Text>
-            </TouchableOpacity>
+            {
+                type === "follow" ?
+                    <TouchableOpacity style={[styles.btnSwipe, { backgroundColor: BackGroundColor }]}
+                        onPress={() => {
+                            follow(token, fromId);
+                            GetNotifications(token);
+                            clearNotificBadge(notificLen);
+                            getContacts(token);
+
+                            let senderName = user.fname + " " + user.lname;
+                            let payload = {
+                                to: fromId,
+                                from: user._id,
+                                description: `accepted you request`,
+                                type: 'accept'
+                            }
+
+                            socket.emit('notification',
+                                {
+                                    payload,
+                                    senderName: senderName
+                                }
+
+                            );
+                        }}
+                    >
+                        <Icon name='user-follow' size={25} color='#FFF' />
+                        <Text style={styles.txtBtn}>
+                            Follow
+                        </Text>
+                    </TouchableOpacity>
+                    :
+                    <View />
+            }
         </View>
     );
 };
@@ -52,6 +73,7 @@ const rightSwipeActions = (fromId, token, follow, GetNotifications, clearNotific
 const mapStateToProps = state => {
     return {
         token: state?.user?.user?.token,
+        user: state?.user?.user?.user,
         notific: state.notifications.notific,
     }
 }
@@ -96,7 +118,8 @@ class SingleNotification extends Component {
                 <Swipeable
                     renderRightActions={() => rightSwipeActions(this.props.fromId, this.props.token,
                         this.props.followUser, this.props.GetNotifications, this.props.clearNotificBadge,
-                        this.props.notific.length, this.props.DltNotification, this.props.GetContacts)}
+                        this.props.notific.length, this.props.DltNotification, this.props.GetContacts,
+                        this.props.user, this.props.type)}
                     onSwipeableRightOpen={swipeFromRightOpen}
 
                 >
@@ -112,9 +135,9 @@ class SingleNotification extends Component {
                             </View>
                             <View style={styles.textView}>
                                 <Text style={styles.txtName}>{this.props.uName}
-                                    <Text style={styles.txtDesc}> sends you follow request</Text>
+                                    <Text style={styles.txtDesc}> {this.props.description}</Text>
                                 </Text>
-                                <Text style={styles.txtTime}>2 hourse ago</Text>
+                                <Text style={styles.txtTime}>{this.props.time}</Text>
                             </View>
                         </View>
                     </View>

@@ -122,7 +122,7 @@ class User extends Component {
                             let payload = {
                                 to: id,
                                 from: this.props.user?._id,
-                                description: `${senderName} wants to be your friend`,
+                                description: `wants to be your friend`,
                                 type: 'follow'
                             }
 

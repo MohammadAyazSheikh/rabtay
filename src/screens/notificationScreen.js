@@ -5,6 +5,7 @@ import SingleNotification from '../components/notificationComponent';
 import Icon from 'react-native-vector-icons/Fontisto';
 import { widthToDp } from '../utilities/responsiveUtils';
 import { BackGroundColor } from '../utilities/colors';
+import moment from "moment";
 import { GetNotifications } from '../redux/actions/notificationsActions';
 import { socket } from '../lib/socket';
 import { ActivityIndicator } from 'react-native-paper';
@@ -78,6 +79,9 @@ class Notification extends Component {
                                         image={item.from.profileImage?.path}
                                         type={item.type}
                                         fromId={item.from._id}
+                                        time={moment(item.createdAt).fromNow()}
+                                        description={item.description}
+                                        type={item.type}
                                     />
                                 }
                                 contentContainerStyle={{ paddingBottom: 120, }}
