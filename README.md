@@ -1,2 +1,2 @@
-"# rabtay a simple social app in which user can post images and videos  and also can chat with friends.
+"# rabtay a simple social app in which user can post images and videos  with real time chat system using socket.io and express.js
 
