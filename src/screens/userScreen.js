@@ -59,7 +59,7 @@ class User extends Component {
 
     RnderHeader = () => {
         const { name, about, image, username, id } = this.props.route.params;
-        // console.log(`\n\n\n\n$User?Screen data ${item}`);
+
         return (
             <>
                 <View style={styles.Header}>
@@ -118,7 +118,7 @@ class User extends Component {
 
                         onPress={() => {
                             // console.log(id)
-                            let senderName = this.props.user.fname +" " +this.props.user.lname;
+                            let senderName = this.props.user.fname + " " + this.props.user.lname;
                             let payload = {
                                 to: id,
                                 from: this.props.user?._id,
@@ -140,7 +140,7 @@ class User extends Component {
                     >
                         <Text style={styles.txtFollow}>{this.state.isFriend ? 'Unfollow' : 'Follow'}</Text>
                     </TouchableOpacity>
-                    <Animated.View style={{
+                    {/* <Animated.View style={{
                         height: heightToDp(40),
                         width: widthToDp(100),
                         backgroundColor: '#FFF',
@@ -150,7 +150,7 @@ class User extends Component {
                         top: 0,
                         elevation: 100,
                         opacity: this.blur
-                    }} />
+                    }} /> */}
 
                 </View>
             </>
@@ -160,6 +160,8 @@ class User extends Component {
 
     componentDidMount() {
 
+        console.log(this.props.route.params);
+        this.setState({ isFriend: this.props.route.params.isFriend })
     }
 
     render() {

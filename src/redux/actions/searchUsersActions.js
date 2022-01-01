@@ -21,7 +21,7 @@ export const searchUsersLoading = () => ({
 });
 
 
-export const SearchUsers = (searchText) => (dispatch) => {
+export const SearchUsers = (searchText, token) => (dispatch) => {
 
     dispatch(searchUsersLoading());
 
@@ -33,6 +33,7 @@ export const SearchUsers = (searchText) => (dispatch) => {
             method: "POST",
             body: JSON.stringify({ username: searchText }),
             headers: {
+                "Authorization": token,
                 "Content-Type": "application/json"
             },
             credentials: "same-origin"
@@ -56,9 +57,9 @@ export const SearchUsers = (searchText) => (dispatch) => {
         .then(
             data => {
 
-                dispatch(searchUsersSuccess(data.users));
+                dispatch(searchUsersSuccess(data));
 
-                console.log(`\n\n\n\n\n\n\n Serach Response\n\n ${JSON.stringify( data.users)}\n\n\n\n\n\n`)
+                console.log(`\n\n\n\n\n\n\n Serach Response\n\n ${JSON.stringify(data)}\n\n\n\n\n\n`)
 
 
             }

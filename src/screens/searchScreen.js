@@ -21,7 +21,9 @@ const User = (props) => {
                     name: props.name,
                     about: props.about,
                     image: props.image ? baseUrl + props.image : null,
-                    id: props.id
+                    id: props.id,
+                    uname: props.uname,
+                    isFriend: props.isFriend
                 })
             }}
         >
@@ -44,14 +46,15 @@ const arr = [1, 2, 3, 4, 5, 6];
 
 const mapStateToProps = state => {
     return {
-        users: state.searchedUsers
+        users: state.searchedUsers,
+        token: state?.user?.user?.token,
     }
 }
 
 const mapDispatchToProps = dispatch => (
     {
-        searchUsers: (searchText) =>
-            dispatch(SearchUsers(searchText))
+        searchUsers: (searchText, token) =>
+            dispatch(SearchUsers(searchText, token))
     }
 )
 
@@ -132,6 +135,7 @@ class Search extends Component {
                                     image={item.profileImage?.path}
                                     id={item._id}
                                     uname={item.username}
+                                    isFriend={item.isFriend}
                                 />}
                             />
                         // <Text>Data... </Text>
@@ -164,7 +168,7 @@ class Search extends Component {
                                 // let str = value.replace(/\s+/g, '').toLocaleLowerCase();
                                 // let filterdUser = post.filter((item) => item.uName.replace(/\s+/g, '').toLocaleLowerCase().includes(str));
                                 // this.setState({ Users: filterdUser });
-                                this.props.searchUsers(value);
+                                this.props.searchUsers(value, this.props.token);
 
 
                                 // this.setState({ Users: filterdUser });
