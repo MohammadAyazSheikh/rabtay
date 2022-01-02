@@ -8,6 +8,7 @@ import { NOTIFICATIONS_REDUCER } from './reducers/notificationReducer';
 import { NOTIFICATIONS_BADGE_REDUCER } from './reducers/notificBadgeReducer';
 import { FOLLOW_USER_REDUCER } from './reducers/followUserReducer';
 import { GET_CONTACTS_REDUCER } from './reducers/getContactsReducer';
+import { Single_User_Reducer } from './reducers/getSingleUserReducer';
 
 
 
@@ -22,6 +23,7 @@ export const configureStore = () => {
                 notificationsBadge: NOTIFICATIONS_BADGE_REDUCER,
                 followedUser: FOLLOW_USER_REDUCER,
                 contacts: GET_CONTACTS_REDUCER,
+                singleUser: Single_User_Reducer,
             }
         ), applyMiddleware(thunk, logger)
     );

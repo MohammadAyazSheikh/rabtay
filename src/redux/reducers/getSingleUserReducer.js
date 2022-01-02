@@ -1,27 +1,27 @@
 import * as ActionTypes from '../actionTypes';
 
-export const Search_Users_Reducer = (state = { isLoading: false, users: null, errMess: null }, action) => {
+export const Single_User_Reducer = (state = { isLoading: false, user: null, errMess: null }, action) => {
 
     switch (action.type) {
-        case ActionTypes.SEARCH_USER_SUCCES:
+        case ActionTypes.GET_SINGLE_USER_SUCCESS:
             return {
                 ...state,
                 isLoading: false,
-                users: action.payload,
+                user: action.payload,
                 errMess: null,
             };
-        case ActionTypes.SEARCH_USER_FAILED:
+        case ActionTypes.GET_SINGLE_USER_FAILED:
             return {
                 ...state,
                 isLoading: false,
-                users: null,
+                user: null,
                 errMess: action.payload,
             };
-        case ActionTypes.SEARCH_USER_LOADING:
+        case ActionTypes.GET_SINGLE_USER_LOADING:
             return {
                 ...state,
                 isLoading: true,
-                users: null,
+                user: null,
                 errMess: null,
             };
         default:

@@ -3,10 +3,12 @@ import { View, Text, StyleSheet, Image, Animated, StatusBar } from 'react-native
 import { BackGroundColor } from '../utilities/colors';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { widthToDp, heightToDp } from '../utilities/responsiveUtils';
-import { UploadDP } from '../redux/actions/dpUploadActions';
+import { GetUser } from '../redux/actions/getSingleUserAction';
 import { connect } from 'react-redux';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import { connectServer, socket } from '../lib/socket';
+import { baseUrl } from '../utilities/config';
+import { ActivityIndicator } from 'react-native-paper';
 // import { utils } from '@react-native-firebase/app';
 
 
@@ -14,6 +16,7 @@ import { connectServer, socket } from '../lib/socket';
 const mapStateToProps = state => {
     return {
         user: state?.user?.user?.user,
+        singleUser: state?.singleUser,
         token: state?.user?.user?.token,
     }
 }
@@ -22,8 +25,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        UploadDp: (url, uid) => {
-            dispatch(UploadDP(url, uid));
+        getSingleUser: (token, uid) => {
+            dispatch(GetUser(token, uid));
         }
     }
 };
@@ -34,6 +37,7 @@ const mapDispatchToProps = (dispatch) => {
 class User extends Component {
     constructor(props) {
         super(props);
+
         this.scrollY = new Animated.Value(0);
         const inputRange = [
 
@@ -48,6 +52,7 @@ class User extends Component {
             }
         )
         this.state = {
+            user: this.props.route.params,
             imageUri: null,
             cloudUrl: null,
             isFriend: !true,
@@ -58,7 +63,16 @@ class User extends Component {
 
 
     RnderHeader = () => {
-        const { name, about, image, username, id } = this.props.route.params;
+        const { fname, lname, about, profileImage, isFriend, isReqSent, username, _id } = this.props?.singleUser.user;
+        const _fname = fname || 'wating';
+        const _lname = lname || 'wating';
+        const _about = about || 'wating';
+        const _profileImage = profileImage || {};
+        const _username = username || 'wating';
+        const _id_ = _id || this.props.singleUser.user._id;
+
+        let btnText = isFriend ? "Unfollow" : "Follow";
+        btnText = isReqSent ? "Unsend" : btnText;
 
         return (
             <>
@@ -67,9 +81,9 @@ class User extends Component {
                     <View style={styles.infoView}>
                         <View style={styles.imageView}>
                             {
-                                image ?
+                                _profileImage?.path ?
                                     <Image
-                                        source={{ uri: image }}
+                                        source={{ uri: baseUrl + _profileImage?.path }}
                                         style={styles.imgStyle}
                                     />
 
@@ -81,10 +95,10 @@ class User extends Component {
                             }
                         </View>
                         <View style={styles.aboutView}>
-                            <Text style={styles.txtName}  > {name}</Text>
-                            <Text style={styles.txtUserName}>{username}</Text>
+                            <Text style={styles.txtName}  > {_fname + ' ' + _lname}</Text>
+                            <Text style={styles.txtUserName}>{_username}</Text>
                             <Text style={styles.txtDesc}>
-                                {about.substr(0, 59)}
+                                {_about.substr(0, 59) || "nothing to say"}
                             </Text>
                         </View>
                     </View>
@@ -120,25 +134,35 @@ class User extends Component {
                             // console.log(id)
                             let senderName = this.props.user.fname + " " + this.props.user.lname;
                             let payload = {
-                                to: id,
+                                to: _id,
                                 from: this.props.user?._id,
                                 description: `wants to be your friend`,
                                 type: 'follow'
                             }
 
 
+                            if (isFriend == false && isReqSent == false) {
+                                socket.emit('notification',
+                                    {
+                                        payload,
+                                        senderName: senderName
+                                    }
 
-                            socket.emit('notification',
-                                {
-                                    payload,
-                                    senderName: senderName
-                                }
+                                );
 
-                            );
+                                // this.props.getSingleUser(this.props.token, this.props.route.params.id)
+                            }
 
                         }}
                     >
-                        <Text style={styles.txtFollow}>{this.state.isFriend ? 'Unfollow' : 'Follow'}</Text>
+                        <Text style={styles.txtFollow}>{btnText}</Text>
+                        {
+                            this.props.singleUser.isLoading ?
+                                <ActivityIndicator size={20} color='#FFF' />
+                                :
+                                <View />
+                        }
+
                     </TouchableOpacity>
                     {/* <Animated.View style={{
                         height: heightToDp(40),
@@ -159,9 +183,8 @@ class User extends Component {
 
 
     componentDidMount() {
-
-        console.log(this.props.route.params);
-        this.setState({ isFriend: this.props.route.params.isFriend })
+        this.props.getSingleUser(this.props.token, this.props.route.params.id);
+        this.setState({ user: this.props.singleUser });
     }
 
     render() {
@@ -173,7 +196,7 @@ class User extends Component {
             <View style={styles.container}>
 
                 {
-                    this.state.isFriend ?
+                    this.props?.singleUser?.user?.isFriend ?
                         <Animated.FlatList
                             ListHeaderComponent=
                             {
@@ -361,6 +384,7 @@ const styles = StyleSheet.create({
         color: '#4E4E4E',
     },
     btnFollow: {
+        flexDirection: 'row',
         marginTop: 10,
         // marginBottom:5,
         width: widthToDp(85),
@@ -372,6 +396,7 @@ const styles = StyleSheet.create({
         elevation: 10
     },
     txtFollow: {
+        marginRight: 5,
         color: '#FFF',
         fontSize: 16,
         fontWeight: 'bold'
