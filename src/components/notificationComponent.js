@@ -22,7 +22,7 @@ const rightSwipeActions = (fromId, token, follow, GetNotifications, clearNotific
         <View style={[styles.BtnSwipeView, type === "accept" ? { width: '30%' } : { width: '55%' }]}   >
             <TouchableOpacity style={[styles.btnSwipe, { backgroundColor: 'tomato' }, type === "accept" ? { width: '100%' } : { width: '50%' }]}
                 onPress={() => {
-                    DltNotification(token, fromId);
+                    DltNotification(token, fromId, 'follow', false);
                     clearNotificBadge(notificLen);
                 }}
             >
@@ -93,8 +93,8 @@ const mapDispatchToProps = (dispatch) => {
         clearNotificBadge: (data) => {
             dispatch(notificationsBadgeSucces(data));
         },
-        DltNotification: (token, senderId) => {
-            dispatch(DltNotification(token, senderId));
+        DltNotification: (token, userId, type, isCreator) => {
+            dispatch(DltNotification(token, userId, type, isCreator));
         },
         GetContacts: (token) => {
             dispatch(GetContacts(token));

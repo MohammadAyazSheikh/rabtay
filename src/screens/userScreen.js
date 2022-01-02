@@ -8,6 +8,7 @@ import { connect } from 'react-redux';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import { connectServer, socket } from '../lib/socket';
 import { baseUrl } from '../utilities/config';
+import { DltNotification } from '../redux/actions/notificationsActions';
 import { ActivityIndicator } from 'react-native-paper';
 // import { utils } from '@react-native-firebase/app';
 
@@ -27,7 +28,10 @@ const mapDispatchToProps = (dispatch) => {
     return {
         getSingleUser: (token, uid) => {
             dispatch(GetUser(token, uid));
-        }
+        },
+        DltNotification: (token, userId, type, isCreator) => {
+            dispatch(DltNotification(token, userId, type, isCreator));
+        },
     }
 };
 
@@ -38,23 +42,9 @@ class User extends Component {
     constructor(props) {
         super(props);
 
-        this.scrollY = new Animated.Value(0);
-        const inputRange = [
-
-            0,
-            290
-        ]
-
-        this.blur = this.scrollY.interpolate(
-            {
-                inputRange,
-                outputRange: [0, 1]
-            }
-        )
         this.state = {
-            user: this.props.route.params,
-            imageUri: null,
-            cloudUrl: null,
+            user: this.props.singleUser,
+            refresh: true,
             isFriend: !true,
         }
 
@@ -63,16 +53,19 @@ class User extends Component {
 
 
     RnderHeader = () => {
-        const { fname, lname, about, profileImage, isFriend, isReqSent, username, _id } = this.props?.singleUser.user;
-        const _fname = fname || 'wating';
-        const _lname = lname || 'wating';
-        const _about = about || 'wating';
-        const _profileImage = profileImage || {};
-        const _username = username || 'wating';
-        const _id_ = _id || this.props.singleUser.user._id;
+        // const { fname, lname, about, profileImage, isFriend, isReqSent, username, _id } = this.props?.singleUser.user;
+        this._fname = this.props?.singleUser?.user?.fname || 'wating';
+        this._lname = this.props?.singleUser?.user?.lname || 'wating';
+        this._about = this.props?.singleUser?.user?.about || 'wating';
+        this._profileImage = this.props?.singleUser?.user?.profileImage?.path || 'waiting';
+        this._username = this.props?.singleUser?.user?.username || 'wating';
+        this.isFriend = this.props?.singleUser?.user?.isFriend || false;
+        this.isReqSent = this.props?.singleUser?.user?.isReqSent || false;
+        this.isLoading = this.props?.singleUser?.isLoading;
+        // const _id_ = _id || this.props.singleUser.user._id;
 
-        let btnText = isFriend ? "Unfollow" : "Follow";
-        btnText = isReqSent ? "Unsend" : btnText;
+        let btnText = this.isFriend ? "Unfollow" : "Follow";
+        btnText = this.isReqSent ? "Unsend" : btnText;
 
         return (
             <>
@@ -81,9 +74,9 @@ class User extends Component {
                     <View style={styles.infoView}>
                         <View style={styles.imageView}>
                             {
-                                _profileImage?.path ?
+                                this._profileImage?.path ?
                                     <Image
-                                        source={{ uri: baseUrl + _profileImage?.path }}
+                                        source={{ uri: baseUrl + this._profileImage?.path }}
                                         style={styles.imgStyle}
                                     />
 
@@ -95,10 +88,10 @@ class User extends Component {
                             }
                         </View>
                         <View style={styles.aboutView}>
-                            <Text style={styles.txtName}  > {_fname + ' ' + _lname}</Text>
-                            <Text style={styles.txtUserName}>{_username}</Text>
+                            <Text style={styles.txtName}  > {this._fname + ' ' + this._lname}</Text>
+                            <Text style={styles.txtUserName}>{this._username}</Text>
                             <Text style={styles.txtDesc}>
-                                {_about.substr(0, 59) || "nothing to say"}
+                                {this._about.substr(0, 59) || "nothing to say"}
                             </Text>
                         </View>
                     </View>
@@ -134,48 +127,39 @@ class User extends Component {
                             // console.log(id)
                             let senderName = this.props.user.fname + " " + this.props.user.lname;
                             let payload = {
-                                to: _id,
+                                to: this.props.route.params.id,
                                 from: this.props.user?._id,
                                 description: `wants to be your friend`,
                                 type: 'follow'
                             }
 
 
-                            if (isFriend == false && isReqSent == false) {
+                            if (this.isFriend == false && this.isReqSent == false) {
                                 socket.emit('notification',
                                     {
                                         payload,
                                         senderName: senderName
                                     }
-
                                 );
-
-                                // this.props.getSingleUser(this.props.token, this.props.route.params.id)
+                            }
+                            else if (this.isReqSent) {
+                                this.props.DltNotification(this.props.token, this.props.route.params.id, 'follow', true)
                             }
 
+                            this.props.getSingleUser(this.props.token, this.props.route.params.id);
+                            this.setState({ refresh: !this.state.refresh })
                         }}
                     >
                         <Text style={styles.txtFollow}>{btnText}</Text>
                         {
-                            this.props.singleUser.isLoading ?
+                            //  this.props.singleUser.isLoading
+                            this.isLoading ?
                                 <ActivityIndicator size={20} color='#FFF' />
                                 :
                                 <View />
                         }
 
                     </TouchableOpacity>
-                    {/* <Animated.View style={{
-                        height: heightToDp(40),
-                        width: widthToDp(100),
-                        backgroundColor: '#FFF',
-                        position: 'absolute',
-                        borderRadius: 10,
-                        left: 0,
-                        top: 0,
-                        elevation: 100,
-                        opacity: this.blur
-                    }} /> */}
-
                 </View>
             </>
         )
@@ -214,15 +198,7 @@ class User extends Component {
 
                             }}
                             // pagingEnabled
-                            onScroll={
-                                Animated.event(
-                                    [{ nativeEvent: { contentOffset: { y: this.scrollY } } }],
-                                    { useNativeDriver: false }
-                                )
-                                // (e) =>{
-                                //     console.log( e.nativeEvent.contentOffset.y)
-                                // }
-                            }
+
                             renderItem={
                                 ({ item, index }) => {
 

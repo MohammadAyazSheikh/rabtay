@@ -75,7 +75,7 @@ export const GetNotifications = (token) => (dispatch) => {
 
 
 //-----------------------------------------Dlt Notification-------------------------------------
-export const DltNotification = (token, senderId) => (dispatch) => {
+export const DltNotification = (token, userId, type, isCreator) => (dispatch) => {
 
     dispatch(getNotificationsLoading());
 
@@ -85,7 +85,7 @@ export const DltNotification = (token, senderId) => (dispatch) => {
     fetch(`${baseUrl}users/notifications`,
         {
             method: 'DELETE',
-            body: JSON.stringify({ senderId: senderId }),
+            body: JSON.stringify({ userId: userId, type: type, isCreator: isCreator }),
             headers: {
                 "Authorization": token,
                 "Content-Type": "application/json"
