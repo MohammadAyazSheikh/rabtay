@@ -12,37 +12,39 @@ import PlaceHolder from "../components/placeHolderComponent";
 import { baseUrl } from '../utilities/config';
 import { connect } from 'react-redux';
 import { GetContacts } from "../redux/actions/getContactsActions";
+import RenderFriends from "../components/singleFriendComponent";
 import uuid from 'react-native-uuid';
+import { socket } from '../lib/socket';
 
 
-const RenderFriends = ({ isActive, uName, time, image }) => {
+// const RenderFriends = ({ isActive, uName, time, image }) => {
 
-    return (
-        <TouchableOpacity style={styles.messageView}>
-            <View style={styles.imageView}>
-                {image ?
-                    <Image source={{ uri: baseUrl + image }} style={styles.imageStyle} />
-                    :
-                    <Image source={require('../../assets/images/profile3.jpeg')} style={styles.imageStyle} />
-                }
-                {isActive ?
-                    <View style={styles.activeStyles} /> : <View />
-                }
-            </View>
-            <View style={styles.chatView}>
-                <View style={styles.headerView}>
-                    <Text style={styles.txtName}>{uName}</Text>
-                    {
-                        isActive ?
-                            <Text style={styles.txtTime}>active now</Text>
-                            :
-                            <Text style={styles.txtTime}>{time}</Text>
-                    }
-                </View>
-            </View>
-        </TouchableOpacity>
-    );
-}
+//     return (
+//         <TouchableOpacity style={styles.messageView}>
+//             <View style={styles.imageView}>
+//                 {image ?
+//                     <Image source={{ uri: baseUrl + image }} style={styles.imageStyle} />
+//                     :
+//                     <Image source={require('../../assets/images/profile3.jpeg')} style={styles.imageStyle} />
+//                 }
+//                 {isActive ?
+//                     <View style={styles.activeStyles} /> : <View />
+//                 }
+//             </View>
+//             <View style={styles.chatView}>
+//                 <View style={styles.headerView}>
+//                     <Text style={styles.txtName}>{uName}</Text>
+//                     {
+//                         isActive ?
+//                             <Text style={styles.txtTime}>active now</Text>
+//                             :
+//                             <Text style={styles.txtTime}>{time}</Text>
+//                     }
+//                 </View>
+//             </View>
+//         </TouchableOpacity>
+//     );
+// }
 
 
 const mapStateToProps = state => {
@@ -76,17 +78,26 @@ class Friends extends Component {
             inputRange: [0, 1],
             outputRange: [0, -1],
         });
-        this.contacts = this.props.contacts.contacts;
-        this.isLoading = this.props.contacts.isLaoding;
+
+        this.screenFocus = this.screenFocus.bind(this);
+
+
         this.state = {
             isLoading: this.props.contacts.isLaoding,
-            contacts: this.props.contacts.contacts
+            contacts: this.props.contacts.contacts,
+            refresh: false
         }
     }
-
+    screenFocus() {
+        this.setState({ contacts: this.props.contacts.contacts })
+    }
     componentDidMount() {
         this.props.getContacts(this.props.token);
-        alert('frnd online status chages')
+        this.UnsubFocusScreen = this.props.navigation.addListener('focus', this.screenFocus);
+    }
+
+    componentWillUnmount() {
+        this.UnsubFocusScreen();
     }
 
 
@@ -94,8 +105,7 @@ class Friends extends Component {
         return (
             <View style={styles.container}>
                 {
-                    // this.state.isLoading ?
-                    this.isLoading ?
+                    this.state.isLoading ?
                         <ScrollView
                             contentContainerStyle={{ paddingTop: heightToDp(17), paddingHorizontal: 10 }}
                             showsVerticalScrollIndicator={false}
@@ -111,31 +121,29 @@ class Friends extends Component {
 
                         :
                         <Animated.FlatList
-                            // data={this.state.contacts}
-                            data={this.contacts}
-                            // keyExtractor={(item) => item.contacts.contactId._id}
-                            keyExtractor={(item) => uuid.v4()}
+                            data={this.state.contacts}
+                            keyExtractor={(item) => item.contacts.contactId._id}
                             contentContainerStyle={{
-                    paddingHorizontal: 10,
-                    paddingTop: heightToDp(17),
-                    paddingBottom: heightToDp(16),
-                    width: widthToDp(100)
-                }}
+                                paddingHorizontal: 10,
+                                paddingTop: heightToDp(17),
+                                paddingBottom: heightToDp(16),
+                                width: widthToDp(100)
+                            }}
                             showsVerticalScrollIndicator={true}
                             onScroll={
-                    Animated.event(
-                        [{ nativeEvent: { contentOffset: { y: this.scrollY } } }],
-                        { useNativeDriver: true }
-                    )
-                }
+                                Animated.event(
+                                    [{ nativeEvent: { contentOffset: { y: this.scrollY } } }],
+                                    { useNativeDriver: true }
+                                )
+                            }
                             renderItem={({ index, item }) =>
-                    <RenderFriends
-                        uName={item.contacts.contactId.fname + ' ' + item.contacts.contactId.lname}
-                        time={moment(item.lastSeen).fromNow()}
-                        image={item.contacts.contactId?.profileImage?.path}
-                        isActive={item.isActive}
-                    />
-                }
+                                <RenderFriends
+                                    uName={item.contacts.contactId.fname + ' ' + item.contacts.contactId.lname}
+                                    time={moment(item.lastSeen).fromNow()}
+                                    image={item.contacts.contactId?.profileImage?.path}
+                                    isActive={item.isActive}
+                                />
+                            }
                         />
 
                 }
