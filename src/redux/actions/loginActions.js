@@ -112,7 +112,7 @@ export const Login = (email, pass) => (dispatch) => {
                 // ****************************active user listener**************************************
                 socket.on("active", msg => {
                     console.log(`\n\n\active user listener msg from server\n\n ${JSON.stringify(msg)}`);
-                    // alert(data)
+                    // alert("a contact is active")
                     dispatch(GetContacts(data.token));
                 });
             }

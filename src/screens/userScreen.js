@@ -9,6 +9,7 @@ import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import { connectServer, socket } from '../lib/socket';
 import { baseUrl } from '../utilities/config';
 import { DltNotification } from '../redux/actions/notificationsActions';
+import { DltContact } from '../redux/actions/getContactsActions';
 import { ActivityIndicator } from 'react-native-paper';
 // import { utils } from '@react-native-firebase/app';
 
@@ -31,6 +32,9 @@ const mapDispatchToProps = (dispatch) => {
         },
         DltNotification: (token, userId, type, isCreator) => {
             dispatch(DltNotification(token, userId, type, isCreator));
+        },
+        DltContact: (token, userId) => {
+            dispatch(DltContact(token, userId));
         },
     }
 };
@@ -56,7 +60,7 @@ class User extends Component {
         // const { fname, lname, about, profileImage, isFriend, isReqSent, username, _id } = this.props?.singleUser.user;
         this._fname = this.props?.singleUser?.user?.fname || 'wating';
         this._lname = this.props?.singleUser?.user?.lname || 'wating';
-        this._about = this.props?.singleUser?.user?.about || 'wating';
+        this._about = this.props?.singleUser?.user?.about || 'nothing special about me 😔';
         this._profileImage = this.props?.singleUser?.user?.profileImage?.path || 'waiting';
         this._username = this.props?.singleUser?.user?.username || 'wating';
         this.isFriend = this.props?.singleUser?.user?.isFriend || false;
@@ -124,7 +128,7 @@ class User extends Component {
                     <TouchableOpacity style={styles.btnFollow}
 
                         onPress={() => {
-                            // console.log(id)
+
                             let senderName = this.props.user.fname + " " + this.props.user.lname;
                             let payload = {
                                 to: this.props.route.params.id,
@@ -133,7 +137,7 @@ class User extends Component {
                                 type: 'follow'
                             }
 
-
+                            //---follow---
                             if (this.isFriend == false && this.isReqSent == false) {
                                 socket.emit('notification',
                                     {
@@ -142,8 +146,13 @@ class User extends Component {
                                     }
                                 );
                             }
+                            //---Unsend Request---
                             else if (this.isReqSent) {
                                 this.props.DltNotification(this.props.token, this.props.route.params.id, 'follow', true)
+                            }
+                            //---Unfollow---
+                            else if (this.isFriend) {
+                                this.props.DltContact(this.props.token, this.props.route.params.id);
                             }
 
                             this.props.getSingleUser(this.props.token, this.props.route.params.id);

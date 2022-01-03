@@ -22,7 +22,7 @@ const rightSwipeActions = (fromId, token, follow, GetNotifications, clearNotific
         <View style={[styles.BtnSwipeView, type === "accept" ? { width: '30%' } : { width: '55%' }]}   >
             <TouchableOpacity style={[styles.btnSwipe, { backgroundColor: 'tomato' }, type === "accept" ? { width: '100%' } : { width: '50%' }]}
                 onPress={() => {
-                    DltNotification(token, fromId, 'follow', false);
+                    DltNotification(token, fromId, type, false);
                     clearNotificBadge(notificLen);
                 }}
             >

@@ -12,6 +12,7 @@ import PlaceHolder from "../components/placeHolderComponent";
 import { baseUrl } from '../utilities/config';
 import { connect } from 'react-redux';
 import { GetContacts } from "../redux/actions/getContactsActions";
+import uuid from 'react-native-uuid';
 
 
 const RenderFriends = ({ isActive, uName, time, image }) => {
@@ -75,7 +76,8 @@ class Friends extends Component {
             inputRange: [0, 1],
             outputRange: [0, -1],
         });
-
+        this.contacts = this.props.contacts.contacts;
+        this.isLoading = this.props.contacts.isLaoding;
         this.state = {
             isLoading: this.props.contacts.isLaoding,
             contacts: this.props.contacts.contacts
@@ -84,13 +86,16 @@ class Friends extends Component {
 
     componentDidMount() {
         this.props.getContacts(this.props.token);
+        alert('frnd online status chages')
     }
+
 
     render() {
         return (
             <View style={styles.container}>
                 {
-                    this.state.isLoading ?
+                    // this.state.isLoading ?
+                    this.isLoading ?
                         <ScrollView
                             contentContainerStyle={{ paddingTop: heightToDp(17), paddingHorizontal: 10 }}
                             showsVerticalScrollIndicator={false}
@@ -106,29 +111,31 @@ class Friends extends Component {
 
                         :
                         <Animated.FlatList
-                            data={this.state.contacts}
-                            keyExtractor={(item) => item.contacts.contactId._id}
+                            // data={this.state.contacts}
+                            data={this.contacts}
+                            // keyExtractor={(item) => item.contacts.contactId._id}
+                            keyExtractor={(item) => uuid.v4()}
                             contentContainerStyle={{
-                                paddingHorizontal: 10,
-                                paddingTop: heightToDp(17),
-                                paddingBottom: heightToDp(16),
-                                width: widthToDp(100)
-                            }}
+                    paddingHorizontal: 10,
+                    paddingTop: heightToDp(17),
+                    paddingBottom: heightToDp(16),
+                    width: widthToDp(100)
+                }}
                             showsVerticalScrollIndicator={true}
                             onScroll={
-                                Animated.event(
-                                    [{ nativeEvent: { contentOffset: { y: this.scrollY } } }],
-                                    { useNativeDriver: true }
-                                )
-                            }
+                    Animated.event(
+                        [{ nativeEvent: { contentOffset: { y: this.scrollY } } }],
+                        { useNativeDriver: true }
+                    )
+                }
                             renderItem={({ index, item }) =>
-                                <RenderFriends
-                                    uName={item.contacts.contactId.fname + ' ' + item.contacts.contactId.lname}
-                                    time={moment(item.lastSeen).fromNow()}
-                                    image={item.contacts.contactId?.profileImage?.path}
-                                    isActive={item.isActive}
-                                />
-                            }
+                    <RenderFriends
+                        uName={item.contacts.contactId.fname + ' ' + item.contacts.contactId.lname}
+                        time={moment(item.lastSeen).fromNow()}
+                        image={item.contacts.contactId?.profileImage?.path}
+                        isActive={item.isActive}
+                    />
+                }
                         />
 
                 }
