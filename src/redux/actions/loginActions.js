@@ -92,7 +92,7 @@ export const Login = (email, pass) => (dispatch) => {
                 // console.log(`\n\n\n\nLogin Respons${JSON.stringify(data)}\n\n`);
 
                 //********** establishing socket connection ************ */
-                connectServer((socket) => {
+                connectServer(data.user._id, (socket) => {
                     socket.emit('active', { userId: data.user._id, username: data.user.username });
 
                 });

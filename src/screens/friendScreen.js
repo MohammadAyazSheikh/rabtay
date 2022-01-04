@@ -50,7 +50,8 @@ import { socket } from '../lib/socket';
 const mapStateToProps = state => {
     return {
         token: state?.user?.user?.token,
-        contacts: state.contacts
+        contacts: state?.contacts?.contacts,
+        isLaoding: state?.contacts?.isLoading
     }
 }
 
@@ -83,8 +84,9 @@ class Friends extends Component {
 
 
         this.state = {
-            isLoading: this.props.contacts.isLaoding,
-            contacts: this.props.contacts.contacts,
+            // isLoading: this.props.contacts.isLaoding,
+            // contacts: this.props.contacts.contacts,
+
             refresh: false
         }
     }
@@ -105,7 +107,8 @@ class Friends extends Component {
         return (
             <View style={styles.container}>
                 {
-                    this.state.isLoading ?
+                    // this.state.isLoading
+                    this.props?.isLoading ?
                         <ScrollView
                             contentContainerStyle={{ paddingTop: heightToDp(17), paddingHorizontal: 10 }}
                             showsVerticalScrollIndicator={false}
@@ -121,7 +124,7 @@ class Friends extends Component {
 
                         :
                         <Animated.FlatList
-                            data={this.state.contacts}
+                            data={this.props?.contacts}
                             keyExtractor={(item) => item.contacts.contactId._id}
                             contentContainerStyle={{
                                 paddingHorizontal: 10,
