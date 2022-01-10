@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import {
-    Text, View, StyleSheet, TouchableOpacity, Image,
-    Animated, TextInput, Keyboard, Platform, ScrollView
+    View, StyleSheet,
+    Animated, TextInput, ScrollView
 } from 'react-native';
 import { BackGroundColor } from "../utilities/colors";
 import { heightToDp, widthToDp } from "../utilities/responsiveUtils";
@@ -9,12 +9,11 @@ import { data } from "../utilities/messageData";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import moment from "moment";
 import PlaceHolder from "../components/placeHolderComponent";
-import { baseUrl } from '../utilities/config';
+
 import { connect } from 'react-redux';
 import { GetContacts } from "../redux/actions/getContactsActions";
 import RenderFriends from "../components/singleFriendComponent";
-import uuid from 'react-native-uuid';
-import { socket } from '../lib/socket';
+
 
 
 // const RenderFriends = ({ isActive, uName, time, image }) => {

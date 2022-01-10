@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import {
     Text, View, StyleSheet, TouchableOpacity, Image,
-    Animated, TextInput, Keyboard, Platform, ScrollView
+    Animated, TextInput, ScrollView, 
 } from 'react-native';
 import { BackGroundColor } from "../utilities/colors";
 import { heightToDp, widthToDp } from "../utilities/responsiveUtils";
@@ -12,20 +12,31 @@ import PlaceHolder from "../components/placeHolderComponent";
 import { connect } from 'react-redux';
 import { GetMessages } from '../redux/actions/getMessagesActions';
 import { GetContacts } from "../redux/actions/getContactsActions";
+import { baseUrl } from '../utilities/config';
+import moment from "moment";
 
-
-
+//isActive, uName,  time, image,
 // props.navigation.navigate('Search');
-const RenderMessages = ({ isActive, uName, message, time, image, navigation, contacts, contactId }) => {
+const RenderMessages = ({ navigation, message, contacts, contactId }) => {
     let user;
-    if (contactId) {
-        user = contacts?.filter(
-            contact => {
-                return contact.contacts.contactId._id == contactId;
-            })
-        console.log(`\n\n\n\n\n\n\n\*********************************${user}\n=========================`)
+
+    let uName;
+    let isActive;
+    let lastSeen;
+    let image;
+
+    user = contacts?.filter(
+        contact => {
+            return contact?.contacts?.contactId?._id == contactId;
+        });
+    if (user) {
+        uName = user[0]?.contacts?.contactId?.fname + " " + user[0]?.contacts?.contactId?.lname;
+        isActive = user[0]?.isActive;
+        lastSeen = user[0]?.lastSeen;
+        image = user[0]?.contacts?.contactId?.profileImage?.path;
     }
 
+    console.log(`\n\n\n\n\n\n\n\*********************************\nuser = ${contactId}\ncontactId = ${JSON.stringify(uName)}\n=========================`)
 
     return (
         <TouchableOpacity
@@ -35,7 +46,13 @@ const RenderMessages = ({ isActive, uName, message, time, image, navigation, con
             }}
         >
             <View style={styles.imageView}>
-                <Image source={image} style={styles.imageStyle} />
+                {
+                    image ?
+                        <Image source={{ uri: baseUrl + image }} style={styles.imageStyle} />
+                        :
+                        <Image source={require('../../assets/images/profile3.jpeg')} style={styles.imageStyle} />
+                }
+
                 {isActive ?
                     <View style={styles.activeStyles} /> : <View />
                 }
@@ -43,7 +60,7 @@ const RenderMessages = ({ isActive, uName, message, time, image, navigation, con
             <View style={styles.chatView}>
                 <View style={styles.headerView}>
                     <Text style={styles.txtName}>{uName}</Text>
-                    <Text style={styles.txtTime}>{time}</Text>
+                    <Text style={styles.txtTime}>{moment(lastSeen).fromNow()}</Text>
                 </View>
                 <View style={styles.footerView}>
                     <Text style={styles.txtMessage}>{message.length > 60 ? message.slice(0, 60) + ' ....' : message}</Text>
@@ -106,7 +123,8 @@ class Message extends Component {
 
     componentDidMount() {
         this.props.getMessages(this.props.token);
-        this.props.getContacts(this.props.token);
+        // this.props.getContacts(this.props.token);
+
     }
 
     render() {
@@ -148,13 +166,13 @@ class Message extends Component {
 
                                 return (
                                     <RenderMessages
-                                        uName={"ilyas"}
+                                        // uName={"ilyas"}
+                                        // time={'12-5-2012'}
+                                        // image={null}
+                                        // isActive={true}
                                         message={item.message.text}
-                                        time={'12-5-2012'}
-                                        image={null}
-                                        isActive={true}
                                         contactId={item.contactId}
-                                        // contacts={this.props.contacts}
+                                        contacts={this.props.contacts}
                                         {...this.props}
                                     />);
                             }
@@ -310,3 +328,4 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     }
 })
+

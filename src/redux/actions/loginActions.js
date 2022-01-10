@@ -87,7 +87,7 @@ export const Login = (email, pass) => (dispatch) => {
 
 
                 dispatch(loginSuccess(data));
-
+                dispatch(GetContacts(data.token));
 
                 // console.log(`\n\n\n\nLogin Respons${JSON.stringify(data)}\n\n`);
 
