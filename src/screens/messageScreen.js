@@ -9,9 +9,23 @@ import { data } from "../utilities/messageData";
 import Icon from "react-native-vector-icons/FontAwesome";
 import Icon2 from "react-native-vector-icons/Entypo";
 import PlaceHolder from "../components/placeHolderComponent";
+import { connect } from 'react-redux';
+import { GetMessages } from '../redux/actions/getMessagesActions';
+import { GetContacts } from "../redux/actions/getContactsActions";
+
+
 
 // props.navigation.navigate('Search');
-const RenderMessages = ({ isActive, uName, message, time, image, navigation }) => {
+const RenderMessages = ({ isActive, uName, message, time, image, navigation, contacts, contactId }) => {
+    let user;
+    if (contactId) {
+        user = contacts?.filter(
+            contact => {
+                return contact.contacts.contactId._id == contactId;
+            })
+        console.log(`\n\n\n\n\n\n\n\*********************************${user}\n=========================`)
+    }
+
 
     return (
         <TouchableOpacity
@@ -39,6 +53,33 @@ const RenderMessages = ({ isActive, uName, message, time, image, navigation }) =
     );
 }
 const arr = [1, 2, 3]
+
+const mapStateToProps = state => {
+    return {
+        user: state?.user?.user?.user,
+        token: state?.user?.user?.token,
+        contacts: state?.contacts?.contacts,
+        messages: state.messages.messages,
+        isLoading: state.messages.isLoading
+    }
+}
+
+
+
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        getMessages: (token) => {
+            dispatch(GetMessages(token));
+        },
+        getContacts: (token) => {
+            dispatch(GetContacts(token));
+        }
+    }
+};
+
+
+
 class Message extends Component {
 
     constructor(props) {
@@ -63,11 +104,16 @@ class Message extends Component {
     }
 
 
+    componentDidMount() {
+        this.props.getMessages(this.props.token);
+        this.props.getContacts(this.props.token);
+    }
+
     render() {
         return (
             <View style={styles.container}>
                 {
-                    this.state.isLoading ?
+                    this.props.isLoading ?
                         <ScrollView
                             contentContainerStyle={{ paddingTop: heightToDp(17), paddingHorizontal: 10 }}
                             showsVerticalScrollIndicator={false}
@@ -83,8 +129,8 @@ class Message extends Component {
 
                         :
                         <Animated.FlatList
-                            data={this.state.messages}
-                            keyExtractor={(item) => item.id}
+                            data={this.props.messages}
+                            keyExtractor={(item) => item.chatId}
                             contentContainerStyle={{
                                 paddingHorizontal: 10,
                                 paddingTop: heightToDp(17),
@@ -98,15 +144,20 @@ class Message extends Component {
                                     { useNativeDriver: true }
                                 )
                             }
-                            renderItem={({ index, item }) =>
-                                <RenderMessages
-                                    uName={item.uName}
-                                    message={item.message}
-                                    time={item.time}
-                                    image={item.img}
-                                    isActive={item.isActive}
-                                    {...this.props}
-                                />
+                            renderItem={({ index, item }) => {
+
+                                return (
+                                    <RenderMessages
+                                        uName={"ilyas"}
+                                        message={item.message.text}
+                                        time={'12-5-2012'}
+                                        image={null}
+                                        isActive={true}
+                                        contactId={item.contactId}
+                                        // contacts={this.props.contacts}
+                                        {...this.props}
+                                    />);
+                            }
                             }
                         />
 
@@ -143,7 +194,7 @@ class Message extends Component {
     }
 }
 
-export default Message;
+export default connect(mapStateToProps, mapDispatchToProps)(Message);
 
 const styles = StyleSheet.create({
     container: {

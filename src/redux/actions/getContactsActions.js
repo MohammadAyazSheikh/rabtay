@@ -57,7 +57,7 @@ export const GetContacts = (token) => (dispatch) => {
                 // alert(data);
                 dispatch(getContactsSuccess(data));
 
-                console.log(`\n\n\n\n====get contacts data\n${JSON.stringify(data)}======\n\n\n\n`)
+                // console.log(`\n\n\n\n====get contacts data\n${JSON.stringify(data)}======\n\n\n\n`)
             }
         )
         .catch(
