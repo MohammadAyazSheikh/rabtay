@@ -137,7 +137,7 @@ class Profile extends Component {
 
                                                 :
                                                 <Image
-                                                    source={require('../../assets/profile.jpg')}
+                                                    source={require('../../assets/images/profile3.jpeg')}
                                                     style={styles.imgStyle}
                                                 />
                                         }

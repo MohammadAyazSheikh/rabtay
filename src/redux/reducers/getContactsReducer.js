@@ -24,14 +24,6 @@ export const GET_CONTACTS_REDUCER = (state = { isLoading: true, contacts: null, 
                 contacts: null,
                 errMess: null,
             };
-        case ActionTypes.GET_CONTACTS_LOADIND:
-            return {
-                ...state,
-                isLoading: true,
-                contacts: null,
-                errMess: null,
-            };
-
         default:
             return state;
     }

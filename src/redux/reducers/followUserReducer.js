@@ -17,7 +17,7 @@ export const FOLLOW_USER_REDUCER = (state = { isLoading: true, users: null, errM
                 users: null,
                 errMess: action.payload,
             };
-        case ActionTypes.FOLLOW_USER_FAILED:
+        case ActionTypes.FOLLOW_USER_LOADIND:
             return {
                 ...state,
                 isLoading: true,

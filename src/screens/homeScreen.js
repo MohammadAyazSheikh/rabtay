@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, Image, TouchableOpacity, StatusBar, Animated } from 'react-native';
+import { View, StyleSheet, Animated } from 'react-native';
 import { connect } from 'react-redux';
 import HomeHeader from '../components/homeHeaderComponents';
 import Post from '../components/postComponent';
 import { post } from '../utilities/data';
-import { BackGroundColor } from "../utilities/colors";
 import { widthToDp, heightToDp } from '../utilities/responsiveUtils';
 
 
@@ -26,7 +25,7 @@ class Home extends Component {
             inputRange: [0, 1],
             outputRange: [0, -1],
         });
-       
+
     }
 
 

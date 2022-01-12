@@ -16,36 +16,6 @@ import RenderFriends from "../components/singleFriendComponent";
 
 
 
-// const RenderFriends = ({ isActive, uName, time, image }) => {
-
-//     return (
-//         <TouchableOpacity style={styles.messageView}>
-//             <View style={styles.imageView}>
-//                 {image ?
-//                     <Image source={{ uri: baseUrl + image }} style={styles.imageStyle} />
-//                     :
-//                     <Image source={require('../../assets/images/profile3.jpeg')} style={styles.imageStyle} />
-//                 }
-//                 {isActive ?
-//                     <View style={styles.activeStyles} /> : <View />
-//                 }
-//             </View>
-//             <View style={styles.chatView}>
-//                 <View style={styles.headerView}>
-//                     <Text style={styles.txtName}>{uName}</Text>
-//                     {
-//                         isActive ?
-//                             <Text style={styles.txtTime}>active now</Text>
-//                             :
-//                             <Text style={styles.txtTime}>{time}</Text>
-//                     }
-//                 </View>
-//             </View>
-//         </TouchableOpacity>
-//     );
-// }
-
-
 const mapStateToProps = state => {
     return {
         token: state?.user?.user?.token,

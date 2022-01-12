@@ -31,7 +31,7 @@ const User = (props) => {
                 props.image ?
                     <Image source={{ uri: baseUrl + props.image }} style={styles.imageStyle} />
                     :
-                    <Image source={require('../../assets/profile.jpg')} style={styles.imageStyle} />
+                    <Image source={require('../../assets/images/profile3.jpeg')} style={styles.imageStyle} />
             }
 
             <View style={styles.infoView}>

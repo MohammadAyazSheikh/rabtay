@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import {
     Text, View, StyleSheet, TouchableOpacity, Image,
-    Animated, TextInput, ScrollView, 
+    Animated, TextInput, ScrollView,
 } from 'react-native';
 import { BackGroundColor } from "../utilities/colors";
 import { heightToDp, widthToDp } from "../utilities/responsiveUtils";
@@ -17,7 +17,7 @@ import moment from "moment";
 
 //isActive, uName,  time, image,
 // props.navigation.navigate('Search');
-const RenderMessages = ({ navigation, message, contacts, contactId }) => {
+const RenderMessages = ({ navigation, message, contacts, contactId, lastMessageTime }) => {
     let user;
 
     let uName;
@@ -60,7 +60,7 @@ const RenderMessages = ({ navigation, message, contacts, contactId }) => {
             <View style={styles.chatView}>
                 <View style={styles.headerView}>
                     <Text style={styles.txtName}>{uName}</Text>
-                    <Text style={styles.txtTime}>{moment(lastSeen).fromNow()}</Text>
+                    <Text style={styles.txtTime}>{moment(lastMessageTime).fromNow()}</Text>
                 </View>
                 <View style={styles.footerView}>
                     <Text style={styles.txtMessage}>{message.length > 60 ? message.slice(0, 60) + ' ....' : message}</Text>
@@ -166,13 +166,10 @@ class Message extends Component {
 
                                 return (
                                     <RenderMessages
-                                        // uName={"ilyas"}
-                                        // time={'12-5-2012'}
-                                        // image={null}
-                                        // isActive={true}
                                         message={item.message.text}
                                         contactId={item.contactId}
                                         contacts={this.props.contacts}
+                                        lastMessageTime={item.message.updatedAt}
                                         {...this.props}
                                     />);
                             }

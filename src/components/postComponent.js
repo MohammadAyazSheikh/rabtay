@@ -19,7 +19,7 @@ class Post extends Component {
                 <TouchableOpacity style={styles.postHeaderView}>
                     <View style={styles.imgProfView}>
                         <Image
-                            source={require('../../assets/profile.jpg')}
+                            source={require('../../assets/images/profile3.jpeg')}
                             style={styles.imgStyle}
                         />
                     </View>
@@ -58,7 +58,7 @@ class Post extends Component {
                                     style={styles.mediaPlayer}
                                     volume={10}
                                     controls
-                                    paused = {true}
+                                    paused={true}
                                 />
 
                                 :
@@ -194,18 +194,18 @@ const styles = StyleSheet.create({
     },
 
     mediaPlayer: {
-            // position: 'absolute',
-            // top: 0,
-            // left: 0,
-            // bottom: 0,
-            // right: 0,
-            // backgroundColor: 'black',
-            // justifyContent: 'center',
-            // flex:1,
-            width:'100%',
-            height:'100%',
-           
-            // resizeMode:'cover'
-          },
+        // position: 'absolute',
+        // top: 0,
+        // left: 0,
+        // bottom: 0,
+        // right: 0,
+        // backgroundColor: 'black',
+        // justifyContent: 'center',
+        // flex:1,
+        width: '100%',
+        height: '100%',
+
+        // resizeMode:'cover'
+    },
 
 })
