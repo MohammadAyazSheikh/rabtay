@@ -10,8 +10,10 @@ import FA from "react-native-vector-icons/FontAwesome";
 import PlaceHolder from "../components/placeHolderComponent";
 import { data } from "../utilities/chatData";
 import LinearGradient from 'react-native-linear-gradient';
-
-const AnimatedInput = Animated.createAnimatedComponent(TextInput);
+import { connect } from 'react-redux';
+import { GetSingleUserMessages } from '../redux/actions/getSingleUserMessagesActions';
+import { baseUrl } from '../utilities/config';
+import moment from "moment";
 
 
 const RenderMessage = ({ sender, reciever, image, message, isImage, index }) => {
@@ -25,12 +27,16 @@ const RenderMessage = ({ sender, reciever, image, message, isImage, index }) => 
             isImage ?
                 <Image source={image} style={[styles.imgStyleMessage, { alignSelf: 'flex-end' }]} />
                 :
-                <LinearGradient colors={[BackGroundColor, blueGradeint2]} style={
+                <LinearGradient colors={['#085672','#C6EDFB']} style={
                     [
                         styles.messageRecievedStyle,
                         { marginBottom: data[i].sender ? 10 : 2 }
                     ]
-                }>
+                }
+                    start={{ x: 1, y: 0 }}
+                    end={{ x: -1, y: 0 }}
+
+                >
                     <Text style={[styles.txtSender]}>{message}</Text>
                 </LinearGradient >
 
@@ -42,7 +48,10 @@ const RenderMessage = ({ sender, reciever, image, message, isImage, index }) => 
                     isImage ?
                         <Image source={image} style={[styles.imgStyleMessage]} />
                         :
-                        <LinearGradient colors={[blackGradient1, '#6E8894']} style={[styles.messageRecievedStyle, styles.messageSentStyle,]}>
+                        <LinearGradient colors={['#2FBBF0', '#042B39']} style={[styles.messageRecievedStyle, styles.messageSentStyle,]}
+                            start={{ x: 1, y: 0 }}
+                            end={{ x: -1, y: 0 }}
+                        >
                             <Text style={[styles.txtSender]}>{message}</Text>
                         </LinearGradient>
                 }
@@ -61,6 +70,28 @@ const RenderMessage = ({ sender, reciever, image, message, isImage, index }) => 
     );
 }
 
+
+const mapStateToProps = state => {
+    return {
+        user: state?.user?.user?.user,
+        token: state?.user?.user?.token,
+        messages: state?.singeUserMessages?.messages?.messages,
+        isLoading: state?.singeUserMessages?.isLoading,
+    }
+}
+
+
+
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        getMessages: (token, chatId) => {
+            dispatch(GetSingleUserMessages(token, chatId));
+        }
+    }
+};
+
+
 class Chat extends Component {
 
     constructor(props) {
@@ -76,6 +107,9 @@ class Chat extends Component {
 
 
     componentDidMount() {
+
+        // alert(JSON.stringify(this.props.route.params.contact));
+        this.props.getMessages(this.props.token, this.props.route.params.chatId);
         const show = Platform.OS == 'android' ? 'keyboardDidShow' : 'keyboardWillShow';
         const hide = Platform.OS == 'android' ? 'keyboardDidHide' : 'keyboardWillHide';
 
@@ -119,6 +153,12 @@ class Chat extends Component {
         }).start();
     }
     render() {
+        const fname = this.props.route.params.contact.fname;
+        const lname = this.props.route.params.contact.lname;
+        const uname = fname + " " + lname;
+        const profileImage = this.props.route.params.contact?.profileImage?.path;
+        const isActive = this.props.route.params.isActive;
+        const lastSeen = this.props.route.params.lastSeen;
         return (
 
             <KeyboardAvoidingView style={styles.container} behavior='padding'>
@@ -132,11 +172,16 @@ class Chat extends Component {
                     </View>
                     <View style={styles.centerView}>
                         <View style={styles.imgView}>
-                            <Image source={require('../../assets/p4.jpg')} style={styles.imgStyle} />
+                            {
+                                profileImage ?
+                                    <Image source={{ uri: baseUrl + profileImage }} style={styles.imgStyle} /> :
+                                    <Image source={require('../../assets/images/profile3.jpeg')} style={styles.imgStyle} />
+                            }
+
                         </View>
                         <View style={styles.textView}>
-                            <Text style={styles.txtName}>Ali Ahmed</Text>
-                            <Text style={styles.txtActive}>Active Now</Text>
+                            <Text style={styles.txtName}>{uname.length > 13 ? `${fname}...` : uname}</Text>
+                            <Text style={styles.txtActive}>{isActive ? "Active Now" : moment(lastSeen).fromNow()}</Text>
                         </View>
                     </View>
                     <View style={styles.leftButtonView}>
@@ -154,17 +199,27 @@ class Chat extends Component {
                 <View style={styles.bodyView}>
                     <View style={styles.chatView}>
                         <FlatList
-                            data={data}
-                            keyExtractor={(item) => item.id}
+                            // data={data}
+                            data={this.props.messages}
+                            keyExtractor={(item) => item._id}
                             contentContainerStyle={{ paddingHorizontal: 5 }}
                             renderItem={({ item, index }) =>
                                 <RenderMessage
-                                    sender={item.sender}
-                                    reciever={item.reciever}
-                                    image={item.img}
-                                    message={item.message}
+
+                                    sender={item.from === this.props.user._id}
+                                    reciever={item.to === this.props.user._id}
+                                    image={item.image}
+                                    message={item.text}
                                     index={index}
-                                    isImage={item.isImage}
+                                    isImage={item.type === "image"}
+
+
+                                // sender={item.sender}
+                                // reciever={item.reciever}
+                                // image={item.img}
+                                // message={item.message}
+                                // index={index}
+                                // isImage={item.isImage}
                                 />
                             }
                         />
@@ -226,7 +281,7 @@ class Chat extends Component {
     }
 }
 
-export default Chat;
+export default connect(mapStateToProps, mapDispatchToProps)(Chat);
 
 const styles = StyleSheet.create({
     container: {
@@ -282,7 +337,7 @@ const styles = StyleSheet.create({
         }
     },
     txtActive: {
-        color: 'grey',
+        color: '#FFF',
         textShadowColor: '#000',
         textShadowRadius: 1,
         textShadowOffset: {

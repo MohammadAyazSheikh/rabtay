@@ -17,7 +17,7 @@ import moment from "moment";
 
 //isActive, uName,  time, image,
 // props.navigation.navigate('Search');
-const RenderMessages = ({ navigation, message, contacts, contactId, lastMessageTime }) => {
+const RenderMessages = ({ navigation, message, contacts, contactId, lastMessageTime, chatId }) => {
     let user;
 
     let uName;
@@ -42,7 +42,12 @@ const RenderMessages = ({ navigation, message, contacts, contactId, lastMessageT
         <TouchableOpacity
             style={styles.messageView}
             onPress={() => {
-                navigation.navigate('Chat');
+                navigation.navigate('Chat', {
+                    chatId: chatId,
+                    contact: user[0].contacts?.contactId,
+                    isActive: user[0]?.isActive,
+                    lastSeen: user[0]?.lastSeen,
+                });
             }}
         >
             <View style={styles.imageView}>
@@ -170,6 +175,7 @@ class Message extends Component {
                                         contactId={item.contactId}
                                         contacts={this.props.contacts}
                                         lastMessageTime={item.message.updatedAt}
+                                        chatId={item.chatId}
                                         {...this.props}
                                     />);
                             }

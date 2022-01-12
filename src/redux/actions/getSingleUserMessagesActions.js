@@ -57,7 +57,7 @@ export const GetSingleUserMessages = (token, chatId) => (dispatch) => {
 
                 dispatch(GetMessagesSuccess(data));
 
-                console.log(`\n\n\n\n\n\n\n get messages Response\n\n ${JSON.stringify(data)}\n\n\n\n\n\n`)
+                console.log(`\n\n\n\n\n\n\n get single user messages Response\n\n ${JSON.stringify(data)}\n\n\n\n\n\n`)
 
             }
         )

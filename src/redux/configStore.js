@@ -28,7 +28,7 @@ export const configureStore = () => {
                 messages: GET_MESSAGES_REDUCER,
                 singeUserMessages: GET_SINGLE_USER_MESSAGES_REDUCER,
             }
-        ), applyMiddleware(thunk, logger)
+        ), applyMiddleware(thunk /*,logger*/)
     );
 
     return store;
