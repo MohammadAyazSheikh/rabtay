@@ -1,88 +1,26 @@
 import React, { Component } from "react";
 import {
-    Text, View, StyleSheet, TouchableOpacity, Image,
-    Animated, TextInput, ScrollView,
+    View, StyleSheet,
+    Animated, TextInput, ScrollView
 } from 'react-native';
 import { BackGroundColor } from "../utilities/colors";
 import { heightToDp, widthToDp } from "../utilities/responsiveUtils";
 import { data } from "../utilities/messageData";
-import Icon from "react-native-vector-icons/FontAwesome";
-import Icon2 from "react-native-vector-icons/Entypo";
-import PlaceHolder from "../components/placeHolderComponent";
-import { connect } from 'react-redux';
-import { GetMessages } from '../redux/actions/getMessagesActions';
-import { GetContacts } from "../redux/actions/getContactsActions";
-import { baseUrl } from '../utilities/config';
+import Icon from "react-native-vector-icons/FontAwesome5";
 import moment from "moment";
+import PlaceHolder from "../components/placeHolderComponent";
 
-//isActive, uName,  time, image,
-// props.navigation.navigate('Search');
-const RenderMessages = ({ navigation, message, contacts, contactId, lastMessageTime, chatId }) => {
-    let user;
+import { connect } from 'react-redux';
+import { GetContacts } from "../redux/actions/getContactsActions";
+import RenderFriends from "../components/singleFriendComponent";
 
-    let uName;
-    let isActive;
-    let lastSeen;
-    let image;
 
-    user = contacts?.filter(
-        contact => {
-            return contact?.contacts?.contactId?._id == contactId;
-        });
-    if (user) {
-        uName = user[0]?.contacts?.contactId?.fname + " " + user[0]?.contacts?.contactId?.lname;
-        isActive = user[0]?.isActive;
-        lastSeen = user[0]?.lastSeen;
-        image = user[0]?.contacts?.contactId?.profileImage?.path;
-    }
-
-    console.log(`\n\n\n\n\n\n\n\*********************************\nuser = ${contactId}\ncontactId = ${JSON.stringify(uName)}\n=========================`)
-
-    return (
-        <TouchableOpacity
-            style={styles.messageView}
-            onPress={() => {
-                navigation.navigate('Chat', {
-                    chatId: chatId,
-                    contact: user[0].contacts?.contactId,
-                    isActive: user[0]?.isActive,
-                    lastSeen: user[0]?.lastSeen,
-                });
-            }}
-        >
-            <View style={styles.imageView}>
-                {
-                    image ?
-                        <Image source={{ uri: baseUrl + image }} style={styles.imageStyle} />
-                        :
-                        <Image source={require('../../assets/images/profile3.jpeg')} style={styles.imageStyle} />
-                }
-
-                {isActive ?
-                    <View style={styles.activeStyles} /> : <View />
-                }
-            </View>
-            <View style={styles.chatView}>
-                <View style={styles.headerView}>
-                    <Text style={styles.txtName}>{uName}</Text>
-                    <Text style={styles.txtTime}>{moment(lastMessageTime).fromNow()}</Text>
-                </View>
-                <View style={styles.footerView}>
-                    <Text style={styles.txtMessage}>{message.length > 60 ? message.slice(0, 60) + ' ....' : message}</Text>
-                </View>
-            </View>
-        </TouchableOpacity>
-    );
-}
-const arr = [1, 2, 3]
 
 const mapStateToProps = state => {
     return {
-        user: state?.user?.user?.user,
         token: state?.user?.user?.token,
         contacts: state?.contacts?.contacts,
-        messages: state.messages.messages,
-        isLoading: state.messages.isLoading
+        isLaoding: state?.contacts?.isLoading
     }
 }
 
@@ -91,54 +29,57 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        getMessages: (token) => {
-            dispatch(GetMessages(token));
-        },
         getContacts: (token) => {
             dispatch(GetContacts(token));
         }
     }
 };
 
+const arr = [1, 2, 3];
 
-
-class Message extends Component {
+class NewMessage extends Component {
 
     constructor(props) {
         super(props);
 
         this.scrollY = new Animated.Value(0);
         this._scrollY = this.scrollY.interpolate({ inputRange: [0, 1], outputRange: [0, 1], extrapolateLeft: 'clamp' });
-        this.headerTranslate = Animated.diffClamp(this._scrollY, 0, heightToDp(20)).interpolate({
+        this.headerTranslate = Animated.diffClamp(this._scrollY, 0, heightToDp(1)).interpolate({
             inputRange: [0, 1],
             outputRange: [0, -1],
         });
 
-        this._scrollY_ = this.scrollY.interpolate({ inputRange: [0, 15], outputRange: [1, 0], extrapolateLeft: 'clamp' });
-        this.addButtonAnim = Animated.diffClamp(this._scrollY_, 0, 1).interpolate({
-            inputRange: [0, 1],
-            outputRange: [0, -1],
-        });
+        this.screenFocus = this.screenFocus.bind(this);
+
+
         this.state = {
-            isLoading: false,
-            messages: data
+            // isLoading: this.props.contacts.isLaoding,
+            // contacts: this.props.contacts.contacts,
+
+            refresh: false
         }
     }
-
-
-    componentDidMount() {
-        this.props.getMessages(this.props.token);
-        // this.props.getContacts(this.props.token);
-
+    screenFocus() {
+        this.setState({ contacts: this.props.contacts.contacts })
     }
+    componentDidMount() {
+        this.props.getContacts(this.props.token);
+        this.UnsubFocusScreen = this.props.navigation.addListener('focus', this.screenFocus);
+    }
+
+    componentWillUnmount() {
+        this.UnsubFocusScreen();
+    }
+
 
     render() {
         return (
             <View style={styles.container}>
                 {
-                    this.props.isLoading ?
+                    // this.state.isLoading
+                    this.props?.isLoading ?
                         <ScrollView
-                            contentContainerStyle={{ paddingTop: heightToDp(17), paddingHorizontal: 10 }}
+                            contentContainerStyle={{ paddingTop: heightToDp(8), paddingHorizontal: 10 }}
                             showsVerticalScrollIndicator={false}
                         >
                             {
@@ -152,11 +93,11 @@ class Message extends Component {
 
                         :
                         <Animated.FlatList
-                            data={this.props.messages}
-                            keyExtractor={(item) => item.chatId}
+                            data={this.props?.contacts}
+                            keyExtractor={(item) => item.contacts.contactId._id}
                             contentContainerStyle={{
                                 paddingHorizontal: 10,
-                                paddingTop: heightToDp(17),
+                                paddingTop: heightToDp(8),
                                 paddingBottom: heightToDp(16),
                                 width: widthToDp(100)
                             }}
@@ -167,18 +108,13 @@ class Message extends Component {
                                     { useNativeDriver: true }
                                 )
                             }
-                            renderItem={({ index, item }) => {
-
-                                return (
-                                    <RenderMessages
-                                        message={item.message.text}
-                                        contactId={item.contactId}
-                                        contacts={this.props.contacts}
-                                        lastMessageTime={item.message.updatedAt}
-                                        chatId={item.chatId}
-                                        {...this.props}
-                                    />);
-                            }
+                            renderItem={({ index, item }) =>
+                                <RenderFriends
+                                    uName={item.contacts.contactId.fname + ' ' + item.contacts.contactId.lname}
+                                    time={moment(item.lastSeen).fromNow()}
+                                    image={item.contacts.contactId?.profileImage?.path}
+                                    isActive={item.isActive}
+                                />
                             }
                         />
 
@@ -201,25 +137,13 @@ class Message extends Component {
                         }
                     />
                 </Animated.View>
-
-                <Animated.View style={[styles.addBtnView, { transform: [{ scale: this.addButtonAnim }, { rotate: '180deg' }] }]}>
-                    <TouchableOpacity style={styles.addBtn}
-                        onPress={() => {
-                            this.props.navigation.navigate('NewMessage');
-                        }}
-                    >
-                        <Icon2 name='new-message' size={25} color='#FFF' />
-                    </TouchableOpacity>
-                </Animated.View>
-
-
             </View>
 
         )
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Message);
+export default connect(mapStateToProps, mapDispatchToProps)(NewMessage);
 
 const styles = StyleSheet.create({
     container: {
@@ -235,12 +159,12 @@ const styles = StyleSheet.create({
         paddingHorizontal: 5,
         alignItems: 'center',
         backgroundColor: '#c4e4f0',
-        width: '90%',
+        width: '95%',
         height: heightToDp(7),
         borderRadius: 10,
         position: 'absolute',
         alignSelf: 'center',
-        top: '10%'
+        top: '1%'
     },
     txtInput: {
         // backgroundColor:'grey',
@@ -285,10 +209,10 @@ const styles = StyleSheet.create({
         elevation: 5,
     },
     chatView: {
-        // backgroundColor: 'red',
         flex: 1,
         height: '100%',
         paddingHorizontal: 5,
+        justifyContent: 'center',
     },
     headerView: {
         flexDirection: 'row',
@@ -316,23 +240,6 @@ const styles = StyleSheet.create({
     txtMessage: {
         fontSize: widthToDp(4),
         color: 'grey'
-    },
-    addBtnView: {
-        position: 'absolute',
-        backgroundColor: BackGroundColor,
-        width: 50,
-        height: 50,
-        borderRadius: 50,
-        elevation: 5,
-        right: 20,
-        bottom: '20%'
-    },
-    addBtn: {
-        width: 50,
-        height: 50,
-        borderRadius: 50,
-        justifyContent: 'center',
-        alignItems: 'center'
     }
-})
 
+})

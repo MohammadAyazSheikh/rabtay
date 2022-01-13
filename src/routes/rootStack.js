@@ -15,7 +15,8 @@ import Search from '../screens/searchScreen';
 import User from '../screens/userScreen'
 import Chat from '../screens/chatScreen';
 import NewPost from '../screens/newPostScreen';
-// import socket from '../lib/socket';
+import NewMessage from '../screens/newMessageScreen';
+
 const rootStack = createStackNavigator();
 
 
@@ -30,19 +31,6 @@ const mapStateToProps = state => {
 
 function RootStack(props) {
 
-    // useEffect(() => {
-
-    //     if (props.user.user) {
-    //         socket.emit('active', { userId: props.user.user.user._id });
-    //         socket.on("active", msg => {
-    //             console.log(msg);
-    //         });
-    //     }
-
-    //     return () => {
-
-    //     };
-    // });
 
     return (
         <>
@@ -89,6 +77,11 @@ function RootStack(props) {
                                     }}
                                 />
                                 <rootStack.Screen name="NewPost" component={NewPost}
+                                    options={{
+                                        headerShown: false
+                                    }}
+                                />
+                                  <rootStack.Screen name="NewMessage" component={NewMessage}
                                     options={{
                                         headerShown: false
                                     }}
