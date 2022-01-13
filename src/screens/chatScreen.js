@@ -16,30 +16,40 @@ import { baseUrl } from '../utilities/config';
 import moment from "moment";
 
 
-const RenderMessage = ({ sender, reciever, image, message, isImage, index }) => {
-    let i;
-    if (index == data.length - 1)
-        i = index;
-    else
-        i = index + 1
+const RenderMessage = ({ sender, reciever, image, message, isImage, index, lastIndex,
+    contactImgFlag, profileImage, msgStatus }) => {
+
+ 
     return (
-        reciever ?
-            isImage ?
-                <Image source={image} style={[styles.imgStyleMessage, { alignSelf: 'flex-end' }]} />
-                :
-                <LinearGradient colors={['#085672','#C6EDFB']} style={
-                    [
-                        styles.messageRecievedStyle,
-                        { marginBottom: data[i].sender ? 10 : 2 }
-                    ]
+        sender ?
+            < View >
+                {
+
+
+                    isImage ?
+                        <Image source={image} style={[styles.imgStyleMessage, { alignSelf: 'flex-end' }]} />
+                        :
+                        <LinearGradient colors={['#085672', '#C6EDFB']} style={
+                            [
+                                styles.messageRecievedStyle,
+                                // { marginBottom: data[i].sender ? 10 : 2 }
+                            ]
+                        }
+                            start={{ x: 1, y: 0 }}
+                            end={{ x: -1, y: 0 }}
+
+                        >
+                            <Text style={[styles.txtSender]}>{message}</Text>
+                        </LinearGradient >
                 }
-                    start={{ x: 1, y: 0 }}
-                    end={{ x: -1, y: 0 }}
+                {
+                    index === lastIndex ?
+                        < Text style={[{ alignSelf: 'flex-end' }]}> {msgStatus}</Text>
+                        :
+                        <View />
+                }
 
-                >
-                    <Text style={[styles.txtSender]}>{message}</Text>
-                </LinearGradient >
-
+            </ View >
             :
 
             < View >
@@ -48,22 +58,25 @@ const RenderMessage = ({ sender, reciever, image, message, isImage, index }) => 
                     isImage ?
                         <Image source={image} style={[styles.imgStyleMessage]} />
                         :
-                        <LinearGradient colors={['#2FBBF0', '#042B39']} style={[styles.messageRecievedStyle, styles.messageSentStyle,]}
+                        <LinearGradient colors={['#2FBBF0', '#042B39']} style={[styles.messageRecievedStyle, styles.messageSentStyle]}
                             start={{ x: 1, y: 0 }}
                             end={{ x: -1, y: 0 }}
                         >
                             <Text style={[styles.txtSender]}>{message}</Text>
                         </LinearGradient>
                 }
-
                 {/* putting image after sender last in a row message */}
                 {
-                    !data[i].sender || data[data.length - 1].sender && index == data.length - 1 ?
-                        <Image source={image} style={[styles.imgStyle, { marginBottom: 10 }]} />
+                    contactImgFlag ?
+                        profileImage ?
+                            <Image source={{ uri: baseUrl + profileImage }} style={[styles.imgStyle, { marginBottom: 10, borderColor: BackGroundColor }]} />
+                            :
+                            <Image source={require('../../assets/images/profile3.jpeg')} style={[styles.imgStyle, { marginBottom: 10 }]} />
                         :
                         <View />
 
                 }
+
             </View >
 
 
@@ -77,6 +90,7 @@ const mapStateToProps = state => {
         token: state?.user?.user?.token,
         messages: state?.singeUserMessages?.messages?.messages,
         isLoading: state?.singeUserMessages?.isLoading,
+        isLoading: state?.singeUserMessages?.messages?.isTyping,
     }
 }
 
@@ -199,12 +213,30 @@ class Chat extends Component {
                 <View style={styles.bodyView}>
                     <View style={styles.chatView}>
                         <FlatList
-                            // data={data}
+
                             data={this.props.messages}
                             keyExtractor={(item) => item._id}
                             contentContainerStyle={{ paddingHorizontal: 5 }}
-                            renderItem={({ item, index }) =>
-                                <RenderMessage
+                            renderItem={({ item, index }) => {
+
+                                let len = this.props.messages.length;
+                                let lastIndex = len - 1;
+                                let nextIndex = index === lastIndex ?
+                                    lastIndex : index + 1;
+                                let msgStatus;
+
+                                if (index === lastIndex && item.from === this.props.user._id) {
+                                    if (item.isSent) {
+                                        msgStatus = 'Sent';
+                                    }
+                                    else if (item.isDelivered) {
+                                        msgStatus = 'Delivered';
+                                    }
+                                    else if (item.isSeen) {
+                                        msgStatus = 'Seen';
+                                    }
+                                }
+                                return <RenderMessage
 
                                     sender={item.from === this.props.user._id}
                                     reciever={item.to === this.props.user._id}
@@ -212,17 +244,25 @@ class Chat extends Component {
                                     message={item.text}
                                     index={index}
                                     isImage={item.type === "image"}
+                                    profileImage={profileImage}
+                                    lastIndex={lastIndex}
+                                    msgStatus={msgStatus}
 
+                                    contactImgFlag={
+                                        //if next message is mine
+                                        this.props.messages[nextIndex].from === this.props.user._id
+                                        ||
+                                        // or if last message is of friend
+                                        this.props.messages[lastIndex].to === this.props.user._id
+                                        &&
+                                        index == lastIndex
+                                    }
 
-                                // sender={item.sender}
-                                // reciever={item.reciever}
-                                // image={item.img}
-                                // message={item.message}
-                                // index={index}
-                                // isImage={item.isImage}
                                 />
                             }
+                            }
                         />
+                        <Text style={[styles.txtActive, { color: 'skyblue' }]} >{this.props.isTyping ? 'Typing...' : ''}</Text>
                     </View>
                     <Animated.View style={[styles.bottomView, { paddingBottom: this.keyboardHeight }]}>
                         <View style={styles.bottomBtnView}>
