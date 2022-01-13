@@ -21,7 +21,11 @@ class RenderFriends extends Component {
     render() {
         const { isActive, uName, time, image, _contacts } = this.props;
         return (
-            <TouchableOpacity style={styles.messageView}>
+            <TouchableOpacity style={styles.messageView}
+                onPress={() => {
+                    alert(this.props.initializeChat);
+                }}
+            >
                 <View style={styles.imageView}>
                     {image ?
                         <Image source={{ uri: baseUrl + image }} style={styles.imageStyle} />

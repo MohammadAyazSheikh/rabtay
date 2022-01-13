@@ -36,7 +36,7 @@ const RenderMessages = ({ navigation, message, contacts, contactId, lastMessageT
         image = user[0]?.contacts?.contactId?.profileImage?.path;
     }
 
-    console.log(`\n\n\n\n\n\n\n\*********************************\nuser = ${contactId}\ncontactId = ${JSON.stringify(uName)}\n=========================`)
+    // console.log(`\n\n\n\n\n\n\n\*********************************\nuser = ${contactId}\ncontactId = ${JSON.stringify(uName)}\n=========================`)
 
     return (
         <TouchableOpacity

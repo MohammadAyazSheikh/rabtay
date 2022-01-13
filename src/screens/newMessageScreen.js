@@ -9,8 +9,8 @@ import { data } from "../utilities/messageData";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import moment from "moment";
 import PlaceHolder from "../components/placeHolderComponent";
-
 import { connect } from 'react-redux';
+import { GetMessages } from '../redux/actions/getMessagesActions';
 import { GetContacts } from "../redux/actions/getContactsActions";
 import RenderFriends from "../components/singleFriendComponent";
 
@@ -20,7 +20,8 @@ const mapStateToProps = state => {
     return {
         token: state?.user?.user?.token,
         contacts: state?.contacts?.contacts,
-        isLaoding: state?.contacts?.isLoading
+        isLaoding: state?.contacts?.isLoading,
+        messages: state.messages.messages,
     }
 }
 
@@ -65,6 +66,8 @@ class NewMessage extends Component {
     componentDidMount() {
         this.props.getContacts(this.props.token);
         this.UnsubFocusScreen = this.props.navigation.addListener('focus', this.screenFocus);
+        // console.log(JSON.stringify(this.props.messages));
+        // alert(JSON.stringify(this.props.messages.length))
     }
 
     componentWillUnmount() {
@@ -108,13 +111,25 @@ class NewMessage extends Component {
                                     { useNativeDriver: true }
                                 )
                             }
-                            renderItem={({ index, item }) =>
-                                <RenderFriends
+                            renderItem={({ index, item }) => {
+
+                                //checking if chat alread exist
+                                const msg = this.props?.messages?.filter(
+                                    msg => {
+                                        return msg?.contactId === item?.contacts?.contactId?._id;
+                                    });
+
+                                let initializeChat = msg?.length > 0 ? false : true;
+
+                                return (<RenderFriends
                                     uName={item.contacts.contactId.fname + ' ' + item.contacts.contactId.lname}
                                     time={moment(item.lastSeen).fromNow()}
                                     image={item.contacts.contactId?.profileImage?.path}
                                     isActive={item.isActive}
-                                />
+                                    fromNewMsgScrn={true}
+                                    initializeChat={initializeChat}
+                                />);
+                            }
                             }
                         />
 
