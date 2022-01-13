@@ -114,6 +114,7 @@ class Friends extends Component {
                                     time={moment(item.lastSeen).fromNow()}
                                     image={item.contacts.contactId?.profileImage?.path}
                                     isActive={item.isActive}
+                                    contactId = {item?.contacts?.contactId?._id}
                                 />
                             }
                         />

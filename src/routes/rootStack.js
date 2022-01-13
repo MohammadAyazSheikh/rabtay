@@ -16,6 +16,7 @@ import User from '../screens/userScreen'
 import Chat from '../screens/chatScreen';
 import NewPost from '../screens/newPostScreen';
 import NewMessage from '../screens/newMessageScreen';
+import CreateMessage  from '../screens/createMessageScreen';
 
 const rootStack = createStackNavigator();
 
@@ -81,7 +82,12 @@ function RootStack(props) {
                                         headerShown: false
                                     }}
                                 />
-                                  <rootStack.Screen name="NewMessage" component={NewMessage}
+                                <rootStack.Screen name="NewMessage" component={NewMessage}
+                                    options={{
+                                        headerShown: false
+                                    }}
+                                />
+                                <rootStack.Screen name="CreateMessage" component={CreateMessage}
                                     options={{
                                         headerShown: false
                                     }}

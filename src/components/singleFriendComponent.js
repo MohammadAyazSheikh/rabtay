@@ -19,11 +19,19 @@ class RenderFriends extends Component {
     }
 
     render() {
-        const { isActive, uName, time, image, _contacts } = this.props;
+        const { isActive, uName, time, image, _contacts, contactId, chatId } = this.props;
         return (
             <TouchableOpacity style={styles.messageView}
                 onPress={() => {
-                    alert(this.props.initializeChat);
+                    // alert(chatId)
+                    if (this.props.fromNewMsgScrn) {
+                        this.props.navigation.navigate('CreateMessage', {
+                            uName: uName,
+                            contactId: contactId,
+                            chatId: chatId,
+                            initializeChat: this.props.initializeChat
+                        });
+                    }
                 }}
             >
                 <View style={styles.imageView}>
