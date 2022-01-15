@@ -2,34 +2,42 @@ import * as ActionTypes from '../actionTypes';
 import { baseUrl } from '../../utilities/config';
 
 
-export const GetMessagesSuccess = (messages) => (
+export const postMessagesSuccess = (messages) => (
     {
-        type: ActionTypes.GET_MESSAGES_SUCCESS,
+        type: ActionTypes.POST_MESSAGE_SUCCESS,
         payload: messages
     }
 );
 
-export const GetMessagesFailed = (err) => (
+export const postMessagesFailed = (err) => (
     {
-        type: ActionTypes.GET_MESSAGES_FAILED,
+        type: ActionTypes.POST_MESSAGE_FAILED,
         payload: err
     }
 );
 
-export const GetMessagesLoading = () => (
+export const postMessagesLoading = () => (
     {
         type: ActionTypes.GET_MESSAGES_LOADIND,
     }
 );
 
 
-export const GetMessages = (token) => (dispatch) => {
+export const GetMessages = (token, chatId, text, to, type, initializeChat) => (dispatch) => {
 
-    dispatch(GetMessagesLoading());
+    dispatch(postMessagesLoading());
 
     // alert();
-    return fetch(`${baseUrl}users/getMessage`,
+    return fetch(`${baseUrl}users/addMessage`,
         {
+            method: 'POST',
+            body: JSON.stringify({
+                chatId: chatId,
+                text: text,
+                to: to,
+                type: text,
+                initializeChat: initializeChat
+            }),
             headers: {
                 "Authorization": token,
                 "Content-Type": "application/json"
@@ -55,7 +63,7 @@ export const GetMessages = (token) => (dispatch) => {
         .then(
             data => {
 
-                dispatch(GetMessagesSuccess(data));
+                dispatch(postMessagesSuccess(data));
 
                 console.log(`\n\n\n\n\n\n\n get messages Response\n\n ${JSON.stringify(data)}\n\n\n\n\n\n`)
 
@@ -65,8 +73,7 @@ export const GetMessages = (token) => (dispatch) => {
             error => {
                 console.log('get messages failed error', error.message);
                 alert('Your get messages req could not be posted\nError: ' + error.message);
-                dispatch(GetMessagesFailed(error.message))
+                dispatch(postMessagesFailed(error.message))
             }
         );
-
 }
