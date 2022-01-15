@@ -19,7 +19,7 @@ class RenderFriends extends Component {
     }
 
     render() {
-        const { isActive, uName, time, image, _contacts, contactId, chatId } = this.props;
+        const { isActive, uName, time, image, _contacts, contactId, chatId, lastSeen } = this.props;
         return (
             <TouchableOpacity style={styles.messageView}
                 onPress={() => {
@@ -29,7 +29,9 @@ class RenderFriends extends Component {
                             uName: uName,
                             contactId: contactId,
                             chatId: chatId,
-                            initializeChat: this.props.initializeChat
+                            initializeChat: this.props.initializeChat,
+                            isActive: isActive,
+                            lastSeen: lastSeen
                         });
                     }
                 }}

@@ -126,8 +126,9 @@ class NewMessage extends Component {
                                     time={moment(item.lastSeen).fromNow()}
                                     image={item.contacts.contactId?.profileImage?.path}
                                     isActive={item.isActive}
+                                    lastSeen={item.lastSeen}
                                     contactId={item?.contacts?.contactId?._id}
-                                    chatId={msg[0]?.chatId}
+                                    chatId={msg?.length > 0 ? msg[0]?.chatId : null}
                                     fromNewMsgScrn={true}
                                     initializeChat={initializeChat}
                                     {...this.props}

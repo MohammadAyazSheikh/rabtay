@@ -9,13 +9,29 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Entypo from 'react-native-vector-icons/Entypo';
 import { ScrollView } from 'react-native-gesture-handler';
 import * as ImagePicker from 'react-native-image-picker';
-
-
+import { PostMessages } from '../redux/actions/postMessageActions'
+import { GetMessages } from '../redux/actions/getMessagesActions';
 const mapStateToProps = state => {
     return {
         user: state.user.user,
+        token: state?.user?.user?.token,
+        messages: state?.singeUserMessages?.messages?.messages,
+        isLoading: state?.singeUserMessages?.isLoading,
+        isPosting: state?.singeUserMessages?.isPosting,
+        isTyping: state?.singeUserMessages?.messages?.isTyping,
     }
 }
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        PostMessages: (token, chatId, text, to, type, initializeChat) => {
+            dispatch(PostMessages(token, chatId, text, to, type, initializeChat));
+        },
+        getMessages: (token) => {
+            dispatch(GetMessages(token));
+        },
+    }
+};
 
 
 
@@ -24,7 +40,8 @@ class CreateMessage extends Component {
         super(props);
 
         this.state = {
-            imageUri: null
+            imageUri: null,
+            text: ''
         };
     }
 
@@ -61,7 +78,7 @@ class CreateMessage extends Component {
 
 
     render() {
-        const { uName, contactId, chatId, initializeChat } = this.props.route.params;
+        const { uName, contactId, chatId, initializeChat, isActive, lastSeen } = this.props.route.params;
         return (
             <View style={styles.container} >
                 <View style={styles.HeaderView}>
@@ -71,7 +88,18 @@ class CreateMessage extends Component {
                     </TouchableOpacity>
                     <Text style={styles.txtHeader}>Create New Message</Text>
                     <TouchableOpacity style={styles.btnPost}
-                        onPress={() => { this.props.navigation.navigate('Home') }}    >
+                        onPress={() => {
+                            this.props.PostMessages(this.props.token, chatId, this.state.text, contactId, 'text', initializeChat);
+                            this.props.getMessages(this.props.token);
+                            console.log(this.state.text)
+                            this.props.navigation
+                                .navigate('Chat', {
+                                    chatId: chatId,
+                                    contact: contactId,
+                                    isActive: isActive,
+                                    lastSeen: lastSeen,
+                                });
+                        }} >
                         <Text style={styles.txtBtnPost}>Send</Text>
                     </TouchableOpacity>
                 </View>
@@ -90,6 +118,9 @@ class CreateMessage extends Component {
                             placeholder='Say it all..!'
                             placeholderTextColor='grey'
                             multiline
+                            onChangeText={(text) => {
+                                this.setState({ text: text });
+                            }}
                         />
                     </View>
                     {
@@ -124,7 +155,7 @@ class CreateMessage extends Component {
     }
 }
 
-export default connect(mapStateToProps, null)(CreateMessage);
+export default connect(mapStateToProps, mapDispatchToProps)(CreateMessage);
 
 const styles = StyleSheet.create({
     container: {

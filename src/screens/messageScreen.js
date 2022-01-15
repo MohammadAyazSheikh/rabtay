@@ -119,18 +119,29 @@ class Message extends Component {
             inputRange: [0, 1],
             outputRange: [0, -1],
         });
+        this.screenFocus = this.screenFocus.bind(this);
         this.state = {
             isLoading: false,
-            messages: data
+            messages: data,
+            refresh: false,
         }
     }
 
 
-    componentDidMount() {
-        this.props.getMessages(this.props.token);
-        // this.props.getContacts(this.props.token);
 
+
+    screenFocus() {
+        this.props.getMessages(this.props.token);
     }
+    componentDidMount() {
+        // this.props.getMessages(this.props.token);
+        this.UnsubFocusScreen = this.props.navigation.addListener('focus', this.screenFocus);
+    }
+
+    componentWillUnmount() {
+        this.UnsubFocusScreen();
+    }
+
 
     render() {
         return (

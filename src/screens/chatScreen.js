@@ -19,7 +19,7 @@ import moment from "moment";
 const RenderMessage = ({ sender, reciever, image, message, isImage, index, lastIndex,
     contactImgFlag, profileImage, msgStatus }) => {
 
- 
+
     return (
         sender ?
             < View >
@@ -90,7 +90,7 @@ const mapStateToProps = state => {
         token: state?.user?.user?.token,
         messages: state?.singeUserMessages?.messages?.messages,
         isLoading: state?.singeUserMessages?.isLoading,
-        isLoading: state?.singeUserMessages?.messages?.isTyping,
+        isTyping: state?.singeUserMessages?.messages?.isTyping,
     }
 }
 

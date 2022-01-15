@@ -23,7 +23,7 @@ export const postMessagesLoading = () => (
 );
 
 
-export const GetMessages = (token, chatId, text, to, type, initializeChat) => (dispatch) => {
+export const PostMessages = (token, chatId, text, to, type, initializeChat) => (dispatch) => {
 
     dispatch(postMessagesLoading());
 
@@ -35,7 +35,7 @@ export const GetMessages = (token, chatId, text, to, type, initializeChat) => (d
                 chatId: chatId,
                 text: text,
                 to: to,
-                type: text,
+                type: type,
                 initializeChat: initializeChat
             }),
             headers: {
@@ -63,7 +63,8 @@ export const GetMessages = (token, chatId, text, to, type, initializeChat) => (d
         .then(
             data => {
 
-                dispatch(postMessagesSuccess(data));
+                alert(JSON.stringify(data.message));
+                // dispatch(postMessagesSuccess(data));
 
                 console.log(`\n\n\n\n\n\n\n get messages Response\n\n ${JSON.stringify(data)}\n\n\n\n\n\n`)
 
@@ -71,9 +72,9 @@ export const GetMessages = (token, chatId, text, to, type, initializeChat) => (d
         )
         .catch(
             error => {
-                console.log('get messages failed error', error.message);
-                alert('Your get messages req could not be posted\nError: ' + error.message);
-                dispatch(postMessagesFailed(error.message))
+                console.log('post message failed error', error.message);
+                alert('Your post message req could not be posted\nError: ' + error.message);
+                // dispatch(postMessagesFailed(error.message))
             }
         );
 }

@@ -1,12 +1,13 @@
 import * as ActionTypes from '../actionTypes';
 
-export const GET_SINGLE_USER_MESSAGES_REDUCER = (state = { isLoading: true, messages: null, errMess: null }, action) => {
+export const GET_SINGLE_USER_MESSAGES_REDUCER = (state = { isLoading: true, isPosting: false, messages: {}, errMess: null }, action) => {
 
     switch (action.type) {
         case ActionTypes.GET_SINGLE_USER_MESSAGE_SUCCESS:
             return {
                 ...state,
                 isLoading: false,
+                isPosting: false,
                 messages: action.payload,
                 errMess: null,
             };
@@ -14,6 +15,7 @@ export const GET_SINGLE_USER_MESSAGES_REDUCER = (state = { isLoading: true, mess
             return {
                 ...state,
                 isLoading: false,
+                isPosting: false,
                 messages: null,
                 errMess: action.payload,
             };
@@ -21,8 +23,35 @@ export const GET_SINGLE_USER_MESSAGES_REDUCER = (state = { isLoading: true, mess
             return {
                 ...state,
                 isLoading: true,
+                isPosting: false,
                 messages: null,
                 errMess: null,
+            };
+        //adding new message
+        case ActionTypes.POST_MESSAGE_SUCCESS:
+            return {
+                // ...state,
+                isLoading: false,
+                isPosting: false,
+                messages: {
+                    ...state?.messages,
+                    messages: [...state?.messages?.messages, action.payload.message]
+                },
+                errMess: null,
+            };
+        case ActionTypes.POST_MESSAGE_FAILED:
+            return {
+                ...state,
+                errMess: action.payload,
+                isPosting: false,
+                isLoading: false,
+            };
+        case ActionTypes.POST_MESSAGE_LOADIND:
+            return {
+                ...state,
+                errMess: null,
+                isPosting: true,
+                isLoading: false,
             };
         default:
             return state;
