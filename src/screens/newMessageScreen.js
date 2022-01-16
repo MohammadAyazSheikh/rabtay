@@ -128,6 +128,7 @@ class NewMessage extends Component {
                                     isActive={item.isActive}
                                     lastSeen={item.lastSeen}
                                     contactId={item?.contacts?.contactId?._id}
+                                    contact={item?.contacts?.contactId}
                                     chatId={msg?.length > 0 ? msg[0]?.chatId : null}
                                     fromNewMsgScrn={true}
                                     initializeChat={initializeChat}

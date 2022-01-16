@@ -123,7 +123,11 @@ class Chat extends Component {
     componentDidMount() {
 
         // alert(JSON.stringify(this.props.route.params.contact));
+        // setTimeout(() => {
+
+        // }, 2000);
         this.props.getMessages(this.props.token, this.props.route.params.chatId);
+
         const show = Platform.OS == 'android' ? 'keyboardDidShow' : 'keyboardWillShow';
         const hide = Platform.OS == 'android' ? 'keyboardDidHide' : 'keyboardWillHide';
 

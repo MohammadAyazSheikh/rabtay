@@ -134,7 +134,8 @@ class Message extends Component {
         this.props.getMessages(this.props.token);
     }
     componentDidMount() {
-        // this.props.getMessages(this.props.token);
+        // setTimeout(() => { this.props.getMessages(this.props.token); }, 5000)
+
         this.UnsubFocusScreen = this.props.navigation.addListener('focus', this.screenFocus);
     }
 

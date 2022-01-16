@@ -78,7 +78,7 @@ class CreateMessage extends Component {
 
 
     render() {
-        const { uName, contactId, chatId, initializeChat, isActive, lastSeen } = this.props.route.params;
+        const { uName, contactId, chatId, initializeChat, isActive, lastSeen, contact } = this.props.route.params;
         return (
             <View style={styles.container} >
                 <View style={styles.HeaderView}>
@@ -89,16 +89,21 @@ class CreateMessage extends Component {
                     <Text style={styles.txtHeader}>Create New Message</Text>
                     <TouchableOpacity style={styles.btnPost}
                         onPress={() => {
+
                             this.props.PostMessages(this.props.token, chatId, this.state.text, contactId, 'text', initializeChat);
-                            this.props.getMessages(this.props.token);
-                            console.log(this.state.text)
-                            this.props.navigation
-                                .navigate('Chat', {
-                                    chatId: chatId,
-                                    contact: contactId,
-                                    isActive: isActive,
-                                    lastSeen: lastSeen,
-                                });
+
+
+                            if (initializeChat)
+                                this.props.navigation
+                                    .navigate('Message');
+                            else
+                                this.props.navigation
+                                    .navigate('Chat', {
+                                        chatId: chatId,
+                                        contact: contact,
+                                        isActive: isActive,
+                                        lastSeen: lastSeen,
+                                    });
                         }} >
                         <Text style={styles.txtBtnPost}>Send</Text>
                     </TouchableOpacity>
