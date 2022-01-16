@@ -124,7 +124,7 @@ class Chat extends Component {
         this.state = {
             inputHieght: 30,
             newLines: 0,
-            text: ''
+            text: '',
         }
     }
 
@@ -299,6 +299,7 @@ class Chat extends Component {
                         </View>
                         <Animated.View style={[styles.txtInputView, { width: this.scaleInputAnim }]}>
                             <TextInput
+                                value = {this.state.text}
                                 placeholder='write somthing'
                                 style={styles.txtInput}
                                 placeholderTextColor='#FFF'
@@ -307,9 +308,11 @@ class Chat extends Component {
                                 onChangeText={
                                     (val) => {
 
+                                        // console.log(newLines.length)
+
                                         let text = val || ' ';
                                         let newLines = text.match(/\n/g) || '';
-                                        console.log(newLines.length)
+
                                         this.setState({ newLines });
                                         this.setState({ text: val });
                                         if (newLines.length < 4 && val.substr(val.length - 1, 2).includes('\n') && this.state.inputHieght < 75) {
@@ -334,7 +337,8 @@ class Chat extends Component {
                                 disabled={this.state.text === '' ? true : false}
                                 onPress={() => {
                                     this.props.PostMessages(this.props.token, chatId, this.state.text, contactId, 'text', false);
-                                    this.setState({ text: '' });
+                                    this.setState({text:''});
+                                    
                                 }}
                             >
                                 <Iconic name='send' color={BackGroundColor} size={25} style={styles.iconStyles} />
