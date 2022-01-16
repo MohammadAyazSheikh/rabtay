@@ -12,9 +12,10 @@ import { data } from "../utilities/chatData";
 import LinearGradient from 'react-native-linear-gradient';
 import { connect } from 'react-redux';
 import { GetSingleUserMessages } from '../redux/actions/getSingleUserMessagesActions';
+import { PostMessages, postMessagesSuccess } from '../redux/actions/postMessageActions'
 import { baseUrl } from '../utilities/config';
 import moment from "moment";
-
+import { socket } from '../lib/socket';
 
 const RenderMessage = ({ sender, reciever, image, message, isImage, index, lastIndex,
     contactImgFlag, profileImage, msgStatus }) => {
@@ -101,7 +102,13 @@ const mapDispatchToProps = (dispatch) => {
     return {
         getMessages: (token, chatId) => {
             dispatch(GetSingleUserMessages(token, chatId));
-        }
+        },
+        PostMessages: (token, chatId, text, to, type, initializeChat) => {
+            dispatch(PostMessages(token, chatId, text, to, type, initializeChat));
+        },
+        PostMessagesSuccess: (data) => {
+            dispatch(postMessagesSuccess(data));
+        },
     }
 };
 
@@ -113,19 +120,25 @@ class Chat extends Component {
         this.keyboardHeight = new Animated.Value(10);
         this.scaleInputAnim = new Animated.Value(widthToDp(60));
         this.scaleYInputAnim = new Animated.Value(0);
+        this.onChat = this.onChat.bind(this);
         this.state = {
             inputHieght: 30,
-            newLines: 0
+            newLines: 0,
+            text: ''
         }
     }
 
+    onChat(data) {
+        console.log(`\n\n\chat listener msg from server\n\n ${JSON.stringify(data)}`);
 
+        // alert(JSON.stringify(data));
+        this.props.PostMessagesSuccess(data);
+    }
     componentDidMount() {
 
-        // alert(JSON.stringify(this.props.route.params.contact));
-        // setTimeout(() => {
 
-        // }, 2000);
+        socket.on("chat", this.onChat);
+
         this.props.getMessages(this.props.token, this.props.route.params.chatId);
 
         const show = Platform.OS == 'android' ? 'keyboardDidShow' : 'keyboardWillShow';
@@ -139,6 +152,8 @@ class Chat extends Component {
         this.keyboardWillShowSub.remove();
         this.keyboardWillHideSub.remove();
         this.scaleYInputAnim.removeAllListeners();
+
+        socket.off('chat', this.onChat);
     }
 
     keyboardWillShow = (event) => {
@@ -175,8 +190,10 @@ class Chat extends Component {
         const lname = this.props.route.params.contact.lname;
         const uname = fname + " " + lname;
         const profileImage = this.props.route.params.contact?.profileImage?.path;
+        const contactId = this.props.route.params.contact?._id;
         const isActive = this.props.route.params.isActive;
         const lastSeen = this.props.route.params.lastSeen;
+        const chatId = this.props.route.params.chatId;
         return (
 
             <KeyboardAvoidingView style={styles.container} behavior='padding'>
@@ -294,6 +311,7 @@ class Chat extends Component {
                                         let newLines = text.match(/\n/g) || '';
                                         console.log(newLines.length)
                                         this.setState({ newLines });
+                                        this.setState({ text: val });
                                         if (newLines.length < 4 && val.substr(val.length - 1, 2).includes('\n') && this.state.inputHieght < 75) {
                                             this.setState({ inputHieght: newLines.length * 25 }, () => {
                                                 this.AnimateScaleYInput(200, this.state.inputHieght);
@@ -312,8 +330,13 @@ class Chat extends Component {
 
                                 }
                             />
-                            < TouchableOpacity style={{ padding: 5 }
-                            }>
+                            < TouchableOpacity style={{ padding: 5 }}
+                                disabled={this.state.text === '' ? true : false}
+                                onPress={() => {
+                                    this.props.PostMessages(this.props.token, chatId, this.state.text, contactId, 'text', false);
+                                    this.setState({ text: '' });
+                                }}
+                            >
                                 <Iconic name='send' color={BackGroundColor} size={25} style={styles.iconStyles} />
                             </TouchableOpacity >
                         </Animated.View>

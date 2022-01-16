@@ -9,7 +9,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Entypo from 'react-native-vector-icons/Entypo';
 import { ScrollView } from 'react-native-gesture-handler';
 import * as ImagePicker from 'react-native-image-picker';
-import { PostMessages } from '../redux/actions/postMessageActions'
+import { PostMessages } from '../redux/actions/postMessageActions';
 import { GetMessages } from '../redux/actions/getMessagesActions';
 const mapStateToProps = state => {
     return {

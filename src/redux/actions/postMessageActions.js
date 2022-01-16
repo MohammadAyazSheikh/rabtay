@@ -1,6 +1,6 @@
 import * as ActionTypes from '../actionTypes';
 import { baseUrl } from '../../utilities/config';
-
+import { socket } from '../../lib/socket';
 
 export const postMessagesSuccess = (messages) => (
     {
@@ -64,7 +64,15 @@ export const PostMessages = (token, chatId, text, to, type, initializeChat) => (
             data => {
 
                 // alert(JSON.stringify(data.message));
-                // dispatch(postMessagesSuccess(data));
+                dispatch(postMessagesSuccess(data));
+
+                socket.emit('chat',
+                    {
+                        message: data,
+                        contactId: to,
+                    }
+
+                );
 
                 console.log(`\n\n\n\n\n\n\n get messages Response\n\n ${JSON.stringify(data)}\n\n\n\n\n\n`)
 
@@ -74,7 +82,7 @@ export const PostMessages = (token, chatId, text, to, type, initializeChat) => (
             error => {
                 console.log('post message failed error', error.message);
                 alert('Your post message req could not be posted\nError: ' + error.message);
-                // dispatch(postMessagesFailed(error.message))
+                dispatch(postMessagesFailed(error.message))
             }
         );
 }
