@@ -121,23 +121,74 @@ class Chat extends Component {
         this.scaleInputAnim = new Animated.Value(widthToDp(60));
         this.scaleYInputAnim = new Animated.Value(0);
         this.onChat = this.onChat.bind(this);
+        this.onChatStatus = this.onChatStatus.bind(this);
+        this.setMsgStatus = this.setMsgStatus.bind(this);
         this.state = {
             inputHieght: 30,
             newLines: 0,
             text: '',
+            msgStatus: 'sent',
+        }
+    }
+
+    setMsgStatus() {
+        const lastIndex = this.props?.messages?.length - 1;
+        let lastMsg = {};
+        if (lastIndex)
+            lastMsg = this.props?.messages[lastIndex];
+
+        if (lastMsg?.from === this.props?.user?._id) {
+            let msgStatus_;
+            if (lastMsg.isSent) {
+                msgStatus_ = 'Sent';
+            }
+            else if (lastMsg.isDelivered) {
+                msgStatus_ = 'Delivered';
+            }
+            else if (lastMsg.isSeen) {
+                msgStatus_ = 'Seen';
+            }
+
+            this.setState({ msgStatus: msgStatus_ })
         }
     }
 
     onChat(data) {
-        console.log(`\n\n\chat listener msg from server\n\n ${JSON.stringify(data)}`);
 
-        // alert(JSON.stringify(data));
+        console.log(`\n\n\chat listener msg from server\n\n ${JSON.stringify(data)}`);
         this.props.PostMessagesSuccess(data);
+
+        //marking all msg seen
+        socket.emit('chatStatus', {
+            contactId: this.props.route.params.contact?._id,
+            chatId: this.props.route.params.chatId
+        });
     }
+
+    onChatStatus(data) {
+        console.log(`\n\n\chat status listener msg from server\n\n ${JSON.stringify(data)}`);
+        this.setState({ msgStatus: data.status });
+    }
+
+
     componentDidMount() {
 
+        //setting msg status
+        setTimeout(this.setMsgStatus, 2000);
 
+        // this.setMsgStatus();
+
+        //listening on new chat
         socket.on("chat", this.onChat);
+        //listening on new msg status
+        socket.on("chatStatus", this.onChatStatus);
+
+
+        //marking all msg seen
+        socket.emit('chatStatus', {
+            contactId: this.props.route.params.contact?._id,
+            chatId: this.props.route.params.chatId
+        });
 
         this.props.getMessages(this.props.token, this.props.route.params.chatId);
 
@@ -153,7 +204,9 @@ class Chat extends Component {
         this.keyboardWillHideSub.remove();
         this.scaleYInputAnim.removeAllListeners();
 
+        //removing handlers
         socket.off('chat', this.onChat);
+        socket.off("chatStatus", this.onChatStatus);
     }
 
     keyboardWillShow = (event) => {
@@ -257,6 +310,7 @@ class Chat extends Component {
                                         msgStatus = 'Seen';
                                     }
                                 }
+
                                 return <RenderMessage
 
                                     sender={item.from === this.props.user._id}
@@ -267,7 +321,7 @@ class Chat extends Component {
                                     isImage={item.type === "image"}
                                     profileImage={profileImage}
                                     lastIndex={lastIndex}
-                                    msgStatus={msgStatus}
+                                    msgStatus={this.state.msgStatus}
 
                                     contactImgFlag={
                                         //if next message is mine
@@ -299,7 +353,7 @@ class Chat extends Component {
                         </View>
                         <Animated.View style={[styles.txtInputView, { width: this.scaleInputAnim }]}>
                             <TextInput
-                                value = {this.state.text}
+                                value={this.state.text}
                                 placeholder='write somthing'
                                 style={styles.txtInput}
                                 placeholderTextColor='#FFF'
@@ -337,8 +391,8 @@ class Chat extends Component {
                                 disabled={this.state.text === '' ? true : false}
                                 onPress={() => {
                                     this.props.PostMessages(this.props.token, chatId, this.state.text, contactId, 'text', false);
-                                    this.setState({text:''});
-                                    
+                                    this.setState({ text: '' });
+                                    this.setMsgStatus();
                                 }}
                             >
                                 <Iconic name='send' color={BackGroundColor} size={25} style={styles.iconStyles} />
