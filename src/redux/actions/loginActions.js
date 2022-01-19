@@ -4,6 +4,7 @@ import { connectServer, socket } from '../../lib/socket';
 import { notificationsBadgeSucces } from '../actions/notificBadgeActions';
 import { GetNotifications } from '../actions/notificationsActions';
 import { GetContacts } from '../actions/getContactsActions';
+import { PostMessages, postMessagesSuccess } from '../actions/postMessageActions'
 // import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
@@ -114,6 +115,18 @@ export const Login = (email, pass) => (dispatch) => {
                     console.log(`\n\n\active user listener msg from server\n\n ${JSON.stringify(msg)}`);
                     // alert("a contact is active")
                     dispatch(GetContacts(data.token));
+                });
+
+                //*******************Listening on new message****************************** */
+                socket.on("chat", (data) => {
+                    console.log(`\n\n\chat listener msg from server\n\n ${JSON.stringify(data)}`);
+                    alert();
+                    dispatch(postMessagesSuccess(data))
+                    //marking all msg seen
+                    socket.emit('chatStatus', {
+                        contactId: data.message.from,
+                        chatId: data.chatId
+                    });
                 });
             }
         )

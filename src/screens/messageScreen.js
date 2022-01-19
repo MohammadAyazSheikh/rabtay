@@ -12,6 +12,7 @@ import PlaceHolder from "../components/placeHolderComponent";
 import { connect } from 'react-redux';
 import { GetMessages } from '../redux/actions/getMessagesActions';
 import { GetContacts } from "../redux/actions/getContactsActions";
+import { GetChatBadge } from "../redux/actions/chatBadgeActions";
 import { baseUrl } from '../utilities/config';
 import moment from "moment";
 
@@ -96,6 +97,9 @@ const mapDispatchToProps = (dispatch) => {
         },
         getContacts: (token) => {
             dispatch(GetContacts(token));
+        },
+        getChatBadge: (messages, userId) => {
+            dispatch(GetChatBadge(messages, userId));
         }
     }
 };
@@ -128,10 +132,15 @@ class Message extends Component {
     }
 
 
-
+    getBadge() {
+        this.props.getChatBadge(this.props?.messages, this.props?.user?._id)
+    }
 
     screenFocus() {
         this.props.getMessages(this.props.token);
+        setTimeout(() => {
+            this.getBadge.call(this);
+        }, 2000);
     }
     componentDidMount() {
         // setTimeout(() => { this.props.getMessages(this.props.token); }, 5000)

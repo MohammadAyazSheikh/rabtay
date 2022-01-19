@@ -120,7 +120,7 @@ class Chat extends Component {
         this.keyboardHeight = new Animated.Value(10);
         this.scaleInputAnim = new Animated.Value(widthToDp(60));
         this.scaleYInputAnim = new Animated.Value(0);
-        this.onChat = this.onChat.bind(this);
+        // this.onChat = this.onChat.bind(this);
         this.onChatStatus = this.onChatStatus.bind(this);
         this.setMsgStatus = this.setMsgStatus.bind(this);
         this.state = {
@@ -153,17 +153,17 @@ class Chat extends Component {
         }
     }
 
-    onChat(data) {
+    // onChat(data) {
 
-        console.log(`\n\n\chat listener msg from server\n\n ${JSON.stringify(data)}`);
-        this.props.PostMessagesSuccess(data);
+    //     console.log(`\n\n\chat listener msg from server\n\n ${JSON.stringify(data)}`);
+    //     this.props.PostMessagesSuccess(data);
 
-        //marking all msg seen
-        socket.emit('chatStatus', {
-            contactId: this.props.route.params.contact?._id,
-            chatId: this.props.route.params.chatId
-        });
-    }
+    //     //marking all msg seen
+    //     socket.emit('chatStatus', {
+    //         contactId: this.props.route.params.contact?._id,
+    //         chatId: this.props.route.params.chatId
+    //     });
+    // }
 
     onChatStatus(data) {
         console.log(`\n\n\chat status listener msg from server\n\n ${JSON.stringify(data)}`);
@@ -179,7 +179,7 @@ class Chat extends Component {
         // this.setMsgStatus();
 
         //listening on new chat
-        socket.on("chat", this.onChat);
+        // socket.on("chat", this.onChat);
         //listening on new msg status
         socket.on("chatStatus", this.onChatStatus);
 

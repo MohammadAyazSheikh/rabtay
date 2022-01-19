@@ -70,6 +70,7 @@ export const PostMessages = (token, chatId, text, to, type, initializeChat) => (
                     {
                         message: data,
                         contactId: to,
+                        chatId: chatId
                     }
                 );
 

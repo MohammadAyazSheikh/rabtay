@@ -11,6 +11,7 @@ import { GET_CONTACTS_REDUCER } from './reducers/getContactsReducer';
 import { Single_User_Reducer } from './reducers/getSingleUserReducer';
 import { GET_MESSAGES_REDUCER } from './reducers/getMessagesReducer';
 import { GET_SINGLE_USER_MESSAGES_REDUCER } from './reducers/getSingleUserMessageReducer';
+import { CHAT_BADGE_REDUCER } from './reducers/chatBadgeReducer';
 
 
 export const configureStore = () => {
@@ -27,6 +28,7 @@ export const configureStore = () => {
                 singleUser: Single_User_Reducer,
                 messages: GET_MESSAGES_REDUCER,
                 singeUserMessages: GET_SINGLE_USER_MESSAGES_REDUCER,
+                chatBadge: CHAT_BADGE_REDUCER
             }
         ), applyMiddleware(thunk /*,logger*/)
     );
