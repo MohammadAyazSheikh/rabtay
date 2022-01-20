@@ -92,6 +92,7 @@ const mapStateToProps = state => {
         messages: state?.singeUserMessages?.messages?.messages,
         isLoading: state?.singeUserMessages?.isLoading,
         isTyping: state?.singeUserMessages?.messages?.isTyping,
+        msgState: state?.singeUserMessages
     }
 }
 
@@ -172,6 +173,8 @@ class Chat extends Component {
 
 
     componentDidMount() {
+
+        // console.log(`\n\n===== getMsg Reducer state \n\n${JSON.stringify(this.props.msgState)}\n\n`)
 
         //setting msg status
         setTimeout(this.setMsgStatus, 2000);

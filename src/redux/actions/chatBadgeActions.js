@@ -42,10 +42,10 @@ export const GetChatBadge = (messages, userId) => (dispatch) => {
 
     
     let badge = 0;
-    for (let i = 0; i < messages.length; i++) {
+    for (let i = 0; i < messages?.length; i++) {
 
     
-        if (messages[i].message.to === userId && messages[i].message.isSeen === false) {
+        if (messages[i]?.message?.to === userId && messages[i]?.message?.isSeen === false) {
         
             badge++;
         }

@@ -18,7 +18,7 @@ export const postMessagesFailed = (err) => (
 
 export const postMessagesLoading = () => (
     {
-        type: ActionTypes.GET_MESSAGES_LOADIND,
+        type: ActionTypes.POST_MESSAGE_LOADIND,
     }
 );
 
@@ -70,12 +70,12 @@ export const PostMessages = (token, chatId, text, to, type, initializeChat) => (
                     {
                         message: data,
                         contactId: to,
-                        chatId: chatId
+                        chatId: chatId || ''
                     }
                 );
 
-                console.log(`\n\n\n\n\n\n\n get messages Response\n\n ${JSON.stringify(data)}\n\n\n\n\n\n`)
-
+                console.log(`\n\n\n\n\n\n\n post messages Response\n\n ${JSON.stringify(data)}\n\n\n\n\n\n`)
+                console.log(`\n post messages Response chatId= ${chatId} \n`)
             }
         )
         .catch(

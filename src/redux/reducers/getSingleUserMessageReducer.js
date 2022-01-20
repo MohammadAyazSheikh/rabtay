@@ -1,6 +1,6 @@
 import * as ActionTypes from '../actionTypes';
 
-export const GET_SINGLE_USER_MESSAGES_REDUCER = (state = { isLoading: true, isPosting: false, messages: {}, errMess: null }, action) => {
+export const GET_SINGLE_USER_MESSAGES_REDUCER = (state = { isLoading: true, isPosting: false, messages: { _id: '', userId: '', isTyping: false, messages: [] }, errMess: null }, action) => {
 
     switch (action.type) {
         case ActionTypes.GET_SINGLE_USER_MESSAGE_SUCCESS:
@@ -30,11 +30,11 @@ export const GET_SINGLE_USER_MESSAGES_REDUCER = (state = { isLoading: true, isPo
         //adding new message
         case ActionTypes.POST_MESSAGE_SUCCESS:
             return {
-                // ...state,
+                ...state,
                 isLoading: false,
                 isPosting: false,
                 messages: {
-                    ...state?.messages,
+                    ...state.messages,
                     messages: [...state?.messages?.messages, action.payload.message]
                 },
                 errMess: null,
