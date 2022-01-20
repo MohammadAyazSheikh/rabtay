@@ -4,8 +4,8 @@ import { connectServer, socket } from '../../lib/socket';
 import { notificationsBadgeSucces } from '../actions/notificBadgeActions';
 import { GetNotifications } from '../actions/notificationsActions';
 import { GetContacts } from '../actions/getContactsActions';
-import {  postMessagesSuccess } from '../actions/postMessageActions'
-import {chatBadgeSucces} from '../actions/chatBadgeActions';
+import { postMessagesSuccess } from '../actions/postMessageActions'
+import { GetMessages } from '../actions/getMessagesActions';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
@@ -119,16 +119,15 @@ export const Login = (email, pass) => (dispatch) => {
                 });
 
                 //*******************Listening on new message****************************** */
-                socket.on("chat", (data) => {
-                    console.log(`\n\n\chat listener msg from server\n\n ${JSON.stringify(data)}`);
+                socket.on("chat", (chatData) => {
+                    console.log(`\n\n\chat listener msg from server\n\n ${JSON.stringify(chatData)}`);
                     alert();
-                    dispatch(postMessagesSuccess(data))
-                    // marking all msg seen
-                    // dispatch(chatBadgeSucces(1))
-                    socket.emit('chatStatus', {
-                        contactId: data.message.from,
-                        chatId: data.chatId
-                    });
+                    dispatch(postMessagesSuccess(chatData));
+                    dispatch(GetMessages(data.token, data.user._id));
+                    // socket.emit('chatStatus', {
+                    //     contactId: chatData.message.from,
+                    //     chatId: chatData.chatId
+                    // });
                 });
             }
         )

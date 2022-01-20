@@ -1,5 +1,7 @@
 import * as ActionTypes from '../actionTypes';
 import { baseUrl } from '../../utilities/config';
+import { GetChatBadge } from '../actions/chatBadgeActions'
+import { getContactsFailed } from './getContactsActions';
 
 
 export const GetMessagesSuccess = (messages) => (
@@ -23,8 +25,9 @@ export const GetMessagesLoading = () => (
 );
 
 
-export const GetMessages = (token) => (dispatch) => {
+export const GetMessages = (token, userId) => (dispatch) => {
 
+    console.log(userId)
     dispatch(GetMessagesLoading());
 
     // alert();
@@ -56,7 +59,8 @@ export const GetMessages = (token) => (dispatch) => {
             data => {
 
                 dispatch(GetMessagesSuccess(data));
-
+                //getting badge
+                dispatch(GetChatBadge(data, userId));
                 console.log(`\n\n\n\n\n\n\n get messages Response\n\n ${JSON.stringify(data)}\n\n\n\n\n\n`)
 
             }

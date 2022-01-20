@@ -92,8 +92,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        getMessages: (token) => {
-            dispatch(GetMessages(token));
+        getMessages: (token, userId) => {
+            dispatch(GetMessages(token, userId));
         },
         getContacts: (token) => {
             dispatch(GetContacts(token));
@@ -132,15 +132,15 @@ class Message extends Component {
     }
 
 
-    getBadge() {
-        this.props.getChatBadge(this.props?.messages, this.props?.user?._id)
-    }
+    // getBadge() {
+    //     this.props.getChatBadge(this.props?.messages, this.props?.user?._id)
+    // }
 
     screenFocus() {
-        this.props.getMessages(this.props.token);
-        setTimeout(() => {
-            this.getBadge.call(this);
-        }, 2000);
+        this.props.getMessages(this.props.token, this.props?.user?._id);
+        // setTimeout(() => {
+        //     this.getBadge.call(this);
+        // }, 1000);
     }
     componentDidMount() {
         // setTimeout(() => { this.props.getMessages(this.props.token); }, 5000)
