@@ -121,14 +121,15 @@ class Chat extends Component {
         this.keyboardHeight = new Animated.Value(10);
         this.scaleInputAnim = new Animated.Value(widthToDp(60));
         this.scaleYInputAnim = new Animated.Value(0);
-        // this.onChat = this.onChat.bind(this);
         this.onChatStatus = this.onChatStatus.bind(this);
         this.setMsgStatus = this.setMsgStatus.bind(this);
+        this.onTyping = this.onTyping.bind(this)
         this.state = {
             inputHieght: 30,
             newLines: 0,
             text: '',
             msgStatus: 'sent',
+            isTyping: false
         }
     }
 
@@ -154,38 +155,30 @@ class Chat extends Component {
         }
     }
 
-    // onChat(data) {
 
-    //     console.log(`\n\n\chat listener msg from server\n\n ${JSON.stringify(data)}`);
-    //     this.props.PostMessagesSuccess(data);
-
-    //     //marking all msg seen
-    //     socket.emit('chatStatus', {
-    //         contactId: this.props.route.params.contact?._id,
-    //         chatId: this.props.route.params.chatId
-    //     });
-    // }
 
     onChatStatus(data) {
         console.log(`\n\n\chat status listener msg from server\n\n ${JSON.stringify(data)}`);
         this.setState({ msgStatus: data.status });
     }
 
+    onTyping(data) {
+        this.setState({ isTyping: data.isTyping });
+    }
 
     componentDidMount() {
 
         // console.log(`\n\n===== getMsg Reducer state \n\n${JSON.stringify(this.props.msgState)}\n\n`)
 
         //setting msg status
-        setTimeout(this.setMsgStatus, 2000);
+        setTimeout(this.setMsgStatus, 1000);
 
-        // this.setMsgStatus();
 
-        //listening on new chat
-        // socket.on("chat", this.onChat);
         //listening on new msg status
         socket.on("chatStatus", this.onChatStatus);
 
+        //listening on typing status status
+        socket.on('typing', this.onTyping);
 
         //marking all msg seen
         socket.emit('chatStatus', {
@@ -208,8 +201,8 @@ class Chat extends Component {
         this.scaleYInputAnim.removeAllListeners();
 
         //removing handlers
-        socket.off('chat', this.onChat);
         socket.off("chatStatus", this.onChatStatus);
+        socket.off('typing', this.onTyping);
     }
 
     keyboardWillShow = (event) => {
@@ -272,7 +265,13 @@ class Chat extends Component {
                         </View>
                         <View style={styles.textView}>
                             <Text style={styles.txtName}>{uname.length > 13 ? `${fname}...` : uname}</Text>
-                            <Text style={styles.txtActive}>{isActive ? "Active Now" : moment(lastSeen).fromNow()}</Text>
+                            {
+                                this.state.isTyping ?
+                                    <Text style={styles.txtActive}>typing...</Text>
+                                    :
+                                    <Text style={styles.txtActive}>{isActive ? "Active Now" : moment(lastSeen).fromNow()}</Text>
+                            }
+
                         </View>
                     </View>
                     <View style={styles.leftButtonView}>
@@ -376,19 +375,29 @@ class Chat extends Component {
                                             this.setState({ inputHieght: newLines.length * 25 }, () => {
                                                 this.AnimateScaleYInput(200, this.state.inputHieght);
                                             })
-
                                         }
 
                                         if (newLines.length < 4 && val.substr(val.length - 1, 2).includes('\n') && this.state.inputHieght >= 75) {
                                             this.setState({ inputHieght: newLines.length * 25 }, () => {
                                                 this.AnimateScaleYInput(200, this.state.inputHieght);
                                             })
-
                                         }
 
                                     }
 
                                 }
+                                onBlur={() => {
+                                    socket.emit('typing', {
+                                        contactId: this.props.route.params.contact?._id,
+                                        isTyping: false
+                                    });
+                                }}
+                                onFocus={() => {
+                                    socket.emit('typing', {
+                                        contactId: this.props.route.params.contact?._id,
+                                        isTyping: true
+                                    });
+                                }}
                             />
                             < TouchableOpacity style={{ padding: 5 }}
                                 disabled={this.state.text === '' ? true : false}

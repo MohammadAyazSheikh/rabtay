@@ -121,7 +121,7 @@ export const Login = (email, pass) => (dispatch) => {
                 //*******************Listening on new message****************************** */
                 socket.on("chat", (chatData) => {
                     console.log(`\n\n\chat listener msg from server\n\n ${JSON.stringify(chatData)}`);
-                    alert();
+                    // alert();
                     dispatch(postMessagesSuccess(chatData));
                     dispatch(GetMessages(data.token, data.user._id));
                     // socket.emit('chatStatus', {
