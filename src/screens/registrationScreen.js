@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, createRef } from 'react';
 import {
     Text, View, TouchableOpacity, Animated,
     StyleSheet, StatusBar, FlatList, Image
@@ -43,7 +43,7 @@ const Indicator = ({ scrollX }) => {
 
 
 
-                    return (<Animated.View key={item.id} style={[styles.indicator, { transform: [{ scale },{skewX:skew}], opacity, backgroundColor,borderRadius:10 }]} />);
+                    return (<Animated.View key={item.id} style={[styles.indicator, { transform: [{ scale }, { skewX: skew }], opacity, backgroundColor, borderRadius: 10 }]} />);
                 })
             }
         </View>
@@ -108,10 +108,29 @@ const BackCircle = ({ scrollX }) => {
     )
 }
 
+
+const SkipButton = ({ scrollX, onPress }) => {
+
+    const backgroundColor = scrollX.interpolate({
+        inputRange: bgsRevers.map((_, i) => i * widthToDp(100)),
+        outputRange: bgsRevers.map((bg) => bg),
+    });
+
+
+    return (
+        <TouchableOpacity style={[styles.skipBtn, { backgroundColor }]}
+            onPress={() => { onPress() }}
+        >
+            <Text style={[styles.txtSkipBtn]}>Skip</Text>
+        </TouchableOpacity >
+    )
+}
+
 export default class Registration extends Component {
     constructor(props) {
         super(props);
         this.scrollX = new Animated.Value(0);
+        this.FlatListRef = createRef();
     }
     render() {
         return (
@@ -119,6 +138,7 @@ export default class Registration extends Component {
                 <BackColor scrollX={this.scrollX} />
                 <BackCircle scrollX={this.scrollX} />
                 <Animated.FlatList
+                    ref={this.FlatListRef}
                     data={data}
                     keyExtractor={(item) => item.id}
                     horizontal
@@ -143,7 +163,7 @@ export default class Registration extends Component {
                             });
                             return item.isScreen ?
                                 <View style={{ width: widthToDp(100) }}>
-                                    <Register {...this.props} backColor = {backColor} />
+                                    <Register {...this.props} backColor={backColor} />
                                 </View>
                                 :
                                 <View style={{ justifyContent: 'center', alignItems: 'center', width: widthToDp(100) }}>
@@ -152,13 +172,23 @@ export default class Registration extends Component {
                                         <Image source={item.image} style={{ width: widthToDp(50), height: widthToDp(50) }} resizeMode='contain' />
                                     </View>
                                     <View style={{ flex: 0.3 }}>
-                                        <Animated.Text style={[styles.txtDesc,{color:textColor}]}>{item.desc}</Animated.Text>
+                                        <Animated.Text style={[styles.txtDesc, { color: textColor }]}>{item.desc}</Animated.Text>
                                     </View>
                                 </View>
                         }
                     }
                 />
-                <Indicator scrollX={this.scrollX} />
+                {/* <SkipButton scrollX={this.scrollX} onPress={() => {
+                  
+                    alert()
+                }} /> */}
+                <TouchableOpacity style={[styles.skipBtn]}
+                    onPress={() => {
+                        this.FlatListRef.current.scrollToEnd({ animating: true });
+                    }}
+                >
+                    <Text style={[styles.txtSkipBtn]}>Skip</Text>
+                </TouchableOpacity >
             </View>
 
         );
@@ -194,6 +224,19 @@ export const styles = StyleSheet.create({
         textShadowOffset: { width: 1, height: 1 },
         textShadowRadius: 1,
         textShadowColor: 'black',
+    },
+    skipBtn: {
+        paddingHorizontal: 10, paddingVertical: 2,
+        backgroundColor: '#FFF', borderRadius: 10,
+        marginBottom: 10, justifyContent: 'center', alignItems: 'center'
+    },
+    txtSkipBtn: {
+        color: BackGroundColor,
+        textShadowColor: 'rgba(0, 0, 0, 0.75)',
+        textShadowOffset: { width: -0.5, height: 1 },
+        textShadowRadius: 1,
+        fontSize: 18
+
     }
 });
 

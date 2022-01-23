@@ -121,9 +121,10 @@ class Chat extends Component {
         this.keyboardHeight = new Animated.Value(10);
         this.scaleInputAnim = new Animated.Value(widthToDp(60));
         this.scaleYInputAnim = new Animated.Value(0);
+        this.FlatListRef = createRef();
         this.onChatStatus = this.onChatStatus.bind(this);
         this.setMsgStatus = this.setMsgStatus.bind(this);
-        this.onTyping = this.onTyping.bind(this)
+        this.onTyping = this.onTyping.bind(this);
         this.state = {
             inputHieght: 30,
             newLines: 0,
@@ -168,7 +169,7 @@ class Chat extends Component {
 
     componentDidMount() {
 
-        // console.log(`\n\n===== getMsg Reducer state \n\n${JSON.stringify(this.props.msgState)}\n\n`)
+        this.FlatListRef.current.scrollToEnd({ animating: true });
 
         //setting msg status
         setTimeout(this.setMsgStatus, 1000);
@@ -234,6 +235,9 @@ class Chat extends Component {
             useNativeDriver: false
         }).start();
     }
+
+  
+
     render() {
         const fname = this.props.route.params.contact.fname;
         const lname = this.props.route.params.contact.lname;
@@ -243,6 +247,7 @@ class Chat extends Component {
         const isActive = this.props.route.params.isActive;
         const lastSeen = this.props.route.params.lastSeen;
         const chatId = this.props.route.params.chatId;
+     
         return (
 
             <KeyboardAvoidingView style={styles.container} behavior='padding'>
@@ -289,7 +294,7 @@ class Chat extends Component {
                 <View style={styles.bodyView}>
                     <View style={styles.chatView}>
                         <FlatList
-
+                            ref={this.FlatListRef}
                             data={this.props.messages}
                             keyExtractor={(item) => item._id}
                             contentContainerStyle={{ paddingHorizontal: 5 }}
@@ -405,6 +410,7 @@ class Chat extends Component {
                                     this.props.PostMessages(this.props.token, chatId, this.state.text, contactId, 'text', false);
                                     this.setState({ text: '' });
                                     this.setMsgStatus();
+                                    this.FlatListRef.current.scrollToEnd({ animating: true });
                                 }}
                             >
                                 <Iconic name='send' color={BackGroundColor} size={25} style={styles.iconStyles} />
