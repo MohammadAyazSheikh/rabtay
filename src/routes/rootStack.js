@@ -16,7 +16,9 @@ import User from '../screens/userScreen'
 import Chat from '../screens/chatScreen';
 import NewPost from '../screens/newPostScreen';
 import NewMessage from '../screens/newMessageScreen';
-import CreateMessage  from '../screens/createMessageScreen';
+import CreateMessage from '../screens/createMessageScreen';
+import IncomingCall from '../screens/incomingCallScreen';
+import incomingCallScreen from '../screens/incomingCallScreen';
 
 const rootStack = createStackNavigator();
 
@@ -92,11 +94,18 @@ function RootStack(props) {
                                         headerShown: false
                                     }}
                                 />
+                                <rootStack.Screen name="IncomingCall" component={IncomingCall}
+                                    options={{
+                                        headerShown: false
+                                    }}
+                                />
                             </rootStack.Navigator>
                         )
                         :
                         (
-                            <rootStack.Navigator initialRouteName="Splash"
+                            <rootStack.Navigator 
+                            // initialRouteName="Splash"
+                            initialRouteName="Test"
                                 screenOptions={{
                                     style: {
                                         textAlign: 'center'
@@ -128,6 +137,12 @@ function RootStack(props) {
                                     }}
                                 />
                                 <rootStack.Screen name="SignUp" component={Signup}
+                                    options={{
+                                        headerShown: false
+                                    }}
+                                />
+
+                                <rootStack.Screen name="Test" component={IncomingCall}
                                     options={{
                                         headerShown: false
                                     }}
