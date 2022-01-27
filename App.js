@@ -11,6 +11,8 @@ import RootStack from './src/routes/rootStack';
 import { configureStore } from './src/redux/configStore';
 import Test from './src/screens/test';
 import { Provider } from 'react-redux';
+
+import { View } from 'react-native';
 const store = configureStore();
 
 
@@ -21,8 +23,8 @@ function App() {
       <RootStack />
     </Provider>
     // <View style={{ backgroundColor: 'grey', flex: 1 }}>
-    //  {/* <Donut/> */}
-    //  <Test/>
+    //   {/* <Donut/> */}
+    //   <Test />
     // </View>
 
   );

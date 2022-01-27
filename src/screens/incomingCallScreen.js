@@ -1,5 +1,5 @@
 import React, { Component, createRef } from 'react';
-import { View, Text, StyleSheet, Image, Animated, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Image, Vibration, TouchableOpacity } from 'react-native';
 import { BackGroundColor } from '../utilities/colors';
 import { widthToDp, heightToDp } from '../utilities/responsiveUtils';
 import { UploadDP } from '../redux/actions/dpUploadActions';
@@ -45,6 +45,10 @@ const mapDispatchToProps = (dispatch) => {
 class IncomingCall extends Component {
     constructor(props) {
         super(props);
+
+        this.ONE_SECOND_IN_MS = 1000;
+        this.PATTERN = [1 * this.ONE_SECOND_IN_MS, 2 * this.ONE_SECOND_IN_MS, 1 * this.ONE_SECOND_IN_MS];
+
         this.circleAnim = createRef();
     }
 
@@ -54,8 +58,15 @@ class IncomingCall extends Component {
     componentDidMount() {
         this.circleAnim.current.play();
         this.circleAnim.current.play(1, 320);
+        Vibration.vibrate(this.PATTERN, true);
     }
+    componentWillUnmount() {
+        Vibration.cancel();
+    }
+
     render() {
+
+
         return (
             <View style={styles.container}>
                 <Image source={require('../../assets/p6.jpg')}
@@ -80,11 +91,13 @@ class IncomingCall extends Component {
                     </View>
                 </View>
                 <View style={styles.BtnView}>
-                    <TouchableOpacity >
+                    <TouchableOpacity
+                        onPress={() => {
+                            Vibration.cancel();
+                        }}
+                    >
                         <Animatable.View animation='swing' iterationCount='infinite' style={[styles.BtnStyle, { backgroundColor: '#F15946' }]}>
-
                             <IconMat name='call-end' size={40} color='#FFF' />
-
                         </Animatable.View>
                     </TouchableOpacity>
 
@@ -138,8 +151,8 @@ const styles = StyleSheet.create({
         width: '90%',
         height: '90%',
         borderRadius: widthToDp(21),
-        borderColor:BackGroundColor,
-        borderWidth:1
+        borderColor: BackGroundColor,
+        borderWidth: 1
     },
 
     txtView: {
