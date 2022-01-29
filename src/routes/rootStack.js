@@ -18,7 +18,7 @@ import NewPost from '../screens/newPostScreen';
 import NewMessage from '../screens/newMessageScreen';
 import CreateMessage from '../screens/createMessageScreen';
 import IncomingCall from '../screens/incomingCallScreen';
-import incomingCallScreen from '../screens/incomingCallScreen';
+import OutgoingCall from '../screens/outgoingCallScreen';
 
 const rootStack = createStackNavigator();
 
@@ -99,13 +99,19 @@ function RootStack(props) {
                                         headerShown: false
                                     }}
                                 />
+                                <rootStack.Screen name="outgoingCall" component={OutgoingCall}
+                                    options={{
+                                        headerShown: false
+                                    }}
+                                />
                             </rootStack.Navigator>
                         )
                         :
                         (
-                            <rootStack.Navigator 
-                            // initialRouteName="Splash"
-                            initialRouteName="Test"
+                            <rootStack.Navigator
+                                // initialRouteName="Splash"
+                                initialRouteName="test"
+
                                 screenOptions={{
                                     style: {
                                         textAlign: 'center'
@@ -141,26 +147,19 @@ function RootStack(props) {
                                         headerShown: false
                                     }}
                                 />
-
                                 <rootStack.Screen name="Test" component={IncomingCall}
                                     options={{
                                         headerShown: false
                                     }}
                                 />
-
-
-                                {/* <rootStack.Screen name="Home" component={Home}
-                            options={{
-                                title: 'Getting Start',
-                                headerTitleStyle: {
-                                    alignSelf: 'center',
-                                },
-                            }} /> */}
-
+                                <rootStack.Screen name="test" component={OutgoingCall}
+                                    options={{
+                                        headerShown: false
+                                    }}
+                                />
                             </rootStack.Navigator>
                         )
                 }
-
             </NavigationContainer>
         </>
     );
