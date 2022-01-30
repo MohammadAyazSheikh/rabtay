@@ -147,11 +147,6 @@ function RootStack(props) {
                                         headerShown: false
                                     }}
                                 />
-                                <rootStack.Screen name="Test" component={IncomingCall}
-                                    options={{
-                                        headerShown: false
-                                    }}
-                                />
                                 <rootStack.Screen name="test" component={OutgoingCall}
                                     options={{
                                         headerShown: false
