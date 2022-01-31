@@ -6,6 +6,7 @@ import { GetNotifications } from '../actions/notificationsActions';
 import { GetContacts } from '../actions/getContactsActions';
 import { postMessagesSuccess } from '../actions/postMessageActions'
 import { GetMessages } from '../actions/getMessagesActions';
+import { OnVideoCallStart } from '../actions/onVideoCallAction';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
@@ -134,8 +135,8 @@ export const Login = (email, pass) => (dispatch) => {
                 //*******************Listening on new message****************************** */
                 socket.on("videoCall", (vCallData) => {
                     console.log(`\n\n\chat listener msg from server\n\n ${JSON.stringify(vCallData)}`);
-                    alert();
-
+                    dispatch(OnVideoCallStart());
+                    // alert();
                 });
             }
         )
