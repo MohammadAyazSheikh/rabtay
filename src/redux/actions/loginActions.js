@@ -129,6 +129,14 @@ export const Login = (email, pass) => (dispatch) => {
                     //     chatId: chatData.chatId
                     // });
                 });
+
+
+                //*******************Listening on new message****************************** */
+                socket.on("videoCall", (vCallData) => {
+                    console.log(`\n\n\chat listener msg from server\n\n ${JSON.stringify(vCallData)}`);
+                    alert();
+
+                });
             }
         )
         .catch(

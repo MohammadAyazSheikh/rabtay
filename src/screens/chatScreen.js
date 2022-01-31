@@ -290,10 +290,19 @@ class Chat extends Component {
                     <View style={styles.leftButtonView}>
                         <TouchableOpacity style={{ padding: 5 }}
                             onPress={() => {
-                                this.props.navigation.navigate('OutgoingCall', {
-                                    roomName: username + '_' + this.props.user.username
-                                });
+
+                                const roomName = username + '_' + this.props.user.username;
+
                                 this.props.getVideoChatToken(this.props.token, this.props.user.username);
+
+                                this.props.navigation.navigate('OutgoingCall', {
+                                    roomName: roomName
+                                });
+
+                                socket.emit('videoCall', {
+                                    contactId: this.props.route.params.contact?._id,
+                                    roomName: roomName
+                                });
                             }}
                         >
                             <Iconic name='call' color='#FFF' size={30} style={styles.iconStyles}></Iconic>

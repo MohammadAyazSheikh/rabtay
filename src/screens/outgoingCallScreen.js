@@ -90,6 +90,7 @@ class OutGoingCall extends Component {
         // this.circleAnim?.current?.play(1, 320);
         console.log(`call screen =  ${JSON.stringify(this.props.videoCallToken)}`);
         console.log(`\n\n ${this.props.route.params.roomName}\n\n`);
+      
 
         setTimeout(() => {
             this._onConnectButtonPress();
@@ -199,7 +200,7 @@ class OutGoingCall extends Component {
                                                     <Image source={require('../../assets/p6.jpg')}
                                                         style={styles.profileImageStyle} />
                                                 </View>
-                                                
+
                                             }
                                         </TouchableOpacity>
 
