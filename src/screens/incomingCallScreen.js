@@ -2,8 +2,7 @@ import React, { Component, createRef } from 'react';
 import { View, Text, StyleSheet, Image, Vibration, TouchableOpacity } from 'react-native';
 import { BackGroundColor } from '../utilities/colors';
 import { widthToDp, heightToDp } from '../utilities/responsiveUtils';
-import { UploadDP } from '../redux/actions/dpUploadActions';
-import { Logout } from '../redux/actions/logoutActions';
+import { OnVideoCallEnd } from '../redux/actions/onVideoCallActions';
 import { connect } from 'react-redux';
 import uuid from 'react-native-uuid';
 import { post } from '../utilities/data';
@@ -30,12 +29,9 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        UploadDp: (url, uid) => {
-            dispatch(UploadDP(url, uid));
+        onVideoCallEnd: () => {
+            dispatch(OnVideoCallEnd())
         },
-        Logout: () => {
-            dispatch(Logout());
-        }
     }
 };
 
@@ -94,6 +90,8 @@ class IncomingCall extends Component {
                     <TouchableOpacity
                         onPress={() => {
                             Vibration.cancel();
+                            this.props.onVideoCallEnd();
+                            this.props.navigation.goBack();
                         }}
                     >
                         <Animatable.View animation='swing' iterationCount='infinite' style={[styles.BtnStyle, { backgroundColor: '#F15946' }]}>

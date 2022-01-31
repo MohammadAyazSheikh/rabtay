@@ -6,7 +6,7 @@ import { GetNotifications } from '../actions/notificationsActions';
 import { GetContacts } from '../actions/getContactsActions';
 import { postMessagesSuccess } from '../actions/postMessageActions'
 import { GetMessages } from '../actions/getMessagesActions';
-import { OnVideoCallStart } from '../actions/onVideoCallAction';
+import { OnVideoCallStart } from './onVideoCallActions';
 // import AsyncStorage from '@react-native-async-storage/async-storage';
 
 

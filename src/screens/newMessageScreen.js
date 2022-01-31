@@ -22,6 +22,7 @@ const mapStateToProps = state => {
         contacts: state?.contacts?.contacts,
         isLaoding: state?.contacts?.isLoading,
         messages: state.messages.messages,
+        onVideoCall: state?.onVideoCall.onVideoCall
     }
 }
 
@@ -74,7 +75,11 @@ class NewMessage extends Component {
         this.UnsubFocusScreen();
     }
 
-
+    componentDidUpdate() {
+        if (this.props.onVideoCall) {
+            this.props.navigation.navigate("IncomingCall");
+        }
+    }
     render() {
         return (
             <View style={styles.container}>

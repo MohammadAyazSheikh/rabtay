@@ -9,7 +9,8 @@ import { widthToDp, heightToDp } from '../utilities/responsiveUtils';
 
 const mapStateToProps = state => {
     return {
-        user: state.user.user,
+        user: state?.user?.user,
+        onVideoCall: state?.onVideoCall.onVideoCall
     }
 }
 
@@ -25,9 +26,13 @@ class Home extends Component {
             inputRange: [0, 1],
             outputRange: [0, -1],
         });
-
     }
 
+    componentDidUpdate() {
+        if (this.props.onVideoCall) {
+            this.props.navigation.navigate("IncomingCall");
+        }
+    }
 
     render() {
         const arr = [1, 2, 3, 4, 5, 6, 6, 7, , 8, 9, 10, 11, 12, 13, 14, 15]

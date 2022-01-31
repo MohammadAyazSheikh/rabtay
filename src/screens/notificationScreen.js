@@ -18,7 +18,8 @@ const mapStateToProps = state => {
         user: state?.user?.user?.user,
         token: state?.user?.user?.token,
         notific: state.notifications.notific,
-        isLoading: state.notifications.isLoading
+        isLoading: state.notifications.isLoading,
+        onVideoCall: state?.onVideoCall.onVideoCall
     }
 }
 
@@ -62,7 +63,11 @@ class Notification extends Component {
     }
 
 
-
+    componentDidUpdate() {
+        if (this.props.onVideoCall) {
+            this.props.navigation.navigate("IncomingCall");
+        }
+    }
     render() {
         return (
             <View style={styles.container}>

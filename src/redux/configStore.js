@@ -13,7 +13,7 @@ import { GET_MESSAGES_REDUCER } from './reducers/getMessagesReducer';
 import { GET_SINGLE_USER_MESSAGES_REDUCER } from './reducers/getSingleUserMessageReducer';
 import { CHAT_BADGE_REDUCER } from './reducers/chatBadgeReducer';
 import { VIDEO_CALL_TOKEN } from './reducers/videoCallTokenReducer';
-
+import { ON_VIDEO_CALL } from './reducers/onVideoCallReducer';
 
 export const configureStore = () => {
     const store = createStore(
@@ -30,7 +30,8 @@ export const configureStore = () => {
                 messages: GET_MESSAGES_REDUCER,
                 singeUserMessages: GET_SINGLE_USER_MESSAGES_REDUCER,
                 chatBadge: CHAT_BADGE_REDUCER,
-                videoCallToken: VIDEO_CALL_TOKEN
+                videoCallToken: VIDEO_CALL_TOKEN,
+                onVideoCall: ON_VIDEO_CALL
             }
         ), applyMiddleware(thunk /*,logger*/)
     );

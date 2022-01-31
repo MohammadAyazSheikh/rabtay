@@ -20,7 +20,8 @@ const mapStateToProps = state => {
     return {
         token: state?.user?.user?.token,
         contacts: state?.contacts?.contacts,
-        isLaoding: state?.contacts?.isLoading
+        isLaoding: state?.contacts?.isLoading,
+        onVideoCall: state?.onVideoCall.onVideoCall
     }
 }
 
@@ -71,6 +72,12 @@ class Friends extends Component {
         this.UnsubFocusScreen();
     }
 
+    componentDidUpdate() {
+        if (this.props.onVideoCall) {
+            this.props.navigation.navigate("IncomingCall");
+        }
+    }
+
 
     render() {
         return (
@@ -114,7 +121,7 @@ class Friends extends Component {
                                     time={moment(item.lastSeen).fromNow()}
                                     image={item.contacts.contactId?.profileImage?.path}
                                     isActive={item.isActive}
-                                    contactId = {item?.contacts?.contactId?._id}
+                                    contactId={item?.contacts?.contactId?._id}
                                 />
                             }
                         />

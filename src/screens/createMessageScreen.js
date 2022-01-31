@@ -19,6 +19,7 @@ const mapStateToProps = state => {
         isLoading: state?.singeUserMessages?.isLoading,
         isPosting: state?.singeUserMessages?.isPosting,
         isTyping: state?.singeUserMessages?.messages?.isTyping,
+        onVideoCall: state?.onVideoCall.onVideoCall
     }
 }
 
@@ -75,7 +76,11 @@ class CreateMessage extends Component {
     };
 
 
-
+    componentDidUpdate() {
+        if (this.props.onVideoCall) {
+            this.props.navigation.navigate("IncomingCall");
+        }
+    }
 
     render() {
         const { uName, contactId, chatId, initializeChat, isActive, lastSeen, contact } = this.props.route.params;

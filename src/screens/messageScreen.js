@@ -83,7 +83,8 @@ const mapStateToProps = state => {
         token: state?.user?.user?.token,
         contacts: state?.contacts?.contacts,
         messages: state.messages.messages,
-        isLoading: state.messages.isLoading
+        isLoading: state.messages.isLoading,
+        onVideoCall: state?.onVideoCall.onVideoCall
     }
 }
 
@@ -152,6 +153,11 @@ class Message extends Component {
         this.UnsubFocusScreen();
     }
 
+    componentDidUpdate() {
+        if (this.props.onVideoCall) {
+            this.props.navigation.navigate("IncomingCall");
+        }
+    }
 
     render() {
         return (

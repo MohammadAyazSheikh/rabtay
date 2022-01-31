@@ -93,7 +93,8 @@ const mapStateToProps = state => {
         messages: state?.singeUserMessages?.messages?.messages,
         isLoading: state?.singeUserMessages?.isLoading,
         isTyping: state?.singeUserMessages?.messages?.isTyping,
-        msgState: state?.singeUserMessages
+        msgState: state?.singeUserMessages,
+        onVideoCall: state?.onVideoCall.onVideoCall
     }
 }
 
@@ -210,9 +211,12 @@ class Chat extends Component {
         socket.off('typing', this.onTyping);
     }
 
-    // componentDidUpdate() {
-    //     this.FlatListRef.current.scrollToEnd({ animating: true });
-    // }
+    componentDidUpdate() {
+        if (this.props.onVideoCall) {
+            this.props.navigation.navigate("IncomingCall");
+        }
+    }
+
     keyboardWillShow = (event) => {
         // toValue:   event.endCoordinates.height/100*60, 
         this.AnimateScaleYInput(event.duration, this.state.inputHieght);

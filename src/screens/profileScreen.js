@@ -24,7 +24,8 @@ const mapStateToProps = state => {
     return {
         user: state?.user?.user?.user,
         token: state?.user?.user?.token,
-        dp: state?.dpUpload
+        dp: state?.dpUpload,
+        onVideoCall: state?.onVideoCall.onVideoCall
     }
 }
 
@@ -71,11 +72,12 @@ class Profile extends Component {
         } 
     }
 
-    componentDidMount() {
-        // this.socket = io(baseUrl);
-        // this.socket.emit('active', { userId: this.props.user._id })
+    
+    componentDidUpdate() {
+        if (this.props.onVideoCall) {
+            this.props.navigation.navigate("IncomingCall");
+        }
     }
-
 
     selectPicture = () => {
         let options = {

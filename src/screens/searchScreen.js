@@ -48,6 +48,7 @@ const mapStateToProps = state => {
     return {
         users: state.searchedUsers,
         token: state?.user?.user?.token,
+        onVideoCall: state?.onVideoCall.onVideoCall
     }
 }
 
@@ -93,6 +94,11 @@ class Search extends Component {
         this.animateTextInput();
     }
 
+    componentDidUpdate() {
+        if (this.props.onVideoCall) {
+            this.props.navigation.navigate("IncomingCall");
+        }
+    }
 
     render() {
         return (
