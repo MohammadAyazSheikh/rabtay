@@ -12,7 +12,8 @@ import PlaceHolder from "../components/placeHolderComponent";
 import LinearGradient from 'react-native-linear-gradient';
 import { connect } from 'react-redux';
 import { GetSingleUserMessages } from '../redux/actions/getSingleUserMessagesActions';
-import { PostMessages, postMessagesSuccess } from '../redux/actions/postMessageActions'
+import { PostMessages, postMessagesSuccess } from '../redux/actions/postMessageActions';
+import { GetVideoChatToken } from '../redux/actions/getVideoChatTokenActions';
 import { baseUrl } from '../utilities/config';
 import moment from "moment";
 import { socket } from '../lib/socket';
@@ -110,6 +111,9 @@ const mapDispatchToProps = (dispatch) => {
         PostMessagesSuccess: (data) => {
             dispatch(postMessagesSuccess(data));
         },
+        getVideoChatToken: (token, username) => {
+            dispatch(GetVideoChatToken(token, username));
+        },
     }
 };
 
@@ -206,6 +210,9 @@ class Chat extends Component {
         socket.off('typing', this.onTyping);
     }
 
+    // componentDidUpdate() {
+    //     this.FlatListRef.current.scrollToEnd({ animating: true });
+    // }
     keyboardWillShow = (event) => {
         // toValue:   event.endCoordinates.height/100*60, 
         this.AnimateScaleYInput(event.duration, this.state.inputHieght);
@@ -241,6 +248,7 @@ class Chat extends Component {
     render() {
         const fname = this.props.route.params.contact.fname;
         const lname = this.props.route.params.contact.lname;
+        const username = this.props.route.params.contact.username;
         const uname = fname + " " + lname;
         const profileImage = this.props.route.params.contact?.profileImage?.path;
         const contactId = this.props.route.params.contact?._id;
@@ -282,7 +290,10 @@ class Chat extends Component {
                     <View style={styles.leftButtonView}>
                         <TouchableOpacity style={{ padding: 5 }}
                             onPress={() => {
-                                this.props.navigation.navigate('OutgoingCall')
+                                this.props.navigation.navigate('OutgoingCall', {
+                                    roomName: username + '_' + this.props.user.username
+                                });
+                                this.props.getVideoChatToken(this.props.token, this.props.user.username);
                             }}
                         >
                             <Iconic name='call' color='#FFF' size={30} style={styles.iconStyles}></Iconic>

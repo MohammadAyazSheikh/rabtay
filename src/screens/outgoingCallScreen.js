@@ -5,7 +5,7 @@ import React, {
 import {
     StyleSheet,
     Text,
-    TextInput,
+    ActivityIndicator,
     View,
     Button,
     TouchableOpacity, Image,
@@ -25,11 +25,13 @@ import MIcon from 'react-native-vector-icons/MaterialIcons';
 import normalize from 'react-native-normalize';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { GetVideoChatToken } from '../redux/actions/getVideoChatTokenActions';
 
 const mapStateToProps = state => {
     return {
         user: state?.user?.user?.user,
         token: state?.user?.user?.token,
+        videoCallToken: state?.videoCallToken.videoCallToken,
     }
 }
 
@@ -38,9 +40,9 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        UploadDp: (url, uid) => {
-            dispatch(UploadDP(url, uid));
-        },
+        // getVideoChatToken: (token, username) => {
+        //     dispatch(GetVideoChatToken(token, username));
+        // },
     }
 };
 
@@ -63,8 +65,6 @@ export async function GetAllPermissions() {
 }
 class OutGoingCall extends Component {
 
-
-
     constructor(props) {
         super(props);
         this.twilioVideo = createRef();
@@ -77,8 +77,7 @@ class OutGoingCall extends Component {
             isUserConnect: false,
             participants: new Map(),
             videoTracks: new Map(),
-            roomName: 'test',
-            token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImN0eSI6InR3aWxpby1mcGE7dj0xIn0.eyJqdGkiOiJTSzg1NmMxMzcwYWZjMzg1NzZhOWE2NmZmNDZiYjAwOTMxLTE2NDM2MTI2OTIiLCJncmFudHMiOnsiaWRlbnRpdHkiOiJpbHlhc0BnbWFpbC5jb20iLCJ2aWRlbyI6e319LCJpYXQiOjE2NDM2MTI2OTIsImV4cCI6MTY0MzYxNjI5MiwiaXNzIjoiU0s4NTZjMTM3MGFmYzM4NTc2YTlhNjZmZjQ2YmIwMDkzMSIsInN1YiI6IkFDY2ZjMTQxNzMxY2QyMGQ5NDI3MjNhNzZlZDU1YWJlZTYifQ.5bzTraSt_eiqEcD2w08RpN_wGFEhGdWdHvZrkZraukI',
+            isLoading: true,
         }
     }
 
@@ -89,11 +88,17 @@ class OutGoingCall extends Component {
         GetAllPermissions();
         // this.circleAnim?.current?.play();
         // this.circleAnim?.current?.play(1, 320);
+        console.log(`call screen =  ${JSON.stringify(this.props.videoCallToken)}`);
+        console.log(`\n\n ${this.props.route.params.roomName}\n\n`);
 
+        setTimeout(() => {
+            this._onConnectButtonPress();
+            this.setState({ isLoading: false });
+        }, 1000);
     }
     _onConnectButtonPress = () => {
         console.log("in on connect button preess");
-        this.twilioVideo.current.connect({ roomName: this.state.roomName, accessToken: this.state.token })
+        this.twilioVideo.current.connect({ roomName: this.props.route.params.roomName, accessToken: this.props.videoCallToken })
         this.setState({ status: 'connecting' })
         console.log(this.state.status);
 
@@ -150,83 +155,63 @@ class OutGoingCall extends Component {
     render() {
         return (
             <View style={styles.container} >
-                {
-                    this.state.status === 'disconnected' &&
-                    <View>
-                        <Text style={styles.welcome}>
-                            React Native Twilio Video
-                </Text>
-                        <View style={styles.spacing}>
-                            <Text style={styles.inputLabel}>Room Name</Text>
-                            <TextInput style={styles.inputBox}
-                                placeholder="Room Name"
-                                defaultValue={this.state.roomName}
-                                onChangeText={(text) => this.setState({ roomName: text })}
-                            />
-                        </View>
-                        <View style={styles.spacing}>
-                            <Text style={styles.inputLabel}>Token</Text>
-                            <TextInput style={styles.inputBox}
-                                placeholder="Token"
-                                defaultValue={this.state.token}
-                                onChangeText={(text) => this.setState({ token: text })}
-                            />
-                        </View>
-                        <TouchableHighlight style={[styles.buttonContainer, styles.loginButton]} onPress={this._onConnectButtonPress}>
-                            <Text style={styles.Buttontext}>Connect</Text>
-                        </TouchableHighlight>
-                    </View>
-                }
-                {
-                    (this.state.status === 'connected' || this.state.status === 'connecting') &&
-                    <View style={styles.callContainer}>
-                        {
-                            this.state.status === 'connected' &&
-                            <View style={styles.remoteGrid}>
-                                <TouchableOpacity style={styles.remoteVideo} onPress={() => { this.setState({ isButtonDisplay: !this.state.isButtonDisplay }) }} >
-                                    {
-                                        Array.from(this.state.videoTracks, ([trackSid, trackIdentifier]) => {
-                                            return (
-                                                <TwilioVideoParticipantView
-                                                    style={styles.remoteVideo}
-                                                    key={trackSid}
-                                                    trackIdentifier={trackIdentifier}
-                                                />
-                                            )
-                                        })
-                                    }
-                                    {
-                                        !this.state.isUserConnect &&
-                                        <Image source={require('../../assets/p6.jpg')}
-                                            style={styles.backgroundImage} blurRadius={20} />
-                                    }
-                                    {
-                                        !this.state.isUserConnect &&
-                                        <View style={styles.profileImageView}>
-                                            <LottieView
-                                                style={styles.animationStyles}
-                                                resizeMode='cover'
-                                                loop
-                                                autoPlay
-                                                // ref={this.circleAnim}
-                                                source={require('../utilities/animations/circleAnim.json')}
-                                            />
-                                            <Image source={require('../../assets/p6.jpg')}
-                                                style={styles.profileImageStyle} />
-                                        </View>
-                                    }
-                                </TouchableOpacity>
 
-                                <TwilioVideoLocalView
-                                    enabled={true}
-                                    style={this.state.isButtonDisplay ? styles.localVideoOnButtonEnabled : styles.localVideoOnButtonDisabled}
-                                />
+                {
 
-                            </View>
-                        }
-                        <View
-                            style={
-                                {
+                    !(this.state.status === 'connected' || this.state.status === 'connecting') ?
+                        <ActivityIndicator size={70} color={BackGroundColor} />
+                        :
+                        <View style={styles.callContainer}>
+
+                            {
+                                !this.state.status === 'connected' ?
+                                    <ActivityIndicator size={70} color={BackGroundColor} />
+                                    :
+                                    <View style={styles.remoteGrid}>
+                                        <TouchableOpacity style={styles.remoteVideo} onPress={() => { this.setState({ isButtonDisplay: !this.state.isButtonDisplay }) }} >
+                                            {
+                                                Array.from(this.state.videoTracks, ([trackSid, trackIdentifier]) => {
+                                                    return (
+                                                        <TwilioVideoParticipantView
+                                                            style={styles.remoteVideo}
+                                                            key={trackSid}
+                                                            trackIdentifier={trackIdentifier}
+                                                        />
+                                                    )
+                                                })
+                                            }
+                                            {
+                                                !this.state.isUserConnect &&
+                                                <Image source={require('../../assets/p6.jpg')}
+                                                    style={styles.backgroundImage} blurRadius={20} />
+                                            }
+                                            {
+                                                !this.state.isUserConnect &&
+                                                <View style={styles.profileImageView}>
+                                                    <LottieView
+                                                        style={styles.animationStyles}
+                                                        resizeMode='cover'
+                                                        loop
+                                                        autoPlay
+                                                        // ref={this.circleAnim}
+                                                        source={require('../utilities/animations/circleAnim.json')}
+                                                    />
+                                                    <Image source={require('../../assets/p6.jpg')}
+                                                        style={styles.profileImageStyle} />
+                                                </View>
+                                                
+                                            }
+                                        </TouchableOpacity>
+
+                                        <TwilioVideoLocalView
+                                            enabled={true}
+                                            style={this.state.isButtonDisplay ? styles.localVideoOnButtonEnabled : styles.localVideoOnButtonDisabled}
+                                        />
+
+                                    </View>
+                            }
+                            <View
+                                style={{
                                     display: this.state.isButtonDisplay ? "flex" : "none",
                                     position: "absolute",
                                     left: 0,
@@ -237,64 +222,66 @@ class OutGoingCall extends Component {
                                     alignItems: "center",
                                     justifyContent: "space-evenly",
                                     zIndex: this.state.isButtonDisplay ? 2 : 0,
-                                }
-                            } >
-                            <TouchableOpacity
-                                style={
-                                    {
-                                        display: this.state.isButtonDisplay ? "flex" : "none",
-                                        width: 60,
-                                        height: 60,
-                                        marginLeft: 10,
-                                        marginRight: 10,
-                                        borderRadius: 100 / 2,
-                                        backgroundColor: 'grey',
-                                        justifyContent: 'center',
-                                        alignItems: "center"
+                                }} >
+                                <TouchableOpacity
+                                    style={
+                                        {
+                                            display: this.state.isButtonDisplay ? "flex" : "none",
+                                            width: 60,
+                                            height: 60,
+                                            marginLeft: 10,
+                                            marginRight: 10,
+                                            borderRadius: 100 / 2,
+                                            backgroundColor: 'grey',
+                                            justifyContent: 'center',
+                                            alignItems: "center"
+                                        }
                                     }
-                                }
-                                onPress={this._onMuteButtonPress}>
-                                < MIcon name={this.state.isAudioEnabled ? "mic" : "mic-off"} size={24} color='#fff' />
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                style={
-                                    {
-                                        display: this.state.isButtonDisplay ? "flex" : "none",
-                                        width: 60,
-                                        height: 60,
-                                        marginLeft: 10,
-                                        marginRight: 10,
-                                        borderRadius: 100 / 2,
-                                        backgroundColor: 'grey',
-                                        justifyContent: 'center',
-                                        alignItems: "center"
+                                    onPress={this._onMuteButtonPress}>
+                                    < MIcon name={this.state.isAudioEnabled ? "mic" : "mic-off"} size={24} color='#fff' />
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    style={
+                                        {
+                                            display: this.state.isButtonDisplay ? "flex" : "none",
+                                            width: 60,
+                                            height: 60,
+                                            marginLeft: 10,
+                                            marginRight: 10,
+                                            borderRadius: 100 / 2,
+                                            backgroundColor: 'grey',
+                                            justifyContent: 'center',
+                                            alignItems: "center"
+                                        }
                                     }
-                                }
-                                onPress={this._onEndButtonPress}>
-                                {/* <Text style={{fontSize: 12}}>End</Text> */}
-                                < MIcon name="call-end" size={28} color='#fff' />
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                style={
-                                    {
-                                        display: this.state.isButtonDisplay ? "flex" : "none",
-                                        width: 60,
-                                        height: 60,
-                                        marginLeft: 10,
-                                        marginRight: 10,
-                                        borderRadius: 100 / 2,
-                                        backgroundColor: 'grey',
-                                        justifyContent: 'center',
-                                        alignItems: "center"
+                                    onPress={() => {
+                                        this._onEndButtonPress();
+                                        this.props.navigation.goBack();
+                                    }}>
+                                    {/* <Text style={{fontSize: 12}}>End</Text> */}
+                                    < MIcon name="call-end" size={28} color='#fff' />
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    style={
+                                        {
+                                            display: this.state.isButtonDisplay ? "flex" : "none",
+                                            width: 60,
+                                            height: 60,
+                                            marginLeft: 10,
+                                            marginRight: 10,
+                                            borderRadius: 100 / 2,
+                                            backgroundColor: 'grey',
+                                            justifyContent: 'center',
+                                            alignItems: "center"
+                                        }
                                     }
-                                }
-                                onPress={this._onFlipButtonPress}>
-                                {/* <Text style={{fontSize: 12}}>Flip</Text> */}
-                                < MCIcon name="rotate-3d" size={28} color='#fff' />
-                            </TouchableOpacity>
-                        </View>
+                                    onPress={this._onFlipButtonPress}>
+                                    {/* <Text style={{fontSize: 12}}>Flip</Text> */}
+                                    < MCIcon name="rotate-3d" size={28} color='#fff' />
+                                </TouchableOpacity>
+                            </View>
 
-                    </View>
+                        </View>
                 }
                 <TwilioVideo
                     ref={this.twilioVideo}
@@ -314,7 +301,9 @@ export default connect(mapStateToProps, mapDispatchToProps)(OutGoingCall);
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: 'white'
+        backgroundColor: 'white',
+        justifyContent: 'center',
+        alignItems: 'center'
     },
     callContainer: {
         flex: 1,
