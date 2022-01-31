@@ -11,6 +11,7 @@ import {
     TouchableOpacity, Image,
     PermissionsAndroid, TouchableHighlight
 } from 'react-native';
+import { connect } from 'react-redux';
 import LottieView from 'lottie-react-native';
 import {
     TwilioVideoLocalView, // to get local view 
@@ -24,6 +25,26 @@ import MIcon from 'react-native-vector-icons/MaterialIcons';
 import normalize from 'react-native-normalize';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+
+const mapStateToProps = state => {
+    return {
+        user: state?.user?.user?.user,
+        token: state?.user?.user?.token,
+    }
+}
+
+
+
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        UploadDp: (url, uid) => {
+            dispatch(UploadDP(url, uid));
+        },
+    }
+};
+
+
 export async function GetAllPermissions() {
     // it will ask the permission for user 
     try {
@@ -40,7 +61,7 @@ export async function GetAllPermissions() {
     }
     return null;
 }
-export default class Example extends Component {
+class OutGoingCall extends Component {
 
 
 
@@ -57,7 +78,7 @@ export default class Example extends Component {
             participants: new Map(),
             videoTracks: new Map(),
             roomName: 'test',
-            token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImN0eSI6InR3aWxpby1mcGE7dj0xIn0.eyJqdGkiOiJTSzg1NmMxMzcwYWZjMzg1NzZhOWE2NmZmNDZiYjAwOTMxLTE2NDM1MzExNTciLCJncmFudHMiOnsiaWRlbnRpdHkiOiJheWF6IiwidmlkZW8iOnt9fSwiaWF0IjoxNjQzNTMxMTU3LCJleHAiOjE2NDM1MzQ3NTcsImlzcyI6IlNLODU2YzEzNzBhZmMzODU3NmE5YTY2ZmY0NmJiMDA5MzEiLCJzdWIiOiJBQ2NmYzE0MTczMWNkMjBkOTQyNzIzYTc2ZWQ1NWFiZWU2In0.SXdAiVoeVFL76cOfYtikDDhTn5JM9776MSXH4bzWQCs',
+            token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImN0eSI6InR3aWxpby1mcGE7dj0xIn0.eyJqdGkiOiJTSzg1NmMxMzcwYWZjMzg1NzZhOWE2NmZmNDZiYjAwOTMxLTE2NDM2MTI2OTIiLCJncmFudHMiOnsiaWRlbnRpdHkiOiJpbHlhc0BnbWFpbC5jb20iLCJ2aWRlbyI6e319LCJpYXQiOjE2NDM2MTI2OTIsImV4cCI6MTY0MzYxNjI5MiwiaXNzIjoiU0s4NTZjMTM3MGFmYzM4NTc2YTlhNjZmZjQ2YmIwMDkzMSIsInN1YiI6IkFDY2ZjMTQxNzMxY2QyMGQ5NDI3MjNhNzZlZDU1YWJlZTYifQ.5bzTraSt_eiqEcD2w08RpN_wGFEhGdWdHvZrkZraukI',
         }
     }
 
@@ -287,6 +308,9 @@ export default class Example extends Component {
         )
     }
 }
+
+export default connect(mapStateToProps, mapDispatchToProps)(OutGoingCall);
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,

@@ -8,7 +8,7 @@ import { heightToDp, widthToDp } from "../utilities/responsiveUtils";
 import Iconic from "react-native-vector-icons/Ionicons";
 import FA from "react-native-vector-icons/FontAwesome";
 import PlaceHolder from "../components/placeHolderComponent";
-import { data } from "../utilities/chatData";
+// import { data } from "../utilities/chatData";
 import LinearGradient from 'react-native-linear-gradient';
 import { connect } from 'react-redux';
 import { GetSingleUserMessages } from '../redux/actions/getSingleUserMessagesActions';
@@ -236,7 +236,7 @@ class Chat extends Component {
         }).start();
     }
 
-  
+
 
     render() {
         const fname = this.props.route.params.contact.fname;
@@ -247,7 +247,7 @@ class Chat extends Component {
         const isActive = this.props.route.params.isActive;
         const lastSeen = this.props.route.params.lastSeen;
         const chatId = this.props.route.params.chatId;
-     
+
         return (
 
             <KeyboardAvoidingView style={styles.container} behavior='padding'>
@@ -280,7 +280,11 @@ class Chat extends Component {
                         </View>
                     </View>
                     <View style={styles.leftButtonView}>
-                        <TouchableOpacity style={{ padding: 5 }}>
+                        <TouchableOpacity style={{ padding: 5 }}
+                            onPress={() => {
+                                this.props.navigation.navigate('OutgoingCall')
+                            }}
+                        >
                             <Iconic name='call' color='#FFF' size={30} style={styles.iconStyles}></Iconic>
                         </TouchableOpacity>
                         <TouchableOpacity style={{ padding: 5 }}>

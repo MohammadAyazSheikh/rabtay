@@ -99,7 +99,7 @@ function RootStack(props) {
                                         headerShown: false
                                     }}
                                 />
-                                <rootStack.Screen name="outgoingCall" component={OutgoingCall}
+                                <rootStack.Screen name="OutgoingCall" component={OutgoingCall}
                                     options={{
                                         headerShown: false
                                     }}
@@ -109,8 +109,8 @@ function RootStack(props) {
                         :
                         (
                             <rootStack.Navigator
-                                // initialRouteName="Splash"
-                                initialRouteName="test"
+                                initialRouteName="Splash"
+                                // initialRouteName="test"
 
                                 screenOptions={{
                                     style: {
@@ -147,11 +147,11 @@ function RootStack(props) {
                                         headerShown: false
                                     }}
                                 />
-                                <rootStack.Screen name="test" component={OutgoingCall}
+                                {/* <rootStack.Screen name="test" component={OutgoingCall}
                                     options={{
                                         headerShown: false
                                     }}
-                                />
+                                /> */}
                             </rootStack.Navigator>
                         )
                 }
