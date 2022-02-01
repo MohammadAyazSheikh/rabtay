@@ -19,6 +19,7 @@ import NewMessage from '../screens/newMessageScreen';
 import CreateMessage from '../screens/createMessageScreen';
 import IncomingCall from '../screens/incomingCallScreen';
 import OutgoingCall from '../screens/outgoingCallScreen';
+import VideoCall from '../screens/videoCallScreen';
 
 const rootStack = createStackNavigator();
 
@@ -100,6 +101,11 @@ function RootStack(props) {
                                     }}
                                 />
                                 <rootStack.Screen name="OutgoingCall" component={OutgoingCall}
+                                    options={{
+                                        headerShown: false
+                                    }}
+                                />
+                                <rootStack.Screen name="VideoCall" component={VideoCall}
                                     options={{
                                         headerShown: false
                                     }}

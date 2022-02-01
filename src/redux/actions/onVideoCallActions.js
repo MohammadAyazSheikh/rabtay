@@ -3,9 +3,10 @@ import { baseUrl } from '../../utilities/config';
 
 
 
-export const OnVideoCallStart = () => (
+export const OnVideoCallStart = (roomName) => (
     {
-        type: ActionTypes.ON_VIDEO_CALL_START
+        type: ActionTypes.ON_VIDEO_CALL_START,
+        payload: roomName
     }
 );
 

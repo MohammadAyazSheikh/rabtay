@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Image, Vibration, TouchableOpacity } from 'reac
 import { BackGroundColor } from '../utilities/colors';
 import { widthToDp, heightToDp } from '../utilities/responsiveUtils';
 import { OnVideoCallEnd } from '../redux/actions/onVideoCallActions';
+import { GetVideoChatToken } from '../redux/actions/getVideoChatTokenActions';
 import { connect } from 'react-redux';
 import uuid from 'react-native-uuid';
 import { post } from '../utilities/data';
@@ -20,7 +21,7 @@ const mapStateToProps = state => {
     return {
         user: state?.user?.user?.user,
         token: state?.user?.user?.token,
-        dp: state?.dpUpload
+        roomName: state?.onVideoCall?.roomName
     }
 }
 
@@ -31,6 +32,9 @@ const mapDispatchToProps = (dispatch) => {
     return {
         onVideoCallEnd: () => {
             dispatch(OnVideoCallEnd())
+        },
+        getVideoChatToken: (token, username) => {
+            dispatch(GetVideoChatToken(token, username));
         },
     }
 };
@@ -55,6 +59,8 @@ class IncomingCall extends Component {
         this.circleAnim.current.play();
         this.circleAnim.current.play(1, 320);
         Vibration.vibrate(this.PATTERN, true);
+        this.props.getVideoChatToken(this.props.token, this.props.user.username);
+        alert(this.props.roomName)
     }
     componentWillUnmount() {
         Vibration.cancel();
@@ -99,7 +105,14 @@ class IncomingCall extends Component {
                         </Animatable.View>
                     </TouchableOpacity>
 
-                    <TouchableOpacity >
+                    <TouchableOpacity
+                        onPress={() => {
+                            Vibration.cancel();
+                            this.props.navigation.navigate('VideoCall', {
+                                roomName: this.props.roomName
+                            });
+                        }}
+                    >
                         <Animatable.View animation='swing' iterationCount='infinite' style={styles.BtnStyle}>
                             <IconFeather name='phone-call' size={40} color='#FFF' />
                         </Animatable.View>

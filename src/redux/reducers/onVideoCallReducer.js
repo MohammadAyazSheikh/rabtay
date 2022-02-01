@@ -1,6 +1,6 @@
 import * as ActionTypes from '../actionTypes';
 
-export const ON_VIDEO_CALL = (state = { isLoading: true, onVideoCall: false, errMess: null }, action) => {
+export const ON_VIDEO_CALL = (state = { isLoading: true, onVideoCall: false, errMess: null, roomName: null }, action) => {
 
     switch (action.type) {
         case ActionTypes.ON_VIDEO_CALL_START:
@@ -9,6 +9,7 @@ export const ON_VIDEO_CALL = (state = { isLoading: true, onVideoCall: false, err
                 isLoading: false,
                 onVideoCall: true,
                 errMess: null,
+                roomName: action.payload
             };
         case ActionTypes.ON_VIDEO_CALL_END:
             return {
@@ -16,6 +17,7 @@ export const ON_VIDEO_CALL = (state = { isLoading: true, onVideoCall: false, err
                 isLoading: false,
                 onVideoCall: false,
                 errMess: null,
+                roomName: null
             };
         case ActionTypes.ON_VIDEO_CALL_FAILED:
             return {
@@ -23,13 +25,15 @@ export const ON_VIDEO_CALL = (state = { isLoading: true, onVideoCall: false, err
                 isLoading: false,
                 onVideoCall: false,
                 errMess: action.payload,
+                roomName: null
             };
         case ActionTypes.ON_VIDEO_CALL_LOADIND:
             return {
                 ...state,
                 isLoading: true,
                 onVideoCall: false,
-                errMess: null
+                errMess: null,
+                roomName: null
             };
         default:
             return state;

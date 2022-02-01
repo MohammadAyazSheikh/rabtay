@@ -94,7 +94,7 @@ const mapStateToProps = state => {
         isLoading: state?.singeUserMessages?.isLoading,
         isTyping: state?.singeUserMessages?.messages?.isTyping,
         msgState: state?.singeUserMessages,
-        onVideoCall: state?.onVideoCall.onVideoCall
+        onVideoCall: state?.onVideoCall?.onVideoCall
     }
 }
 

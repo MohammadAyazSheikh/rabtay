@@ -135,7 +135,7 @@ export const Login = (email, pass) => (dispatch) => {
                 //*******************Listening on new message****************************** */
                 socket.on("videoCall", (vCallData) => {
                     console.log(`\n\n\chat listener msg from server\n\n ${JSON.stringify(vCallData)}`);
-                    dispatch(OnVideoCallStart());
+                    dispatch(OnVideoCallStart(vCallData.roomName));
                     // alert();
                 });
             }

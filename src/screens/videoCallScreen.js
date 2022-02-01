@@ -4,15 +4,12 @@ import React, {
 } from 'react';
 import {
     StyleSheet,
-    Text,
     ActivityIndicator,
     View,
-    Button,
     TouchableOpacity, Image,
     PermissionsAndroid, TouchableHighlight
 } from 'react-native';
 import { connect } from 'react-redux';
-import LottieView from 'lottie-react-native';
 import {
     TwilioVideoLocalView, // to get local view 
     TwilioVideoParticipantView, //to get participant view
@@ -22,10 +19,9 @@ import { widthToDp, heightToDp } from '../utilities/responsiveUtils';
 import { BackGroundColor } from '../utilities/colors';
 // make sure you install vector icons and its dependencies
 import MIcon from 'react-native-vector-icons/MaterialIcons';
-import normalize from 'react-native-normalize';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import { GetVideoChatToken } from '../redux/actions/getVideoChatTokenActions';
+
 
 const mapStateToProps = state => {
     return {
@@ -63,7 +59,7 @@ export async function GetAllPermissions() {
     }
     return null;
 }
-class OutGoingCall extends Component {
+class VideoCall extends Component {
 
     constructor(props) {
         super(props);
@@ -106,7 +102,7 @@ class OutGoingCall extends Component {
     }
     _onEndButtonPress = () => {
         this.twilioVideo.current.disconnect();
-        this.props.navigation.goBack();
+        this.props.navigation.navigate('Home');
     }
     _onMuteButtonPress = () => {
         // on cliking the mic button we are setting it to mute or viceversa
@@ -125,14 +121,16 @@ class OutGoingCall extends Component {
     _onRoomDidDisconnect = ({ roomName, error }) => {
         console.log("ERROR: ", JSON.stringify(error))
         console.log("disconnected")
+
         this.setState({ status: 'disconnected' });
-        this.props.navigation.goBack();
+        this.props.navigation.navigate('Home');
     }
     _onRoomDidFailToConnect = (error) => {
+        alert(JSON.stringify(error));
         console.log("ERROR: ", JSON.stringify(error));
         console.log("failed to connect");
         this.setState({ status: 'disconnected' });
-        this.props.navigation.goBack();
+        this.props.navigation.navigate('Home');
     }
     _onParticipantAddedVideoTrack = ({ participant, track }) => {
         // call everytime a participant joins the same room
@@ -150,11 +148,11 @@ class OutGoingCall extends Component {
     _onParticipantRemovedVideoTrack = ({ participant, track }) => {
         // gets called when a participant disconnects.
         this.setState({ isUserConnect: false });
-        console.log("onParticipantRemovedVideoTrack: ", participant, track);
+        console.log("onParticipantRemovedVideoTrack: ", participant, track)
         const videoTracks = this.state.videoTracks
         videoTracks.delete(track.trackSid)
         this.setState({ videoTracks: { ...videoTracks } });
-        this.props.navigation.goBack();
+        this.props.navigation.navigate('Home');
     }
     render() {
         return (
@@ -183,27 +181,6 @@ class OutGoingCall extends Component {
                                                         />
                                                     )
                                                 })
-                                            }
-                                            {
-                                                !this.state.isUserConnect &&
-                                                <Image source={require('../../assets/p6.jpg')}
-                                                    style={styles.backgroundImage} blurRadius={20} />
-                                            }
-                                            {
-                                                !this.state.isUserConnect &&
-                                                <View style={styles.profileImageView}>
-                                                    <LottieView
-                                                        style={styles.animationStyles}
-                                                        resizeMode='cover'
-                                                        loop
-                                                        autoPlay
-                                                        // ref={this.circleAnim}
-                                                        source={require('../utilities/animations/circleAnim.json')}
-                                                    />
-                                                    <Image source={require('../../assets/p6.jpg')}
-                                                        style={styles.profileImageStyle} />
-                                                </View>
-
                                             }
                                         </TouchableOpacity>
 
@@ -263,7 +240,7 @@ class OutGoingCall extends Component {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(OutGoingCall);
+export default connect(mapStateToProps, mapDispatchToProps)(VideoCall);
 
 const styles = StyleSheet.create({
     container: {
