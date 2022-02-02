@@ -12,8 +12,9 @@ import IconMat from 'react-native-vector-icons/MaterialIcons';
 import { baseUrl } from '../utilities/config';
 import LottieView from 'lottie-react-native';
 import * as Animatable from 'react-native-animatable';
+import { socket } from '../lib/socket';
 
-var data = post.concat(post);
+
 
 
 
@@ -21,7 +22,9 @@ const mapStateToProps = state => {
     return {
         user: state?.user?.user?.user,
         token: state?.user?.user?.token,
-        roomName: state?.onVideoCall?.roomName
+        roomName: state?.onVideoCall?.roomName,
+        endCall: state?.onVideoCall?.endCall,
+        contact: state?.onVideoCall?.contact
     }
 }
 
@@ -60,19 +63,30 @@ class IncomingCall extends Component {
         this.circleAnim.current.play(1, 320);
         Vibration.vibrate(this.PATTERN, true);
         this.props.getVideoChatToken(this.props.token, this.props.user.username);
-        alert(this.props.roomName)
     }
     componentWillUnmount() {
         Vibration.cancel();
     }
-
+    componentDidUpdate() {
+        if (this.props.endCall) {
+            Vibration.cancel();
+            this.props.navigation.goBack();
+        }
+    }
     render() {
-
+        const imageUrl = this.props?.contact?.profileImage?.path;
 
         return (
             <View style={styles.container}>
-                <Image source={require('../../assets/p6.jpg')}
-                    style={styles.backgroundImage} blurRadius={20} />
+                {
+                    imageUrl ?
+                        <Image source={{ uri: baseUrl + imageUrl }}
+                            style={styles.backgroundImage} blurRadius={20} />
+                        :
+                        <Image source={require('../../assets/images/profile3.jpeg')}
+                            style={styles.backgroundImage} blurRadius={20} />
+                }
+
                 <View style={styles.HeaderView}>
                     <View style={styles.profileImageView}>
                         <LottieView
@@ -83,8 +97,15 @@ class IncomingCall extends Component {
                             ref={this.circleAnim}
                             source={require('../utilities/animations/circleAnim.json')}
                         />
-                        <Image source={require('../../assets/p6.jpg')}
-                            style={styles.profileImageStyle} />
+                        {
+                            imageUrl ?
+                                <Image source={{ uri: baseUrl + imageUrl }}
+                                    style={styles.profileImageStyle} />
+                                :
+                                <Image source={require('../../assets/images/profile3.jpeg')}
+                                    style={styles.profileImageStyle} />
+                        }
+
                     </View>
                     <View style={styles.txtView}>
                         <Text style={styles.txtCallingStaus} >Calling</Text>
@@ -98,6 +119,11 @@ class IncomingCall extends Component {
                             Vibration.cancel();
                             this.props.onVideoCallEnd();
                             this.props.navigation.goBack();
+                            socket.emit('videoCall', {
+                                contactId: this.props.contact?._id,
+                                userId: this.props.user._id,
+                                startCall: false
+                            });
                         }}
                     >
                         <Animatable.View animation='swing' iterationCount='infinite' style={[styles.BtnStyle, { backgroundColor: '#F15946' }]}>

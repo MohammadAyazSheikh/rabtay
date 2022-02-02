@@ -32,3 +32,11 @@ export const OnVideoCallFailed = (err) => (
 );
 
 
+export const OnVideoCallReset = (err) => (
+    {
+        type: ActionTypes.ON_VIDEO_CALL_RESET,
+        payload: err
+    }
+);
+
+

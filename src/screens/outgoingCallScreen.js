@@ -26,12 +26,17 @@ import normalize from 'react-native-normalize';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { GetVideoChatToken } from '../redux/actions/getVideoChatTokenActions';
+import { baseUrl } from '../utilities/config';
+import { socket } from '../lib/socket';
+
 
 const mapStateToProps = state => {
     return {
         user: state?.user?.user?.user,
         token: state?.user?.user?.token,
         videoCallToken: state?.videoCallToken.videoCallToken,
+        onVideoCall: state?.onVideoCall?.onVideoCall,
+        endCall: state?.onVideoCall?.endCall
     }
 }
 
@@ -90,12 +95,15 @@ class OutGoingCall extends Component {
         // this.circleAnim?.current?.play(1, 320);
         console.log(`call screen =  ${JSON.stringify(this.props.videoCallToken)}`);
         console.log(`\n\n ${this.props.route.params.roomName}\n\n`);
+        this._onConnectButtonPress();
+        this.setState({ isLoading: false });
 
-
-        setTimeout(() => {
-            this._onConnectButtonPress();
-            this.setState({ isLoading: false });
-        }, 1000);
+        // setTimeout(() => {
+        //     this._onConnectButtonPress();
+        //     this.setState({ isLoading: false });
+        // }, 1000);
+        console.log('$$$$$$')
+        console.log(`endCall = ${this.props.endCall} onVideoCall= ${this.props.onVideoCall}`)
     }
     _onConnectButtonPress = () => {
         console.log("in on connect button preess");
@@ -106,6 +114,11 @@ class OutGoingCall extends Component {
     }
     _onEndButtonPress = () => {
         this.twilioVideo.current.disconnect();
+        socket.emit('videoCall', {
+            contactId: this.props.route.params.contactId,
+            userId: this.props.user._id,
+            startCall: false
+        });
         this.props.navigation.goBack();
     }
     _onMuteButtonPress = () => {
@@ -156,6 +169,11 @@ class OutGoingCall extends Component {
         this.setState({ videoTracks: { ...videoTracks } });
         this.props.navigation.goBack();
     }
+    componentDidUpdate() {
+        if (this.props.endCall) {
+            this._onEndButtonPress();
+        }
+    }
     render() {
         return (
             <View style={styles.container} >
@@ -186,8 +204,12 @@ class OutGoingCall extends Component {
                                             }
                                             {
                                                 !this.state.isUserConnect &&
-                                                <Image source={require('../../assets/p6.jpg')}
-                                                    style={styles.backgroundImage} blurRadius={20} />
+                                                    this.props.route.params.image ?
+                                                    <Image source={{ uri: baseUrl + this.props.route.params.image }}
+                                                        style={styles.backgroundImage} blurRadius={20} />
+                                                    :
+                                                    <Image source={require('../../assets/images/profile3.jpeg')}
+                                                        style={styles.backgroundImage} blurRadius={20} />
                                             }
                                             {
                                                 !this.state.isUserConnect &&
@@ -200,8 +222,14 @@ class OutGoingCall extends Component {
                                                         // ref={this.circleAnim}
                                                         source={require('../utilities/animations/circleAnim.json')}
                                                     />
-                                                    <Image source={require('../../assets/p6.jpg')}
-                                                        style={styles.profileImageStyle} />
+                                                    {
+                                                        this.props.route.params.image ?
+                                                            <Image source={{ uri: baseUrl + this.props.route.params.image }}
+                                                                style={styles.profileImageStyle} />
+                                                            :
+                                                            <Image source={require('../../assets/images/profile3.jpeg')}
+                                                                style={styles.profileImageStyle} />
+                                                    }
                                                 </View>
 
                                             }

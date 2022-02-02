@@ -14,6 +14,7 @@ import { connect } from 'react-redux';
 import { GetSingleUserMessages } from '../redux/actions/getSingleUserMessagesActions';
 import { PostMessages, postMessagesSuccess } from '../redux/actions/postMessageActions';
 import { GetVideoChatToken } from '../redux/actions/getVideoChatTokenActions';
+import { OnVideoCallReset } from '../redux/actions/onVideoCallActions';
 import { baseUrl } from '../utilities/config';
 import moment from "moment";
 import { socket } from '../lib/socket';
@@ -115,6 +116,9 @@ const mapDispatchToProps = (dispatch) => {
         getVideoChatToken: (token, username) => {
             dispatch(GetVideoChatToken(token, username));
         },
+        onVideoCallReset: () => {
+            dispatch(OnVideoCallReset());
+        },
     }
 };
 
@@ -193,6 +197,7 @@ class Chat extends Component {
         });
 
         this.props.getMessages(this.props.token, this.props.route.params.chatId);
+        this.props.onVideoCallReset();
 
         const show = Platform.OS == 'android' ? 'keyboardDidShow' : 'keyboardWillShow';
         const hide = Platform.OS == 'android' ? 'keyboardDidHide' : 'keyboardWillHide';
@@ -298,14 +303,19 @@ class Chat extends Component {
                                 const roomName = username + '_' + this.props.user.username;
 
                                 this.props.getVideoChatToken(this.props.token, this.props.user.username);
-
+                                this.props.onVideoCallReset();
                                 this.props.navigation.navigate('OutgoingCall', {
-                                    roomName: roomName
+                                    roomName: roomName,
+                                    image: profileImage,
+                                    uname: `${fname} ${lname}`,
+                                    contactId: contactId
                                 });
 
                                 socket.emit('videoCall', {
                                     contactId: this.props.route.params.contact?._id,
-                                    roomName: roomName
+                                    roomName: roomName,
+                                    userId: this.props.user._id,
+                                    startCall: true
                                 });
                             }}
                         >

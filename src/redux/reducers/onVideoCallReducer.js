@@ -1,6 +1,6 @@
 import * as ActionTypes from '../actionTypes';
 
-export const ON_VIDEO_CALL = (state = { isLoading: true, onVideoCall: false, errMess: null, roomName: null }, action) => {
+export const ON_VIDEO_CALL = (state = { isLoading: true, onVideoCall: false, errMess: null, roomName: null, contact: null, endCall: false }, action) => {
 
     switch (action.type) {
         case ActionTypes.ON_VIDEO_CALL_START:
@@ -9,7 +9,9 @@ export const ON_VIDEO_CALL = (state = { isLoading: true, onVideoCall: false, err
                 isLoading: false,
                 onVideoCall: true,
                 errMess: null,
-                roomName: action.payload
+                roomName: action.payload.roomName,
+                contact: action.payload.contact,
+                endCall: false
             };
         case ActionTypes.ON_VIDEO_CALL_END:
             return {
@@ -17,7 +19,9 @@ export const ON_VIDEO_CALL = (state = { isLoading: true, onVideoCall: false, err
                 isLoading: false,
                 onVideoCall: false,
                 errMess: null,
-                roomName: null
+                roomName: null,
+                contact: null,
+                endCall: true
             };
         case ActionTypes.ON_VIDEO_CALL_FAILED:
             return {
@@ -25,7 +29,9 @@ export const ON_VIDEO_CALL = (state = { isLoading: true, onVideoCall: false, err
                 isLoading: false,
                 onVideoCall: false,
                 errMess: action.payload,
-                roomName: null
+                roomName: null,
+                contact: null,
+                endCall: false
             };
         case ActionTypes.ON_VIDEO_CALL_LOADIND:
             return {
@@ -33,7 +39,19 @@ export const ON_VIDEO_CALL = (state = { isLoading: true, onVideoCall: false, err
                 isLoading: true,
                 onVideoCall: false,
                 errMess: null,
-                roomName: null
+                roomName: null,
+                contact: null,
+                endCall: false
+            };
+        case ActionTypes.ON_VIDEO_CALL_RESET:
+            return {
+                ...state,
+                isLoading: false,
+                onVideoCall: false,
+                errMess: null,
+                roomName: null,
+                contact: null,
+                endCall: false
             };
         default:
             return state;
