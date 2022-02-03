@@ -13,7 +13,7 @@ const VibrationsEg = () => {
     const PATTERN_DESC =
         Platform.OS === 'android'
             ? 'wait 1s, vibrate 2s, wait 3s'
-            : 'wait 1s, vibrate, wait 2s, vibrate, wait 3s';
+            : 'wait 1s, vibrate, wait 2s, vibrate,wait 3s';
 
     return (
         <SafeAreaView style={styles.container}>
