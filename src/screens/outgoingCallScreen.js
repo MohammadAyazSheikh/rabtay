@@ -83,25 +83,25 @@ class OutGoingCall extends Component {
             participants: new Map(),
             videoTracks: new Map(),
             isLoading: true,
+            isConnecting: true,
         }
     }
 
 
-
+   
     componentDidMount() {
-        // on start we are asking the permisions
-        GetAllPermissions();
+
+        this.setState({ isConnecting: true });
         // this.circleAnim?.current?.play();
         // this.circleAnim?.current?.play(1, 320);
-        console.log(`call screen =  ${JSON.stringify(this.props.videoCallToken)}`);
-        console.log(`\n\n ${this.props.route.params.roomName}\n\n`);
-        this._onConnectButtonPress();
-        this.setState({ isLoading: false });
+        console.log(`OutGoingcall Token =  ${JSON.stringify(this.props.videoCallToken)}`);
+        console.log(`\n\n OutGoingCall RoomName =  ${this.props.route.params.roomName}\n\n`);
+        // on start we are asking the permisions
+        GetAllPermissions();
 
-        // setTimeout(() => {
-        //     this._onConnectButtonPress();
-        //     this.setState({ isLoading: false });
-        // }, 1000);
+        this.setState({ isLoading: false });
+        this.setState({ isConnecting: false });
+        this._onConnectButtonPress();
         console.log('$$$$$$')
         console.log(`endCall = ${this.props.endCall} onVideoCall= ${this.props.onVideoCall}`)
     }
@@ -286,6 +286,7 @@ class OutGoingCall extends Component {
                     onParticipantAddedVideoTrack={this._onParticipantAddedVideoTrack}
                     onParticipantRemovedVideoTrack={this._onParticipantRemovedVideoTrack}
                 />
+
             </View>
         )
     }

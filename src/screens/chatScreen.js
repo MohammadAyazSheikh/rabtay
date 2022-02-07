@@ -1,13 +1,12 @@
 import React, { Component, createRef } from "react";
 import {
-    Text, View, StyleSheet, TouchableOpacity, Image, Dimensions,
+    Text, View, StyleSheet, TouchableOpacity, Image, Dimensions, ActivityIndicator,
     Animated, TextInput, Platform, Keyboard, FlatList, KeyboardAvoidingView
 } from 'react-native';
 import { BackGroundColor, blueGradeint2, blackGradient1 } from "../utilities/colors";
 import { heightToDp, widthToDp } from "../utilities/responsiveUtils";
 import Iconic from "react-native-vector-icons/Ionicons";
 import FA from "react-native-vector-icons/FontAwesome";
-import PlaceHolder from "../components/placeHolderComponent";
 // import { data } from "../utilities/chatData";
 import LinearGradient from 'react-native-linear-gradient';
 import { connect } from 'react-redux';
@@ -16,7 +15,7 @@ import { PostMessages, postMessagesSuccess } from '../redux/actions/postMessageA
 import { GetVideoChatToken } from '../redux/actions/getVideoChatTokenActions';
 import { OnVideoCallReset } from '../redux/actions/onVideoCallActions';
 import { baseUrl } from '../utilities/config';
-import moment from "moment";
+import moment, { fn } from "moment";
 import { socket } from '../lib/socket';
 
 const RenderMessage = ({ sender, reciever, image, message, isImage, index, lastIndex,
@@ -139,7 +138,8 @@ class Chat extends Component {
             newLines: 0,
             text: '',
             msgStatus: 'sent',
-            isTyping: false
+            isTyping: false,
+            isCallLoading: false
         }
     }
 
@@ -286,7 +286,7 @@ class Chat extends Component {
 
                         </View>
                         <View style={styles.textView}>
-                            <Text style={styles.txtName}>{uname.length > 13 ? `${fname}...` : uname}</Text>
+                            <Text style={styles.txtName}>{uname.length > 8 || fname.length > 10 ? `${fname.substr(0,10)}...` : uname}</Text>
                             {
                                 this.state.isTyping ?
                                     <Text style={styles.txtActive}>typing...</Text>
@@ -304,22 +304,33 @@ class Chat extends Component {
 
                                 this.props.getVideoChatToken(this.props.token, this.props.user.username);
                                 this.props.onVideoCallReset();
-                                this.props.navigation.navigate('OutgoingCall', {
-                                    roomName: roomName,
-                                    image: profileImage,
-                                    uname: `${fname} ${lname}`,
-                                    contactId: contactId
-                                });
+                                this.setState({ isCallLoading: true });
+                                setTimeout(() => {
+                                    this.setState({ isCallLoading: false });
+                                    this.props.navigation.navigate('OutgoingCall', {
+                                        roomName: roomName,
+                                        image: profileImage,
+                                        uname: `${fname} ${lname}`,
+                                        contactId: contactId
+                                    });
 
-                                socket.emit('videoCall', {
-                                    contactId: this.props.route.params.contact?._id,
-                                    roomName: roomName,
-                                    userId: this.props.user._id,
-                                    startCall: true
-                                });
+                                    socket.emit('videoCall', {
+                                        contactId: this.props.route.params.contact?._id,
+                                        roomName: roomName,
+                                        userId: this.props.user._id,
+                                        startCall: true
+                                    });
+                                }, 2000);
+
                             }}
                         >
-                            <Iconic name='call' color='#FFF' size={30} style={styles.iconStyles}></Iconic>
+                            {
+                                this.state.isCallLoading ?
+                                    <ActivityIndicator size={30} color='#FFF' />
+                                    :
+                                    <Iconic name='call' color='#FFF' size={30} style={styles.iconStyles}></Iconic>
+                            }
+
                         </TouchableOpacity>
                         <TouchableOpacity style={{ padding: 5 }}>
                             <Iconic name='videocam' color='#FFF' size={30} style={styles.iconStyles}></Iconic>
