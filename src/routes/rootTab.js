@@ -108,12 +108,11 @@ export function Root_Tab(props) {
             }}
         >
             <rootTab.Screen name="Home" component={Home} />
-            <rootTab.Screen name="Message" component={ChatTab} options={{ tabBarBadge: 3 }}
+            <rootTab.Screen name="Message" component={ChatTab} 
                 options={{ tabBarBadge: props.chatBadge?.badge == 0 ? null : props.chatBadge?.badge }}
             />
             <rootTab.Screen name="Add" component={Screen}
                 options={{
-
                     tabBarButton: (/*props*/) => (
                         <CenterButton {...props} />
                     ),

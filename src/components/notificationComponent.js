@@ -117,8 +117,8 @@ class SingleNotification extends Component {
             <View style={styles.mainView}>
                 <Swipeable
                     renderRightActions={() => rightSwipeActions(this.props.fromId, this.props.token,
-                        this.props.followUser, this.props.GetNotifications, this.props.clearNotificBadge,
-                        this.props.notific.length, this.props.DltNotification, this.props.GetContacts,
+                        this.props.followUser, this.props.GetNotifications, this.props?.clearNotificBadge,
+                        this.props.notific.length, this.props.DltNotification, this.props?.GetContacts,
                         this.props.user, this.props.type)}
                     onSwipeableRightOpen={swipeFromRightOpen}
 

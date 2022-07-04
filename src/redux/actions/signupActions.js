@@ -1,6 +1,7 @@
 import * as ActionTypes from '../actionTypes';
 import { baseUrl } from '../../utilities/config';
 import { socket, connectServer } from '../../lib/socket';
+import { GetContacts } from './getContactsActions'
 
 export const signupSuccess = (user) => (
     {
